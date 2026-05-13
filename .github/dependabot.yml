@@ -1,0 +1,59 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 10
+    labels:
+      - dependencies
+    groups:
+      # Bundle minor + patch bumps across the whole tree into one PR
+      # so we don't get 8 separate PRs every Monday.
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
+      # Closely-coupled dev-tool families that publish in lock-step
+      # (vitest core/UI/coverage; eslint core/plugins/parsers; ts +
+      # @types). Keeping their major bumps in one PR prevents the
+      # lock-file inconsistency we hit on 2026-04-29 where four
+      # sequential dependabot merges each rebased independently
+      # against main and each squash overwrote the previous's
+      # node_modules entries.
+      vitest:
+        patterns:
+          - 'vitest'
+          - '@vitest/*'
+      eslint:
+        patterns:
+          - 'eslint'
+          - '@eslint/*'
+          - 'eslint-plugin-*'
+          - 'eslint-config-*'
+          - '@typescript-eslint/*'
+      typescript:
+        patterns:
+          - 'typescript'
+          - '@types/*'
+    # eslint major bumps are blocked until eslint-plugin-react publishes
+    # a release that accepts eslint 10 in its peerDependencies (current
+    # eslint-plugin-react@7.37.x maxes out at eslint@9.x via
+    # eslint-config-next's transitive constraint). Suppress the open
+    # PR so the queue isn't perpetually red on a known-blocked bump.
+    # Revisit when eslint-plugin-react@8 (or eslint-config-next bump)
+    # ships with eslint@10 peer support.
+    ignore:
+      - dependency-name: 'eslint'
+        update-types:
+          - 'version-update:semver-major'
+    reviewers:
+      - ash
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    labels:
+      - ci
