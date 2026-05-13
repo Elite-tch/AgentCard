@@ -1,5 +1,5 @@
 {
-  "name": "cards402-monorepo",
+  "name": "agent-card",
   "private": true,
   "type": "module",
   "workspaces": [
