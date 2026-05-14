@@ -1,5 +1,5 @@
 import type { NextConfig } from 'next';
-import path from 'path';
+// import path from 'path';
 
 // Security headers. We set these via next.config rather than a proxy/
 // edge function so they're present on static assets, ISR responses,
@@ -36,7 +36,7 @@ const HSTS = 'max-age=63072000; includeSubDomains; preload';
 const isDev = process.env.NODE_ENV === 'development';
 
 const nextConfig: NextConfig = {
-/*
+  /*
   turbopack: {
     root: path.resolve(__dirname, '..'),
   },
