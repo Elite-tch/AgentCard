@@ -203,9 +203,9 @@ router.post('/login', loginLimiter, async (req, res) => {
   `,
   ).run(uuidv4(), addr, hashToken(code), expiresAt);
 
-  // In non-production, log that a code was sent (but not the value itself).
+  // In non-production, log that a code was sent (and the value itself so dev can login).
   if (process.env.NODE_ENV !== 'production') {
-    console.log(`[auth] LOGIN CODE sent to ${addr} (expires in ${CODE_TTL_MINUTES}min)`);
+    console.log(`[auth] LOGIN CODE for ${addr}: ${code} (expires in ${CODE_TTL_MINUTES}min)`);
   }
 
   try {

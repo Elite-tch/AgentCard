@@ -18,8 +18,7 @@
 
 import type { CSSProperties } from 'react';
 
-const ASPECT = 522.42 / 120.59; // full lockup aspect ratio from the SVG viewBox
-const MARK_ASPECT = 120.59 / 120.59; // square for just the mark crop
+
 
 interface Props {
   height?: number;
@@ -32,40 +31,56 @@ interface Props {
 export function Wordmark({
   height = 28,
   mark = false,
-  title = 'Cards402',
+  title = 'AgentCard',
   className,
   style,
 }: Props) {
-  const aspect = mark ? MARK_ASPECT : ASPECT;
-  const width = Math.round(height * aspect);
-  // When rendering the mark-only variant, we crop the left ~23% of the
-  // full SVG (the globe sits at x ≈ 0-120 of a 522 viewBox). The
-  // mask-size uses the full logo width so the crop snaps the globemark
-  // to the visible box without needing a second asset.
-  const maskSize = mark ? `${width * (522.42 / 120.59)}px ${height}px` : `contain`;
-  const maskPosition = mark ? 'left center' : 'center';
+  if (mark) {
+    return (
+      <span
+        role="img"
+        aria-label={title}
+        className={className}
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: height,
+          height: height,
+          borderRadius: '2px',
+          background: 'var(--accent)',
+          color: 'white',
+          fontFamily: 'var(--font-display)',
+          fontSize: height * 0.7,
+          fontWeight: 700,
+          ...style,
+        }}
+      >
+        A
+      </span>
+    );
+  }
 
   return (
     <span
-      role="img"
       aria-label={title}
       className={className}
       style={{
-        display: 'inline-block',
-        width,
-        height,
-        backgroundColor: 'currentColor',
-        maskImage: 'url(/logo.svg)',
-        maskRepeat: 'no-repeat',
-        maskSize,
-        maskPosition,
-        WebkitMaskImage: 'url(/logo.svg)',
-        WebkitMaskRepeat: 'no-repeat',
-        WebkitMaskSize: maskSize,
-        WebkitMaskPosition: maskPosition,
-        flexShrink: 0,
+        display: 'inline-flex',
+        alignItems: 'center',
+        fontFamily: 'var(--font-display)',
+        fontSize: height * 0.9,
+        fontWeight: 500,
+        letterSpacing: '-0.02em',
+        background: 'linear-gradient(180deg, #ffffff 0%, #a1a1a1 100%)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.15))',
+        whiteSpace: 'nowrap',
         ...style,
       }}
-    />
+    >
+      AgentCard
+    </span>
   );
 }

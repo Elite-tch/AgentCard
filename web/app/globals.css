@@ -10,7 +10,7 @@
 :root {
   /* ── Canvas + ink ─────────────────────────────────────────────────── */
   --bg: #050505;
-  --bg-elev: #0c0c0c;
+  --bg-elev: #0a0a0a;
   --bg-elev-2: #111111;
   --fg: #f4f4f4;
   --fg-muted: rgba(255, 255, 255, 0.66);
@@ -18,35 +18,31 @@
   --muted: rgba(255, 255, 255, 0.44);
 
   /* ── Surfaces ─────────────────────────────────────────────────────── */
-  --surface: #0c0c0c;
-  --surface-2: #141414;
+  --surface: #0a0a0a;
+  --surface-2: #121212;
   --surface-3: #1a1a1a;
   --surface-hover: rgba(255, 255, 255, 0.04);
   --border: rgba(255, 255, 255, 0.08);
   --border-strong: rgba(255, 255, 255, 0.16);
   --border-hairline: rgba(255, 255, 255, 0.05);
 
-  /* ── Accents ──────────────────────────────────────────────────────── */
-  /* Single live/success green. Slightly muted from the old neon so it
-     reads as engineering-grade rather than cyberpunk. */
-  --green: #7cffb2;
-  --green-dim: #4fd894;
-  --green-muted: rgba(124, 255, 178, 0.1);
-  --green-border: rgba(124, 255, 178, 0.26);
-  --green-glow: rgba(124, 255, 178, 0.35);
+  /* ── Accents (Infrared) ───────────────────────────────────────────── */
+  --accent: #00FFA3;
+  /* Electric Green */
+  --accent-dim: #008f5d;
+  --accent-muted: rgba(0, 255, 163, 0.12);
+  --accent-border: rgba(0, 255, 163, 0.35);
+  --accent-glow: rgba(0, 255, 163, 0.45);
 
-  --red: #ff7a7a;
-  --red-muted: rgba(255, 122, 122, 0.12);
-  --red-border: rgba(255, 122, 122, 0.26);
+  /* ── Secondary (Chrome/Silver) ────────────────────────────────────── */
+  --silver: #d1d1d1;
+  --silver-muted: #888888;
+  --chrome-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+
+  /* ── Semantic ─────────────────────────────────────────────────────── */
+  --green: #00ff85;
+  --red: #ff3b3b;
   --yellow: #ffd166;
-  --yellow-muted: rgba(255, 209, 102, 0.12);
-  --yellow-border: rgba(255, 209, 102, 0.26);
-  --blue: #8ab4ff;
-  --blue-muted: rgba(138, 180, 255, 0.12);
-  --blue-border: rgba(138, 180, 255, 0.26);
-  --purple: #c8a8ff;
-  --purple-muted: rgba(200, 168, 255, 0.12);
-  --purple-border: rgba(200, 168, 255, 0.26);
 
   /* ── Shadow + glow ────────────────────────────────────────────────── */
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.03);
@@ -54,18 +50,13 @@
   --shadow-float: 0 20px 48px -24px rgba(0, 0, 0, 0.85);
 
   /* ── Typography tokens ────────────────────────────────────────────── */
-  /* next/font sets --font-display, --font-body, --font-mono-next on
-     <html>. We alias the old --font-mono here so the dashboard keeps
-     working without touching component code. */
-  --font-display: 'Fraunces', 'IBM Plex Serif', Georgia, 'Times New Roman', serif;
-  --font-body:
-    'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  --font-mono: var(--font-mono-next, 'IBM Plex Mono'), 'JetBrains Mono', ui-monospace, monospace;
+  --font-display: 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
 
   /* ── Motion ───────────────────────────────────────────────────────── */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.18, 1);
-  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 html[data-theme='light'] {
@@ -149,9 +140,19 @@ body {
   font-weight: 400;
   letter-spacing: -0.025em;
   line-height: 0.96;
-  font-variation-settings:
-    'opsz' 144,
-    'SOFT' 50;
+}
+
+.type-display-chrome {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  background: var(--chrome-silver);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter:
+    drop-shadow(0 0 1px rgba(255, 255, 255, 0.8)) drop-shadow(0 0 20px var(--accent-glow));
+  line-height: 0.9;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
 }
 
 .type-display-tight {
@@ -170,7 +171,7 @@ body {
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--fg-dim);
+  color: var(--accent);
 }
 
 .type-body {
@@ -233,16 +234,20 @@ html[data-theme='light'] .dot-grid {
   width: 8px;
   height: 8px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.18);
 }
+
 html[data-theme='light'] ::-webkit-scrollbar-thumb {
   background: rgba(10, 10, 10, 0.12);
 }
@@ -303,6 +308,7 @@ pre {
   text-decoration: none;
   transition: transform 0.25s var(--ease-out);
 }
+
 .skip-link:focus {
   transform: translateY(0);
   outline: 2px solid var(--green);
@@ -312,10 +318,12 @@ pre {
 /* ── Animations ────────────────────────────────────────────────────── */
 
 @keyframes pulse-green {
+
   0%,
   100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.4;
   }
@@ -327,6 +335,7 @@ pre {
     transform: translateY(24px);
     filter: blur(6px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -345,6 +354,7 @@ pre {
 
 /* Respect reduced motion — all fancy reveals collapse to plain opacity */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
@@ -362,36 +372,43 @@ pre {
   background: var(--yellow-muted);
   border-color: var(--yellow-border);
 }
+
 .status-payment_confirmed {
   color: var(--blue);
   background: var(--blue-muted);
   border-color: var(--blue-border);
 }
+
 .status-ordering {
   color: var(--purple);
   background: var(--purple-muted);
   border-color: var(--purple-border);
 }
+
 .status-claim_received {
   color: var(--purple);
   background: var(--purple-muted);
   border-color: var(--purple-border);
 }
+
 .status-stage1_done {
   color: var(--purple);
   background: var(--purple-muted);
   border-color: var(--purple-border);
 }
+
 .status-delivered {
   color: var(--green);
   background: var(--green-muted);
   border-color: var(--green-border);
 }
+
 .status-failed {
   color: var(--red);
   background: var(--red-muted);
   border-color: var(--red-border);
 }
+
 .status-refund_pending {
   color: var(--yellow);
   background: var(--yellow-muted);
@@ -410,31 +427,37 @@ pre {
   background: var(--purple-muted);
   border-color: var(--purple-border);
 }
+
 .status-awaiting_payment {
   color: var(--yellow);
   background: var(--yellow-muted);
   border-color: var(--yellow-border);
 }
+
 .status-processing {
   color: var(--blue);
   background: var(--blue-muted);
   border-color: var(--blue-border);
 }
+
 .status-ready {
   color: var(--green);
   background: var(--green-muted);
   border-color: var(--green-border);
 }
+
 .status-refunded {
   color: var(--yellow);
   background: var(--yellow-muted);
   border-color: var(--yellow-border);
 }
+
 .status-rejected {
   color: var(--red);
   background: var(--red-muted);
   border-color: var(--red-border);
 }
+
 .status-expired {
   color: var(--fg-dim);
   background: var(--surface);
@@ -453,22 +476,26 @@ pre {
   .dashboard-sidebar {
     display: none !important;
   }
+
   .dashboard-agent-detail-grid {
     grid-template-columns: minmax(0, 1fr) !important;
   }
-  .dashboard-agent-detail-grid > aside {
+
+  .dashboard-agent-detail-grid>aside {
     width: 100% !important;
     position: static !important;
     height: auto !important;
     border-left: none !important;
     border-top: 1px solid var(--border) !important;
   }
+
   /* Overview "spend chart + system health" split collapses to a
      single column. Same rule should hold for any other 2-col
      dashboard split that uses .overview-split. */
   .overview-split {
     grid-template-columns: minmax(0, 1fr) !important;
   }
+
   /* Tables become horizontally scrollable instead of crunching columns.
      The Card component's inner div sets overflow-x: auto when padding=0
      so the min-width here doesn't blow out the parent. */
@@ -481,11 +508,13 @@ pre {
   .dashboard-page-container {
     padding: 1rem 0.85rem !important;
   }
+
   /* Tighter type ramp on small screens — display fonts shouldn't
      wrap into three lines on an iPhone SE. */
   .type-display {
     letter-spacing: -0.02em;
   }
+
   /* Live pill tightens to just the dot + 'Live' and the dashboard
      header gap shrinks so the search, live, bell, and avatar all
      fit on a 375px-wide viewport without the bell clipping. */
@@ -496,6 +525,7 @@ pre {
 }
 
 @media (max-width: 480px) {
+
   /* Theme toggle hides on the smallest viewport — preference is in
      localStorage so it's set-once anyway. Reclaims a 32px column for
      the bell and avatar. */
@@ -513,6 +543,7 @@ pre {
 .dashboard-card-scroll {
   position: relative;
 }
+
 .dashboard-card-scroll::after {
   content: '';
   position: absolute;
@@ -525,6 +556,7 @@ pre {
   opacity: 0;
   transition: opacity 0.3s var(--ease-out);
 }
+
 @media (max-width: 900px) {
   .dashboard-card-scroll::after {
     opacity: 1;
@@ -539,6 +571,7 @@ pre {
 .dashboard-backdrop {
   position: relative;
 }
+
 .dashboard-backdrop::before {
   content: '';
   position: absolute;
@@ -550,6 +583,7 @@ pre {
   -webkit-mask-image: linear-gradient(180deg, black, transparent 60%);
   z-index: 0;
 }
+
 html[data-theme='light'] .dashboard-backdrop::before {
   background-image: radial-gradient(circle, rgba(10, 10, 10, 0.045) 1px, transparent 1px);
 }
@@ -574,9 +608,11 @@ tbody tr {
   position: relative;
   transition: background 0.3s var(--ease-out);
 }
+
 tbody tr td:first-child {
   position: relative;
 }
+
 tbody tr:hover td:first-child::before {
   content: '';
   position: absolute;
@@ -588,10 +624,12 @@ tbody tr:hover td:first-child::before {
   box-shadow: 0 0 12px var(--green-glow);
   animation: row-accent-in 0.3s var(--ease-out) both;
 }
+
 @keyframes row-accent-in {
   from {
     transform: scaleY(0);
   }
+
   to {
     transform: scaleY(1);
   }
@@ -637,10 +675,12 @@ tr:hover td {
 }
 
 @keyframes pulse {
+
   0%,
   100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.4;
   }
@@ -658,6 +698,7 @@ tr:hover td {
   padding-bottom: 1px;
   transition: background-size 0.5s var(--ease-out);
 }
+
 .link-subtle:hover {
   background-size: 0 1px;
 }
@@ -674,10 +715,130 @@ tr:hover td {
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
+
 .link-arrow::after {
   content: '→';
   transition: transform 0.5s var(--ease-out);
 }
+
 .link-arrow:hover::after {
   transform: translateX(4px);
+}
+
+/* ── Grain + Atmosphere ───────────────────────────────────────────── */
+
+.grain {
+  position: fixed;
+  inset: -200%;
+  z-index: 100;
+  pointer-events: none;
+  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+  opacity: 0.12;
+  animation: grain-shift 8s steps(10) infinite;
+  mix-blend-mode: overlay;
+}
+
+@keyframes grain-shift {
+
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  10% {
+    transform: translate(-5%, -10%);
+  }
+
+  20% {
+    transform: translate(-15%, 5%);
+  }
+
+  30% {
+    transform: translate(7%, -25%);
+  }
+
+  40% {
+    transform: translate(-5%, 25%);
+  }
+
+  50% {
+    transform: translate(-15%, 10%);
+  }
+
+  60% {
+    transform: translate(15%, 0%);
+  }
+
+  70% {
+    transform: translate(0%, 15%);
+  }
+
+  80% {
+    transform: translate(3%, 35%);
+  }
+
+  90% {
+    transform: translate(-10%, 10%);
+  }
+}
+
+.dashboard-float {
+  position: absolute;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+  backdrop-filter: blur(8px);
+  border-radius: 4px;
+  pointer-events: none;
+  opacity: 0.35;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.ruby-streak {
+  position: absolute;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  filter: blur(2px);
+  opacity: 0.8;
+  transform: rotate(-15deg);
+  pointer-events: none;
+}
+
+.type-display-chrome {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  background: linear-gradient(180deg,
+      #ffffff 0%,
+      #e2e2e2 25%,
+      #b5b5b5 50%,
+      #8e8e8e 51%,
+      #d1d1d1 75%,
+      #ffffff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter:
+    drop-shadow(0 0 1px rgba(255, 255, 255, 0.8)) drop-shadow(0 0 30px var(--accent-glow));
+  line-height: 0.9;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+}
+
+body {
+  background: #020202;
+  color: #fff;
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 255, 163, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 163, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
 }

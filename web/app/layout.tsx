@@ -36,20 +36,14 @@ const monoFont = IBM_Plex_Mono({
   weight: ['400', '500', '600', '700'],
 });
 
-const SITE_URL = 'https://cards402.com';
-const SITE_NAME = 'Cards402';
-// Kept under Google's 160-char SERP truncation limit so the whole
-// description renders without a trailing ellipsis.
+const SITE_URL = 'https://agentcard.com';
+const SITE_NAME = 'AgentCard';
 const SITE_DESCRIPTION =
-  'Virtual Visa cards for AI agents. Pay with USDC or XLM on Stellar and get a real card in ~60 seconds. Non-custodial, no signup, no KYC.';
+  'The elite digital identity for modern agents. Secure, effortless, exclusive virtual Visa cards issued on Stellar. Pay with USDC or XLM and get a premium card in ~60 seconds.';
 
 export const metadata: Metadata = {
-  // Default title that's used unless a page overrides it. The
-  // `template` turns per-page titles like "Pricing" into
-  // "Pricing — Cards402" so every tab has the brand without each
-  // page having to remember.
   title: {
-    default: `${SITE_NAME} — Virtual Visa cards for AI agents`,
+    default: `${SITE_NAME} — The Elite Digital Identity for Agents`,
     template: `%s — ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,
@@ -58,19 +52,14 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   alternates: {
     canonical: SITE_URL,
-    // Declaring en-GB as the primary locale and x-default for anyone
-    // landing from a non-English search. Once we actually translate
-    // pages this block is where the real locale URLs go.
     languages: {
       'en-GB': SITE_URL,
       'x-default': SITE_URL,
     },
   },
-  // Keywords meta intentionally omitted — Google has ignored it since
-  // ~2009 and it becomes a footgun once pages drift from the list.
-  authors: [{ name: 'Cards402', url: SITE_URL }],
-  creator: 'Cards402',
-  publisher: 'Cards402',
+  authors: [{ name: 'AgentCard', url: SITE_URL }],
+  creator: 'AgentCard',
+  publisher: 'AgentCard',
   formatDetection: {
     email: false,
     address: false,
@@ -81,20 +70,17 @@ export const metadata: Metadata = {
     locale: 'en_GB',
     url: SITE_URL,
     siteName: SITE_NAME,
-    title: `${SITE_NAME} — Virtual Visa cards for AI agents`,
+    title: `${SITE_NAME} — Premium Virtual Visa Cards for AI Agents`,
     description:
-      'One transaction in, one real Visa card out. ~60 seconds from payment to card. Upgrade your agents to have real purchasing power today.',
-    // og:image comes from app/opengraph-image.tsx (file convention).
-    // Don't set it here or child pages that override openGraph lose
-    // the image reference.
+      'The elite digital identity for modern agents. Issued on Stellar in ~60 seconds. Non-custodial and secure.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${SITE_NAME} — Virtual Visa cards for AI agents`,
+    title: `${SITE_NAME} — Premium Virtual Visa Cards for AI Agents`,
     description:
-      'One transaction in, one real Visa card out. ~60 seconds from payment to card. Upgrade your agents to have real purchasing power today.',
-    site: '@cards402',
-    creator: '@cards402',
+      'The elite digital identity for modern agents. Issued on Stellar in ~60 seconds. Non-custodial and secure.',
+    site: '@agentcard',
+    creator: '@agentcard',
   },
   robots: {
     index: true,

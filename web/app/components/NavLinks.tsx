@@ -215,7 +215,7 @@ export function NavLinks() {
         .nav-menu-link {
           text-decoration: none;
           color: var(--fg-muted);
-          font-size: 0.84rem;
+          font-size: 0.95rem;
           font-family: var(--font-body);
           font-weight: 500;
           padding: 0.45rem 0.7rem;
@@ -229,7 +229,7 @@ export function NavLinks() {
         .nav-more { position: relative; }
         .nav-more-btn {
           color: var(--fg-muted);
-          font-size: 0.84rem;
+          font-size: 0.95rem;
           font-family: var(--font-body);
           font-weight: 500;
           padding: 0.45rem 0.7rem;
@@ -285,22 +285,25 @@ export function NavLinks() {
         .nav-cta {
           margin-left: 0.6rem;
           text-decoration: none;
-          font-size: 0.78rem;
-          font-family: var(--font-body);
+          font-size: 0.85rem;
+          font-family: var(--font-mono);
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
           font-weight: 600;
-          padding: 0.52rem 0.95rem;
-          border-radius: 999px;
-          background: var(--fg);
-          color: var(--bg);
+          padding: 0.5rem 1rem;
+          border-radius: 2px;
+          background: var(--accent);
+          color: white;
           transition: transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
           display: inline-flex;
           align-items: center;
           gap: 0.4rem;
           white-space: nowrap;
+          box-shadow: 0 0 12px var(--accent-glow);
         }
         .nav-cta:hover {
           transform: translateY(-1px);
-          box-shadow: 0 8px 24px -8px var(--green-glow);
+          box-shadow: 0 0 24px var(--accent-glow);
         }
 
         .nav-toggle {
@@ -311,8 +314,8 @@ export function NavLinks() {
           align-items: center;
           justify-content: center;
           background: transparent;
-          border: 1px solid var(--border);
-          border-radius: 8px;
+          border: 1px solid var(--accent-border);
+          border-radius: 2px;
           color: var(--fg);
           cursor: pointer;
         }

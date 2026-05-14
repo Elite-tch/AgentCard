@@ -36,9 +36,11 @@ const HSTS = 'max-age=63072000; includeSubDomains; preload';
 const isDev = process.env.NODE_ENV === 'development';
 
 const nextConfig: NextConfig = {
+/*
   turbopack: {
     root: path.resolve(__dirname, '..'),
   },
+*/
   async headers() {
     return [
       {
