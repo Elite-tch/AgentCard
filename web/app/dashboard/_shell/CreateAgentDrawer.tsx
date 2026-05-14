@@ -53,7 +53,7 @@ export function CreateAgentDrawer({ open, onClose }: Props) {
     setBusy(true);
     try {
       const data = await createAgentAction({ label: label || 'Unnamed agent' });
-      setCreated(data as any);
+      setCreated(data as NewKeyData);
       await refresh();
       router.refresh(); // Trigger Server Component re-validation
     } catch (err) {

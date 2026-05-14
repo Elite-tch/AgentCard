@@ -1,7 +1,7 @@
 // web/lib/backend/services/orders.ts
 import { unstable_cache } from 'next/cache';
 import connectToDatabase from '@/lib/backend/db';
-import { Order } from '@/lib/backend/models/Order';
+import { Order, IOrder } from '@/lib/backend/models/Order';
 import { ApiKey } from '@/lib/backend/models/ApiKey';
 import { CACHE_TAGS } from '@/lib/backend/cache-tags';
 
@@ -18,16 +18,16 @@ export const getOrders = (dashboardId: string, limit = 50) =>
         .populate({ path: 'apiKeyId', select: 'label' })
         .lean();
 
-      return orders.map((o: any) => ({
+      return (orders as IOrder[]).map((o: any) => ({
         id: String(o._id),
         status: o.status,
         amount_usdc: o.amountUsdc,
         payment_asset: o.paymentAsset,
-        stellar_txid: o.stellarTxid,
-        card_brand: o.cardBrand,
-        error: o.error,
-        created_at: o.createdAt,
-        updated_at: o.updatedAt,
+        stellar_txid: o.stellarTxid ?? null,
+        card_brand: o.cardBrand ?? null,
+        error: o.error ?? null,
+        created_at: o.createdAt ? o.createdAt.toISOString() : new Date().toISOString(),
+        updated_at: o.updatedAt ? o.updatedAt.toISOString() : new Date().toISOString(),
         api_key_id: o.apiKeyId?._id ? String(o.apiKeyId._id) : String(o.apiKeyId),
         api_key_label: o.apiKeyId?.label ?? null,
       }));
@@ -45,16 +45,16 @@ export const getOrdersForAgent = (apiKeyId: string, limit = 50) =>
         .limit(l)
         .lean();
 
-      return orders.map((o: any) => ({
+      return (orders as IOrder[]).map((o) => ({
         id: String(o._id),
         status: o.status,
         amount_usdc: o.amountUsdc,
         payment_asset: o.paymentAsset,
-        stellar_txid: o.stellarTxid,
-        card_brand: o.cardBrand,
-        error: o.error,
-        created_at: o.createdAt,
-        updated_at: o.updatedAt,
+        stellar_txid: o.stellarTxid ?? null,
+        card_brand: o.cardBrand ?? null,
+        error: o.error ?? null,
+        created_at: o.createdAt ? o.createdAt.toISOString() : new Date().toISOString(),
+        updated_at: o.updatedAt ? o.updatedAt.toISOString() : new Date().toISOString(),
         api_key_id: String(o.apiKeyId),
         api_key_label: null,
       }));

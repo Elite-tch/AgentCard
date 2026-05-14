@@ -11,6 +11,7 @@ import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
+import type { ApiKey as ApiKeyType } from './_lib/types';
 
 async function getSession() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -63,7 +64,7 @@ export async function createAgentAction(data: { label: string; spendLimitUsdc?: 
 }
 
 export async function approveOrderAction(orderId: string, decisionNote?: string) {
-  const session = await getSession();
+  await getSession();
   await connectToDatabase();
   
   await ApprovalRequest.findOneAndUpdate(
@@ -78,7 +79,7 @@ export async function approveOrderAction(orderId: string, decisionNote?: string)
 }
 
 export async function rejectOrderAction(orderId: string, decisionNote?: string) {
-  const session = await getSession();
+  await getSession();
   await connectToDatabase();
   
   await ApprovalRequest.findOneAndUpdate(
@@ -91,7 +92,7 @@ export async function rejectOrderAction(orderId: string, decisionNote?: string) 
   revalidateTag(CACHE_TAGS.APPROVALS, 'max');
 }
 
-export async function updateAgentAction(id: string, data: any) {
+export async function updateAgentAction(id: string, data: Partial<ApiKeyType>) {
   await getSession();
   await connectToDatabase();
   await ApiKey.findByIdAndUpdate(id, data);

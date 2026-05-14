@@ -15,7 +15,7 @@ import { useDashboard } from '../_lib/DashboardProvider';
 
 type Preset = 'all' | 'failed_today' | 'in_flight' | 'delivered_7d' | 'refunded';
 
-export default function OrdersList({ initialOrders, initialAgents }: { initialOrders: Order[]; initialAgents: ApiKey[] }) {
+export default function OrdersList({ initialOrders }: { initialOrders: Order[] }) {
   const { orders: liveOrders } = useDashboard();
   const orders = liveOrders.length > 0 ? liveOrders : initialOrders;
   const [query, setQuery] = useState('');

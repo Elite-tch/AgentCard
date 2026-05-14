@@ -1,7 +1,7 @@
 // web/lib/backend/services/approvals.ts
 import { unstable_cache } from 'next/cache';
 import connectToDatabase from '@/lib/backend/db';
-import { ApprovalRequest } from '@/lib/backend/models/ApprovalRequest';
+import { ApprovalRequest, IApprovalRequest } from '@/lib/backend/models/ApprovalRequest';
 import { ApiKey } from '@/lib/backend/models/ApiKey';
 import { CACHE_TAGS } from '@/lib/backend/cache-tags';
 
@@ -21,17 +21,17 @@ export const getApprovals = (dashboardId: string, status = 'pending', limit = 10
         .populate({ path: 'apiKeyId', select: 'label' })
         .lean();
 
-      return approvals.map((ar: any) => ({
+      return (approvals as any[]).map((ar) => ({
         id: String(ar._id),
         api_key_id: ar.apiKeyId?._id ? String(ar.apiKeyId._id) : String(ar.apiKeyId),
         order_id: String(ar.orderId),
         amount_usdc: ar.amountUsdc,
-        agent_note: ar.agentNote,
+        agent_note: ar.agentNote ?? null,
         status: ar.status,
-        requested_at: ar.requestedAt,
-        expires_at: ar.expiresAt,
-        decided_at: ar.decidedAt,
-        decision_note: ar.decisionNote,
+        requested_at: ar.requestedAt ? ar.requestedAt.toISOString() : new Date().toISOString(),
+        expires_at: ar.expiresAt ? ar.expiresAt.toISOString() : new Date().toISOString(),
+        decided_at: ar.decidedAt ? ar.decidedAt.toISOString() : null,
+        decision_note: ar.decisionNote ?? null,
         api_key_label: ar.apiKeyId?.label ?? null,
       }));
     },

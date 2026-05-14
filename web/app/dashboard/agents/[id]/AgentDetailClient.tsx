@@ -70,7 +70,7 @@ export default function AgentDetailClient({
   const balUsdc = walletBalances[id]?.usdc || '0';
   const comboUsd = parseFloat(balUsdc) + parseFloat(balXlm) * 0.2;
 
-  async function patch(body: any) {
+  async function patch(body: Partial<ApiKey>) {
     try {
       await updateAgentAction(id, body);
       toast.push('Agent updated', 'success');

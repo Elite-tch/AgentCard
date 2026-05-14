@@ -24,7 +24,7 @@ export default async function OrdersPage() {
         title="Orders"
         subtitle={`${orders.length} total history — Real-time via Server Actions`}
       />
-      <OrdersList initialOrders={orders} initialAgents={agents} />
+      <OrdersList initialOrders={orders} />
     </PageContainer>
   );
 }

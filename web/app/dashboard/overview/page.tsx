@@ -8,14 +8,12 @@ import { getOrders } from '@/lib/backend/services/orders';
 import { getApiKeys } from '@/lib/backend/services/api-keys';
 import { KpiTile, KpiRow } from '../_ui/KpiTile';
 import { Card } from '../_ui/Card';
-import { Pill } from '../_ui/Pill';
 import { EmptyState } from '../_ui/EmptyState';
 import { SpendChart } from '../_ui/SpendChart';
 import { OrderStatusPill } from '../_ui/OrderStatusPill';
 import { PageContainer } from '../_ui/PageContainer';
 import { PageHeader } from '../_ui/PageHeader';
 import { formatUsd, parseTimestamp, timeAgo, bucketSpendByDay } from '../_lib/format';
-import { IN_FLIGHT_ORDER_STATUSES } from '../_lib/constants';
 import type { Order, ApiKey } from '../_lib/types';
 
 export default async function OverviewPage() {

@@ -24,7 +24,6 @@ import {
   type ReactNode,
 } from 'react';
 import {
-  API_BASE,
   USDC_ISSUER,
   type ApiKey,
   type ApprovalRequest,
