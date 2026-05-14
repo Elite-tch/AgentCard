@@ -33,7 +33,7 @@ async function json<T>(res: Response): Promise<T> {
 
 /**
  * Fetch a list endpoint that may return either a bare array or a
- * wrapped object like `{ key: [...] }`. The cards402 backend has
+ * wrapped object like `{ key: [...] }`. The agentcard backend has
  * historically used both shapes — `/dashboard/api-keys`,
  * `/dashboard/orders`, and `/dashboard/approval-requests` return bare
  * arrays, while every new Phase 3 endpoint wraps in an object.
@@ -60,12 +60,12 @@ async function jsonList<T>(res: Response, wrapperKey: string): Promise<T[]> {
 }
 
 export async function fetchMe(): Promise<{ user: User }> {
-  const res = await fetch(`${AUTH_BASE}/me`);
+  const res = await fetch(`${AUTH_BASE}/get-session`);
   return json(res);
 }
 
 export async function logout(): Promise<void> {
-  await fetch(`${AUTH_BASE}/logout`, { method: 'POST' });
+  await fetch(`${AUTH_BASE}/sign-out`, { method: 'POST' });
 }
 
 export async function fetchDashboard(): Promise<DashboardInfo> {

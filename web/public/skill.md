@@ -1,12 +1,12 @@
-# Cards402 · Agent skill
+# AgentCard · Agent skill
 
-You are an autonomous agent that has been given access to Cards402 — a service
+You are an autonomous agent that has been given access to AgentCard — a service
 that turns a Stellar network payment into a real, usable Visa card. This
 document is the setup and reference you should read **once**, on first use.
 
-## What Cards402 does
+## What AgentCard does
 
-Cards402 lets you buy a Visa reward card, funded in USDC or XLM over the
+AgentCard lets you buy a Visa reward card, funded in USDC or XLM over the
 Stellar mainnet, and receive the card number, CVV, and expiry back over the
 same HTTP request you made. There is no human in the loop, no hosted
 checkout, no redirect. One transaction in, one card out, typically in under
@@ -14,16 +14,16 @@ checkout, no redirect. One transaction in, one card out, typically in under
 
 The cards are real Visa Reward Cards issued by Pathward, N.A. (Member FDIC).
 They work anywhere Visa is accepted, subject to the issuer's limits
-(documented at <https://cards402.com/pricing>).
+(documented at <https://agentcard.com/pricing>).
 
 ## Before you can use it
 
 The operator who gave you this document will also give you a **claim code**.
-It looks like `c402_abc123def456…` and is single-use. To exchange the claim
+It looks like `acard_abc123def456…` and is single-use. To exchange the claim
 for a usable API key, run:
 
 ```bash
-npx -y cards402@latest onboard --claim c402_<code>
+npx -y cards402@latest onboard --claim acard_<code>
 ```
 
 > **Always pin `@latest`.** The `@latest` flag forces `npx` to re-resolve
@@ -35,12 +35,12 @@ npx -y cards402@latest onboard --claim c402_<code>
 This does four things in one call:
 
 1. Exchanges the claim code for a long-lived API key via the backend.
-2. Writes the key to `~/.cards402/config.json` (chmod 0600) so the SDK can
+2. Writes the key to `~/.agentcard/config.json` (chmod 0600) so the SDK can
    load it automatically on subsequent runs. You don't need to paste the key
    into any env var yourself.
 3. Creates an encrypted OWS Stellar wallet in the default vault at
    `~/.ows/wallets` and prints its public key.
-4. Reports the wallet address to the cards402 backend so your operator sees
+4. Reports the wallet address to the agentcard backend so your operator sees
    "Awaiting deposit" in their dashboard immediately.
 
 Run it **once**. Do not save the claim code in conversation history — once
@@ -85,15 +85,15 @@ your account's minimum reserve by 0.5 XLM. After it lands, `wallet
 balance` will show `usdc: 0.0000000` (line open, zero balance) rather
 than `usdc: 0` (no line).
 
-If you only intend to pay cards402 in XLM you can skip this step — XLM
+If you only intend to pay agentcard in XLM you can skip this step — XLM
 is the native asset on Stellar and needs no trustline. But the operator
 may want to fund you in USDC either way, so opening the trustline
 proactively after XLM lands is the safe default.
 
 **Step 3 — ask the operator to send USDC** (or more XLM if paying in
-XLM). Once the balance updates, `cards402 purchase` works.
+XLM). Once the balance updates, `agentcard purchase` works.
 
-After onboarding, any subsequent Cards402 command uses the cached key
+After onboarding, any subsequent AgentCard command uses the cached key
 automatically. There is no need to pass credentials on subsequent calls.
 
 ## Purchasing a card
@@ -108,10 +108,10 @@ npx -y cards402@latest purchase --amount 25
 Or from TypeScript:
 
 ```ts
-import { purchaseCardOWS } from 'cards402';
+import { purchaseCardOWS } from 'agentcard';
 
 const card = await purchaseCardOWS({
-  apiKey: process.env.CARDS402_API_KEY!,
+  apiKey: process.env.AGENTCARD_API_KEY!,
   walletName: 'my-agent',
   amountUsdc: '25.00',
 });
@@ -126,7 +126,7 @@ explicit instruction.
 
 ## Fees you should know about
 
-Cards402 charges no markup to agents — you pay face value and get a
+AgentCard charges no markup to agents — you pay face value and get a
 card worth face value. The card issuer (Pathward) imposes:
 
 - **Foreign transaction fee** — $2.00 + 2% on any purchase in a non-USD
@@ -143,7 +143,7 @@ memberships, and rentals are blocked by the issuer.
 
 ### Order size limits
 
-cards402 accepts any order from **$0.01 to $10,000** per card. Below the
+agentcard accepts any order from **$0.01 to $10,000** per card. Below the
 floor the issuer can't represent the balance; above the ceiling is
 Pathward's per-card maximum. Need more in aggregate? Issue multiple
 cards — blast-radius containment is why the API works the way it does.
@@ -154,7 +154,7 @@ no ATM access, no recurring payments.
 
 ## Error handling
 
-Cards402 returns errors as JSON bodies with a stable `error` field. The
+AgentCard returns errors as JSON bodies with a stable `error` field. The
 relevant ones for agent logic:
 
 - `invalid_amount` (400) — `amount_usdc` must be a decimal string between
@@ -175,35 +175,35 @@ wallet with a `refund_stellar_txid`.
 
 ## When to ask the human
 
-Cards402 is designed to run without a human, but you should escalate if:
+AgentCard is designed to run without a human, but you should escalate if:
 
 - You are about to spend more than your per-card budget on a single order.
 - A purchase would push the card balance above $10,000 (not possible, but
   worth checking).
-- You repeatedly get `service_temporarily_unavailable` — this means Cards402
+- You repeatedly get `service_temporarily_unavailable` — this means AgentCard
   or the upstream issuer has a problem and the operator should know.
 - You receive any error that isn't in the list above and you can't parse it.
 
 ## Where to read more
 
-- Pricing and limits: <https://cards402.com/pricing>
-- Full HTTP API reference: <https://cards402.com/docs>
-- Quickstart guide: <https://cards402.com/docs/quickstart>
-- Security posture: <https://cards402.com/security>
-- Cardholder agreement (issuer terms): <https://cards402.com/legal/cardholder-agreement>
+- Pricing and limits: <https://agentcard.com/pricing>
+- Full HTTP API reference: <https://agentcard.com/docs>
+- Quickstart guide: <https://agentcard.com/docs/quickstart>
+- Security posture: <https://agentcard.com/security>
+- Cardholder agreement (issuer terms): <https://agentcard.com/legal/cardholder-agreement>
 
 ## A note on trust
 
-Cards402 does not store API keys in plaintext — they are hashed (bcrypt)
+AgentCard does not store API keys in plaintext — they are hashed (bcrypt)
 before they touch the database. The raw key is never returned to the
 dashboard or logged; it is delivered to the agent exactly once during
 claim-code redemption over TLS, then the sealed payload is wiped.
 Treat your key like a wallet private key. Similarly, the Stellar wallet
 you bind during onboarding lives in an encrypted OWS vault on the machine
-running the SDK. Cards402 never sees or touches the secret.
+running the SDK. AgentCard never sees or touches the secret.
 
 If you ever need to revoke an agent's access, open
-<https://cards402.com/dashboard>, go to the **Agents** tab, and click
+<https://agentcard.com/dashboard>, go to the **Agents** tab, and click
 **Revoke** next to the agent. The backend invalidates the key immediately.
 Once revoked you would need a fresh claim code from the operator to come
 back online.

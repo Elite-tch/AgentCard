@@ -5,15 +5,15 @@ import { ogForPage, twitterForPage } from '@/app/lib/seo';
 export const metadata: Metadata = {
   title: 'Careers',
   description:
-    'Join Cards402. Remote-first, flexible hours, published salaries. Building payment infrastructure for the autonomous agent economy.',
-  alternates: { canonical: 'https://cards402.com/careers' },
+    'Join AgentCard. Remote-first, flexible hours, published salaries. Building payment infrastructure for the autonomous agent economy.',
+  alternates: { canonical: 'https://agentcard.com/careers' },
   openGraph: ogForPage({
-    title: 'Careers — Cards402',
+    title: 'Careers — AgentCard',
     description: 'Remote-first. Published salaries. Building payment rails for AI agents.',
     path: '/careers',
   }),
   twitter: twitterForPage({
-    title: 'Careers — Cards402',
+    title: 'Careers — AgentCard',
     description: 'Remote-first. Published salaries. Building payment rails for AI agents.',
   }),
 };
@@ -101,7 +101,7 @@ const JOBS = [
     title: 'Integration engineer · agents',
     location: 'Remote · Americas or Europe',
     band: '£70,000 – £100,000 + equity',
-    body: "Build reference agents on top of Cards402. Ship example MCPs. Run office hours. Write the docs we haven't written yet. You are our feedback loop with the autonomous agent ecosystem.",
+    body: "Build reference agents on top of AgentCard. Ship example MCPs. Run office hours. Write the docs we haven't written yet. You are our feedback loop with the autonomous agent ecosystem.",
   },
   {
     team: 'Security',
@@ -115,7 +115,7 @@ const JOBS = [
 const REASONS = [
   {
     title: 'Get in at the ground level.',
-    body: 'Cards402 is small, fast, and agile. You will directly impact the direction of the product and grow with the company from day one.',
+    body: 'AgentCard is small, fast, and agile. You will directly impact the direction of the product and grow with the company from day one.',
   },
   {
     title: 'Make something real.',
@@ -154,9 +154,9 @@ function buildJobJsonLd(job: (typeof JOBS)[number]) {
     employmentType: 'FULL_TIME',
     hiringOrganization: {
       '@type': 'Organization',
-      name: 'Cards402',
-      sameAs: 'https://cards402.com',
-      logo: 'https://cards402.com/icon.png',
+      name: 'AgentCard',
+      sameAs: 'https://agentcard.com',
+      logo: 'https://agentcard.com/icon.png',
     },
     jobLocationType: 'TELECOMMUTE',
     applicantLocationRequirements: {
@@ -166,7 +166,7 @@ function buildJobJsonLd(job: (typeof JOBS)[number]) {
     directApply: false,
     applicationContact: {
       '@type': 'ContactPoint',
-      email: 'careers@cards402.com',
+      email: 'careers@agentcard.com',
     },
   };
 }
@@ -184,7 +184,7 @@ export default function CareersPage() {
         eyebrow="Careers"
         title="Come build payment rails for AI"
         accent="agents"
-        intro="Cards402 is small, remote-first, and focused. We publish every salary, we hire from everywhere, and we don’t believe anyone should choose between doing great work and taking care of themselves. Below is what we offer and what we’re currently hiring for."
+        intro="AgentCard is small, remote-first, and focused. We publish every salary, we hire from everywhere, and we don’t believe anyone should choose between doing great work and taking care of themselves. Below is what we offer and what we’re currently hiring for."
       />
 
       {/* Benefits grid */}
@@ -251,7 +251,7 @@ export default function CareersPage() {
       {/* Why */}
       <PageSection
         background="surface"
-        eyebrow="Why Cards402"
+        eyebrow="Why AgentCard"
         title="Six reasons to take the call."
       >
         <div
@@ -379,7 +379,7 @@ export default function CareersPage() {
                 }}
               >
                 <a
-                  href={`mailto:careers@cards402.com?subject=Application: ${encodeURIComponent(j.title)}`}
+                  href={`mailto:careers@agentcard.com?subject=Application: ${encodeURIComponent(j.title)}`}
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
@@ -440,7 +440,7 @@ export default function CareersPage() {
             built that we should see.
           </p>
           <a
-            href="mailto:careers@cards402.com?subject=Speculative application"
+            href="mailto:careers@agentcard.com?subject=Speculative application"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -454,7 +454,7 @@ export default function CareersPage() {
               fontWeight: 600,
             }}
           >
-            careers@cards402.com →
+            careers@agentcard.com →
           </a>
         </div>
       </section>

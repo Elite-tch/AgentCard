@@ -2,24 +2,24 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ogForPage, twitterForPage } from '@/app/lib/seo';
 
-const POST_URL = 'https://cards402.com/blog/non-custodial-card-issuance-on-soroban';
+const POST_URL = 'https://agentcard.com/blog/non-custodial-card-issuance-on-soroban';
 const POST_DATE = '2026-04-14';
 
 export const metadata: Metadata = {
   title: 'How we built non-custodial card issuance on Soroban',
   description:
-    'Why Cards402 agents pay the receiver contract directly on Stellar, and how the backend watches on-chain events instead of touching customer funds.',
+    'Why AgentCard agents pay the receiver contract directly on Stellar, and how the backend watches on-chain events instead of touching customer funds.',
   alternates: { canonical: POST_URL },
   openGraph: ogForPage({
-    title: 'How we built non-custodial card issuance on Soroban — Cards402',
+    title: 'How we built non-custodial card issuance on Soroban — AgentCard',
     description:
-      'Agents pay a Soroban receiver contract directly. Cards402 observes on-chain events and brokers fulfilment — funds never pass through our wallets.',
+      'Agents pay a Soroban receiver contract directly. AgentCard observes on-chain events and brokers fulfilment — funds never pass through our wallets.',
     path: '/blog/non-custodial-card-issuance-on-soroban',
   }),
   twitter: twitterForPage({
     title: 'How we built non-custodial card issuance on Soroban',
     description:
-      'Agents pay the receiver contract directly. Cards402 watches on-chain events and brokers fulfilment.',
+      'Agents pay the receiver contract directly. AgentCard watches on-chain events and brokers fulfilment.',
   }),
 };
 
@@ -30,16 +30,16 @@ const blogJsonLd = {
   mainEntityOfPage: POST_URL,
   headline: 'How we built non-custodial card issuance on Soroban',
   description:
-    'Why Cards402 agents pay the receiver contract directly on Stellar, and how the backend watches on-chain events instead of touching customer funds.',
+    'Why AgentCard agents pay the receiver contract directly on Stellar, and how the backend watches on-chain events instead of touching customer funds.',
   datePublished: POST_DATE,
   dateModified: POST_DATE,
-  author: { '@type': 'Organization', name: 'Cards402', url: 'https://cards402.com' },
+  author: { '@type': 'Organization', name: 'AgentCard', url: 'https://agentcard.com' },
   publisher: {
     '@type': 'Organization',
-    name: 'Cards402',
-    logo: { '@type': 'ImageObject', url: 'https://cards402.com/icon.png' },
+    name: 'AgentCard',
+    logo: { '@type': 'ImageObject', url: 'https://agentcard.com/icon.png' },
   },
-  image: 'https://cards402.com/opengraph-image',
+  image: 'https://agentcard.com/opengraph-image',
   keywords: 'stellar, soroban, non-custodial, architecture, receiver contract, watcher',
 };
 
@@ -51,7 +51,7 @@ const breadcrumbJsonLd = {
       '@type': 'ListItem',
       position: 1,
       name: 'Blog',
-      item: 'https://cards402.com/blog',
+      item: 'https://agentcard.com/blog',
     },
     {
       '@type': 'ListItem',
@@ -131,14 +131,14 @@ export default function BlogPost() {
             <span>·</span>
             <span>10 min read</span>
             <span>·</span>
-            <span>by Cards402 engineering</span>
+            <span>by AgentCard engineering</span>
           </div>
         </header>
 
         <div className="post-body">
           <p className="lede">
-            The first version of Cards402 was custodial. An agent would send USDC to a
-            Cards402-controlled Stellar wallet, the backend would watch the ledger for deposits,
+            The first version of AgentCard was custodial. An agent would send USDC to a
+            AgentCard-controlled Stellar wallet, the backend would watch the ledger for deposits,
             match them to an open order, and fulfil the card. Simple, well-understood, and wrong for
             the use case. This post is the walk-through of how and why we moved to a Soroban
             receiver contract the agents pay directly — with no intermediate custody at any point in
@@ -188,13 +188,13 @@ export default function BlogPost() {
             </li>
             <li>
               Events carry structured topics. We can tag every deposit with the{' '}
-              <code>order_id</code> so the backend knows exactly which Cards402 order the deposit
+              <code>order_id</code> so the backend knows exactly which AgentCard order the deposit
               belongs to — no heuristics, no memo field parsing, no timing windows to reconcile.
             </li>
           </ul>
 
           <h2>The receiver contract</h2>
-          <p>The Cards402 receiver contract has two entry points:</p>
+          <p>The AgentCard receiver contract has two entry points:</p>
 
           <ul>
             <li>
@@ -252,7 +252,7 @@ export default function BlogPost() {
               Parses the order id out of <code>topic[1]</code>.
             </li>
             <li>
-              Looks up the matching Cards402 order row. If the order doesn&apos;t exist, we push the
+              Looks up the matching AgentCard order row. If the order doesn&apos;t exist, we push the
               event to an <code>unmatched_payments</code> queue for manual review — that queue has
               been used exactly once in production, and it was a test payment.
             </li>
@@ -290,7 +290,7 @@ export default function BlogPost() {
             <strong>refunds are separate outbound Stellar payments, not reversed deposits</strong>.
             When an order fails, the backend moves it to <code>refund_pending</code>, looks up the
             agent&apos;s sender address from the original event, and submits a new Stellar payment
-            from the Cards402 treasury wallet back to the agent. The refund transaction hash lands
+            from the AgentCard treasury wallet back to the agent. The refund transaction hash lands
             on the order row as <code>refund.stellar_txid</code>, which any integrator can verify
             on-chain.
           </p>
@@ -302,7 +302,7 @@ export default function BlogPost() {
             hold, and customers can verify live that we aren&apos;t over-committed. The balance is
             on-chain and public. We&apos;re considering a proof-of-reserves dashboard but
             haven&apos;t shipped it yet; for now, check{' '}
-            <Link href="/status">status.cards402.com</Link> and the security page for the treasury
+            <Link href="/status">status.agentcard.com</Link> and the security page for the treasury
             public key.
           </p>
 
@@ -317,7 +317,7 @@ export default function BlogPost() {
             <li>
               <strong>Ledger-verifiable history.</strong> Every agent interaction is a Stellar
               transaction. Any integrator can reconcile their own order history against the public
-              ledger without trusting Cards402 data at all.
+              ledger without trusting AgentCard data at all.
             </li>
             <li>
               <strong>Graceful degradation.</strong> If the backend goes down mid-flight, the
@@ -326,7 +326,7 @@ export default function BlogPost() {
               would be slow.
             </li>
             <li>
-              <strong>Blast radius containment.</strong> A compromise of the Cards402 backend
+              <strong>Blast radius containment.</strong> A compromise of the AgentCard backend
               can&apos;t drain agent wallets. The worst case is the treasury balance being spent
               against the wrong refund recipients — which is loud, on-chain, and bounded.
             </li>
@@ -369,16 +369,16 @@ export default function BlogPost() {
             >
               developers.stellar.org
             </a>{' '}
-            cover the event model we rely on. The Cards402-side details are in{' '}
+            cover the event model we rely on. The AgentCard-side details are in{' '}
             <Link href="/docs">the API reference</Link> (specifically the &ldquo;Create order&rdquo;
             and &ldquo;Stream order&rdquo; sections), and the companion blog post{' '}
-            <Link href="/blog/anatomy-of-a-cards402-order">Anatomy of a Cards402 order</Link> walks
+            <Link href="/blog/anatomy-of-a-agentcard-order">Anatomy of a AgentCard order</Link> walks
             through the full 33-second timeline in the other direction — from the agent&apos;s first
             API call through to the card landing.
           </p>
 
           <p>
-            Questions on this? Email <a href="mailto:api@cards402.com">api@cards402.com</a>. We read
+            Questions on this? Email <a href="mailto:api@agentcard.com">api@agentcard.com</a>. We read
             every one.
           </p>
         </div>

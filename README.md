@@ -4,7 +4,7 @@ On-demand virtual Visa card issuance for AI agents. Pay with USDC or XLM on the 
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Stellar](https://img.shields.io/badge/Network-Stellar-black.svg)](https://stellar.org)
-[![NPM Version](https://img.shields.io/npm/v/cards402.svg)](https://www.npmjs.com/package/cards402)
+[![NPM Version](https://img.shields.io/npm/v/agentcard.svg)](https://www.npmjs.com/package/agentcard)
 
 ---
 
@@ -46,14 +46,14 @@ sequenceDiagram
 AgentCard/
 ├── backend/        Node.js/Express API, Soroban watcher, SQLite, policy engine
 ├── contract/       Soroban smart contract (Rust)
-├── sdk/            TypeScript client + CLI + MCP server (npm: cards402)
+├── sdk/            TypeScript client + CLI + MCP server (npm: agentcard)
 ├── web/            Next.js marketing site, docs, operator dashboard
 ├── docs/           Published API guide (skill.md, llms.txt)
 ├── examples/       Integration examples
 └── scripts/        Deploy and ops tooling
 ```
 
-> **Note:** For backward compatibility, the underlying protocol and SDK still use the `cards402` namespace (referencing the HTTP 402 "Payment Required" status code).
+> **Note:** For backward compatibility, the underlying protocol and SDK still use the `agentcard` namespace (referencing the HTTP 402 "Payment Required" status code).
 
 ---
 
@@ -83,12 +83,12 @@ A secure Rust contract deployed on Stellar. It receives USDC or XLM and emits a 
 
 1. **Install the SDK**:
    ```bash
-   npm install cards402
+   npm install agentcard
    ```
 
 2. **Purchase a Card**:
    ```typescript
-   import { purchaseCardOWS } from 'cards402';
+   import { purchaseCardOWS } from 'agentcard';
 
    const card = await purchaseCardOWS({
      apiKey: process.env.AGENT_CARD_API_KEY!,

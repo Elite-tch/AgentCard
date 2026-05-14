@@ -1,12 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { CopyCodeBlock } from '@/app/components/CopyCodeBlock';
+import { APP_URL } from '@/lib/config';
 
 export const metadata: Metadata = {
   title: 'API reference',
   description:
-    'Full API reference for Cards402: create orders, stream status, verify webhooks, and handle errors.',
-  alternates: { canonical: 'https://cards402.com/docs' },
+    'Full API reference for AgentCard: create orders, stream status, verify webhooks, and handle errors.',
+  alternates: { canonical: `${APP_URL}/docs` },
 };
 
 // TechArticle JSON-LD — Google uses this type as a soft hint for
@@ -18,22 +19,22 @@ export const metadata: Metadata = {
 const techArticleJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'TechArticle',
-  '@id': 'https://cards402.com/docs#article',
-  headline: 'Cards402 HTTP API reference',
+  '@id': `${APP_URL}/docs#article`,
+  headline: 'AgentCard HTTP API reference',
   description:
-    'Full HTTP API for Cards402: create orders, stream order state over SSE, poll as a fallback, verify webhook signatures, and handle every error code.',
+    'Full HTTP API for AgentCard: create orders, stream order state over SSE, poll as a fallback, verify webhook signatures, and handle every error code.',
   datePublished: '2026-04-13',
   dateModified: '2026-04-14',
   proficiencyLevel: 'Expert',
   dependencies: 'Node.js 18+, Stellar wallet, USDC or XLM',
   author: {
     '@type': 'Organization',
-    name: 'Cards402',
-    url: 'https://cards402.com',
+    name: 'AgentCard',
+    url: APP_URL,
   },
-  publisher: { '@id': 'https://cards402.com#organization' },
+  publisher: { '@id': `${APP_URL}#organization` },
   inLanguage: 'en-GB',
-  mainEntityOfPage: 'https://cards402.com/docs',
+  mainEntityOfPage: `${APP_URL}/docs`,
 };
 
 // ── Inline primitives ─────────────────────────────────────────────
@@ -373,7 +374,7 @@ export default function DocsPage() {
               Support
             </div>
             <a
-              href="mailto:api@cards402.com"
+              href="mailto:api@agentcard.com"
               style={{
                 fontSize: '0.8rem',
                 color: 'var(--fg-muted)',
@@ -381,7 +382,7 @@ export default function DocsPage() {
                 fontFamily: 'var(--font-mono)',
               }}
             >
-              api@cards402.com
+              api@agentcard.com
             </a>
           </div>
         </div>
@@ -398,7 +399,7 @@ export default function DocsPage() {
               marginBottom: '1.2rem',
             }}
           >
-            Cards402 · HTTP API
+            AgentCard · HTTP API
           </div>
           <h1
             className="type-display"
@@ -469,7 +470,7 @@ export default function DocsPage() {
             >
               Base URL
             </span>
-            <span style={{ color: 'var(--green)' }}>https://api.cards402.com</span>
+            <span style={{ color: 'var(--green)' }}>{APP_URL.replace('://', '://api.')}</span>
           </div>
         </header>
 
@@ -477,7 +478,7 @@ export default function DocsPage() {
         <Section id="authentication" eyebrow="01 · Authentication" title="One header, one key.">
           <Para>
             Every request must include an <Code>X-Api-Key</Code> header. Keys are prefixed with{' '}
-            <Code>cards402_</Code> and scoped to a spend limit in USDC.
+            <Code>agentcard_</Code> and scoped to a spend limit in USDC.
           </Para>
           <Para>
             Create an agent: sign in at{' '}
@@ -486,11 +487,11 @@ export default function DocsPage() {
             </Link>{' '}
             with any email (you&apos;ll get a 6-digit login code), open the <strong>Agents</strong>{' '}
             tab, and click <strong>Create Agent</strong>. Copy the claim code and give it to the
-            agent to run <Code>cards402 onboard --claim &lt;code&gt;</Code>. The agent exchanges the
+            agent to run <Code>agentcard onboard --claim &lt;code&gt;</Code>. The agent exchanges the
             claim for a real API key — the raw token is never shown in the dashboard, only stored as
             a salted hash.
           </Para>
-          <CodeBlock label="Header">{`X-Api-Key: cards402_a1b2c3d4e5f6...`}</CodeBlock>
+          <CodeBlock label="Header">{`X-Api-Key: agentcard_a1b2c3d4e5f6...`}</CodeBlock>
           <Para>
             If the key is missing, invalid, or disabled, the API returns{' '}
             <Code>401 Unauthorized</Code>. If the key has a spend limit and it is exceeded, the API
@@ -575,7 +576,7 @@ export default function DocsPage() {
 
           <CodeBlock label="Request">
             {`POST /v1/orders
-X-Api-Key: cards402_your_key_here
+X-Api-Key: agentcard_your_key_here
 Idempotency-Key: 550e8400-e29b-41d4-a716-446655440000
 Content-Type: application/json
 
@@ -592,7 +593,7 @@ Content-Type: application/json
   "amount_usdc": "25.00",
   "payment": {
     "type": "soroban_contract",
-    "contract_id": "CAAAA...cards402_receiver_contract...",
+    "contract_id": "CAAAA...agentcard_receiver_contract...",
     "order_id": "a3f7c2d1-4e8b-4f0a-9c2d-1b3e5a7f9c0e",
     "usdc": {
       "amount": "25.0000000",
@@ -634,11 +635,11 @@ Content-Type: application/json
           <SubTitle>Skipping all of this with the CLI</SubTitle>
           <Para>
             Most agents should never talk to the raw API. After{' '}
-            <Code>cards402 onboard --claim &lt;code&gt;</Code>, a single command handles
+            <Code>agentcard onboard --claim &lt;code&gt;</Code>, a single command handles
             create-order → sign Soroban tx → stream → return card:
           </Para>
           <CodeBlock label="Shell">
-            {`npx -y cards402@latest purchase --amount 25
+            {`npx -y agentcard@latest purchase --amount 25
 # optional: --asset xlm|usdc
 # default is "auto" — picks USDC if the wallet has enough, else XLM`}
           </CodeBlock>
@@ -816,13 +817,13 @@ def wait_for_card(api_url: str, order_id: str, key: str):
 
           <CodeBlock label="Minimal client — curl">
             {`curl -N \\
-  -H "X-Api-Key: cards402_..." \\
+  -H "X-Api-Key: agentcard_..." \\
   -H "Accept: text/event-stream" \\
-  https://api.cards402.com/v1/orders/<order_id>/stream`}
+  https://api.agentcard.com/v1/orders/<order_id>/stream`}
           </CodeBlock>
 
           <Para>
-            The Cards402 SDK&apos;s <Code>waitForCard()</Code> already uses this path with polling
+            The AgentCard SDK&apos;s <Code>waitForCard()</Code> already uses this path with polling
             as an automatic fallback, so SDK users get SSE for free. The server emits an SSE comment
             (<Code>: keepalive</Code>) every 15s to prevent intermediate proxies from idle-killing
             the connection.
@@ -900,7 +901,7 @@ def wait_for_card(api_url: str, order_id: str, key: str):
           <Para style={{ color: 'var(--fg-dim)', fontSize: '0.85rem' }}>
             Any <Code>metadata</Code> object you passed at <Code>POST /orders</Code> creation time
             is echoed back in every subsequent <Code>GET /orders/:id</Code> response (and SSE
-            event). Use it as the join key between Cards402 orders and your own internal records.
+            event). Use it as the join key between AgentCard orders and your own internal records.
           </Para>
 
           <SubTitle>List orders (recovery / reconciliation)</SubTitle>
@@ -1071,7 +1072,7 @@ def wait_for_card(api_url: str, order_id: str, key: str):
         {/* ── Webhooks ── */}
         <Section id="webhooks" eyebrow="06 · Webhooks" title="Signed, retried, optional.">
           <Para>
-            If you provide a <Code>webhook_url</Code> when creating an order, Cards402 will POST to
+            If you provide a <Code>webhook_url</Code> when creating an order, AgentCard will POST to
             it when the order reaches <Code>delivered</Code> or <Code>failed</Code> status.
           </Para>
           <Para>Each webhook request includes two headers for verification:</Para>
@@ -1087,11 +1088,11 @@ def wait_for_card(api_url: str, order_id: str, key: str):
             }}
           >
             <li style={{ marginBottom: '0.35rem' }}>
-              <Code>X-Cards402-Signature: sha256=&lt;hmac&gt;</Code> — HMAC-SHA256 over{' '}
+              <Code>X-AgentCard-Signature: sha256=&lt;hmac&gt;</Code> — HMAC-SHA256 over{' '}
               <Code>&lt;timestamp&gt;.&lt;body&gt;</Code>
             </li>
             <li>
-              <Code>X-Cards402-Timestamp: &lt;unix-ms&gt;</Code> — send time in milliseconds
+              <Code>X-AgentCard-Timestamp: &lt;unix-ms&gt;</Code> — send time in milliseconds
             </li>
           </ul>
           <Para>
@@ -1245,14 +1246,14 @@ def verify_webhook(raw_body: bytes, signature: str, timestamp: str, secret: str)
 
           <SubTitle>Handling errors by type (SDK)</SubTitle>
           <Para>
-            The Cards402 SDK converts the <Code>error</Code> string from each response into a typed
-            subclass of <Code>Cards402Error</Code>, so agents can handle each case without
+            The AgentCard SDK converts the <Code>error</Code> string from each response into a typed
+            subclass of <Code>AgentCardError</Code>, so agents can handle each case without
             string-parsing:
           </Para>
 
           <CodeBlock label="TypeScript">
             {`import {
-  Cards402Client,
+  AgentCardClient,
   SpendLimitError,
   RateLimitError,
   ServiceUnavailableError,
@@ -1261,9 +1262,9 @@ def verify_webhook(raw_body: bytes, signature: str, timestamp: str, secret: str)
   OrderFailedError,
   WaitTimeoutError,
   ResumableError,
-} from 'cards402';
+} from 'agentcard';
 
-const client = new Cards402Client({ apiKey });
+const client = new AgentCardClient({ apiKey });
 
 try {
   const card = await client.waitForCard(orderId);
@@ -1279,18 +1280,18 @@ try {
   } else if (err instanceof WaitTimeoutError) {
     // err.orderId — order may still complete; poll again later
   } else if (err instanceof ResumableError) {
-    // err.orderId — resume with cards402 purchase --resume <id>
+    // err.orderId — resume with agentcard purchase --resume <id>
   } else if (err instanceof AuthError) {
     // key is missing or revoked
   } else {
-    // Cards402Error base, or a non-cards402 error — rethrow
+    // AgentCardError base, or a non-agentcard error — rethrow
     throw err;
   }
 }`}
           </CodeBlock>
 
           <Para style={{ color: 'var(--fg-dim)', fontSize: '0.85rem' }}>
-            All typed errors extend <Code>Cards402Error</Code>, which carries <Code>code</Code>,{' '}
+            All typed errors extend <Code>AgentCardError</Code>, which carries <Code>code</Code>,{' '}
             <Code>status</Code>, and <Code>raw</Code> (the original JSON body) for cases the SDK
             doesn&apos;t have a dedicated subclass for. <Code>ResumableError</Code> is the one you
             actually need for production — it wraps every non-terminal failure of{' '}
@@ -1391,10 +1392,10 @@ try {
           >
             Questions?{' '}
             <a
-              href="mailto:api@cards402.com"
+              href="mailto:api@agentcard.com"
               style={{ color: 'var(--green)', textDecoration: 'none' }}
             >
-              api@cards402.com
+              api@agentcard.com
             </a>
           </p>
           <Link href="/skill.md" className="link-arrow" style={{ fontSize: '0.72rem' }}>

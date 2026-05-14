@@ -6,23 +6,23 @@ import { ogForPage, twitterForPage } from '@/app/lib/seo';
 export const metadata: Metadata = {
   title: 'Status',
   description:
-    'Live operational status for the Cards402 HTTP API, fulfilment pipeline, and Stellar watcher. Fetched from api.cards402.com/status on every page load.',
-  alternates: { canonical: 'https://cards402.com/status' },
+    'Live operational status for the AgentCard HTTP API, fulfilment pipeline, and Stellar watcher. Fetched from api.agentcard.com/status on every page load.',
+  alternates: { canonical: 'https://agentcard.com/status' },
   openGraph: ogForPage({
-    title: 'Status — Cards402',
-    description: 'Live operational status for the Cards402 API and pipeline.',
+    title: 'Status — AgentCard',
+    description: 'Live operational status for the AgentCard API and pipeline.',
     path: '/status',
   }),
   twitter: twitterForPage({
-    title: 'Status — Cards402',
-    description: 'Live operational status for the Cards402 API and pipeline.',
+    title: 'Status — AgentCard',
+    description: 'Live operational status for the AgentCard API and pipeline.',
   }),
 };
 
 // Render on every request (no prerender). The status page is live
 // health data by definition — prerendering would freeze stale numbers
 // into the deployed HTML. `force-dynamic` also means the build skips
-// fetching api.cards402.com/status, so backend schema drift can't
+// fetching api.agentcard.com/status, so backend schema drift can't
 // take the web build down.
 export const dynamic = 'force-dynamic';
 
@@ -97,7 +97,7 @@ function isBackendStatus(v: unknown): v is BackendStatus {
 async function fetchBackendStatus(): Promise<BackendStatus | null> {
   const url = process.env.NEXT_PUBLIC_API_BASE_URL
     ? `${process.env.NEXT_PUBLIC_API_BASE_URL.replace(/\/v1\/?$/, '')}/status`
-    : 'https://api.cards402.com/status';
+    : 'https://api.agentcard.com/status';
   try {
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 4000);
@@ -326,7 +326,7 @@ export default async function StatusPage() {
           : 'loading';
 
   const message = !s
-    ? "Couldn't reach api.cards402.com/status. The status endpoint may be down, or your network blocks it. The marketing surface at cards402.com is unaffected."
+    ? "Couldn't reach api.agentcard.com/status. The status endpoint may be down, or your network blocks it. The marketing surface at agentcard.com is unaffected."
     : overall === 'operational'
       ? 'All systems operational.'
       : overall === 'degraded'
@@ -345,7 +345,7 @@ export default async function StatusPage() {
         accent={heroAccent}
         intro={
           <>
-            Real-time health of every Cards402 component. This page fetches{' '}
+            Real-time health of every AgentCard component. This page fetches{' '}
             <code
               style={{
                 fontFamily: 'var(--font-mono)',
@@ -357,7 +357,7 @@ export default async function StatusPage() {
                 border: '1px solid var(--border)',
               }}
             >
-              https://api.cards402.com/status
+              https://api.agentcard.com/status
             </code>{' '}
             at request time (30s edge cache) and derives per-component health from the raw signals.
             Incidents and postmortems land on the{' '}
@@ -545,7 +545,7 @@ export default async function StatusPage() {
               fontFamily: 'var(--font-body)',
             }}
           >
-            The status endpoint at <code>api.cards402.com/status</code> is not responding. Try again
+            The status endpoint at <code>api.agentcard.com/status</code> is not responding. Try again
             in a minute — if the whole marketing site is up but this page stays empty, it almost
             always means the backend API is down rather than the site itself.
           </div>
@@ -596,14 +596,14 @@ export default async function StatusPage() {
             with what happened, what we did, and what we changed to make sure it can&apos;t happen
             again. Subscribe to the RSS feed to get it in your reader, or email{' '}
             <a
-              href="mailto:support@cards402.com"
+              href="mailto:support@agentcard.com"
               style={{
                 color: 'var(--fg)',
                 textDecoration: 'none',
                 borderBottom: '1px solid var(--green-border)',
               }}
             >
-              support@cards402.com
+              support@agentcard.com
             </a>{' '}
             to be added to the incident mailing list.
           </p>

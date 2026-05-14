@@ -1,4 +1,4 @@
-// Dynamic Open Graph image for every Cards402 route. Placed at the
+// Dynamic Open Graph image for every AgentCard route. Placed at the
 // app-root segment so Next.js inherits it down to every page unless a
 // child segment provides its own opengraph-image.
 //
@@ -11,7 +11,7 @@
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
-export const alt = 'Cards402 — Virtual Visa cards for AI agents';
+export const alt = 'AgentCard — Virtual Visa cards for AI agents';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 

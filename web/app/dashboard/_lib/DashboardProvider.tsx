@@ -154,64 +154,16 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     };
   }, [refresh]);
 
-  // SSE: the backend emits a single event per state change. We don't
-  // care about the event body — we just full-refetch. Auto-reconnect
-  // with 2s backoff, plus a 60s safety net in case the stream silently
-  // wedges behind a proxy that can't do text/event-stream.
+  // Periodic refresh as a fallback. Server-side cache freshness is
+  // handled by revalidateTag in Server Actions; this interval ensures
+  // the client picks up changes from other browser tabs or background
+  // worker mutations that don't go through a Server Action.
   useEffect(() => {
     if (!user) return;
-    let closed = false;
-    let abort: AbortController | null = null;
-    let timer: ReturnType<typeof setTimeout> | null = null;
-    const safety = setInterval(() => {
+    const interval = setInterval(() => {
       void refresh();
-    }, 60_000);
-
-    async function openStream() {
-      if (closed) return;
-      abort = new AbortController();
-      try {
-        const res = await fetch(`${API_BASE}/dashboard/stream`, {
-          headers: { Accept: 'text/event-stream' },
-          signal: abort.signal,
-        });
-        if (!res.ok || !res.body) throw new Error(`stream http ${res.status}`);
-        const reader = res.body.getReader();
-        const decoder = new TextDecoder();
-        let buf = '';
-        while (!closed) {
-          const { value, done } = await reader.read();
-          if (done) break;
-          // Normalize CRLF and bare CR to LF before accumulating —
-          // same fix as sdk/src/client.ts SSE parser. A proxy that
-          // rewrites line endings to \r\n would otherwise prevent
-          // '\n\n' from ever matching.
-          buf += decoder
-            .decode(value, { stream: true })
-            .replace(/\r\n/g, '\n')
-            .replace(/\r/g, '\n');
-          let idx: number;
-          while ((idx = buf.indexOf('\n\n')) !== -1) {
-            const event = buf.slice(0, idx);
-            buf = buf.slice(idx + 2);
-            if (event.includes('data:')) void refresh();
-          }
-          // Cap the buffer to prevent unbounded growth on malformed streams.
-          if (buf.length > 1024 * 1024) buf = '';
-        }
-      } catch {
-        /* reconnect */
-      } finally {
-        if (!closed) timer = setTimeout(openStream, 2000);
-      }
-    }
-    void openStream();
-    return () => {
-      closed = true;
-      abort?.abort();
-      if (timer) clearTimeout(timer);
-      clearInterval(safety);
-    };
+    }, 30_000);
+    return () => clearInterval(interval);
   }, [user, refresh]);
 
   // Horizon balances for every agent that has a wallet address. Polls

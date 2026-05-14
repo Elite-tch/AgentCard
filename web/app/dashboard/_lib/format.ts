@@ -3,7 +3,7 @@
 
 // Parse a backend-supplied timestamp into a real UTC ms-since-epoch.
 //
-// The cards402 backend mixes two timestamp formats in its responses:
+// The agentcard backend mixes two timestamp formats in its responses:
 //
 //   1. SQLite defaults via `datetime('now')` →  "2026-04-14 14:30:35"
 //      (space delimiter, no Z, no fractional seconds)

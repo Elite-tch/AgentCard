@@ -4,7 +4,7 @@
 
 export type Theme = 'dark' | 'light' | 'system';
 
-const STORAGE_KEY = 'cards402.theme';
+const STORAGE_KEY = 'agentcard.theme';
 
 export function loadTheme(): Theme {
   if (typeof window === 'undefined') return 'dark';

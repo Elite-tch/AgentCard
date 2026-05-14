@@ -48,7 +48,7 @@ export default function GlobalError({ error }: { error: Error & { digest?: strin
               marginBottom: 20,
             }}
           >
-            Cards402 · HTTP 500 · Fatal
+            AgentCard · HTTP 500 · Fatal
           </div>
           <h1
             style={{
@@ -76,14 +76,14 @@ export default function GlobalError({ error }: { error: Error & { digest?: strin
             The page failed before our regular error handler could recover. This is our fault;
             we&apos;ve logged it. Email{' '}
             <a
-              href="mailto:support@cards402.com"
+              href="mailto:support@agentcard.com"
               style={{
                 color: '#f4f4f4',
                 textDecoration: 'none',
                 borderBottom: '1px solid rgba(255, 122, 122, 0.4)',
               }}
             >
-              support@cards402.com
+              support@agentcard.com
             </a>{' '}
             if it keeps happening
             {error?.digest ? (
@@ -123,7 +123,7 @@ export default function GlobalError({ error }: { error: Error & { digest?: strin
               fontWeight: 600,
             }}
           >
-            Back to cards402.com
+            Back to agentcard.com
           </a>
         </div>
       </body>

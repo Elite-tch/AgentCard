@@ -15,8 +15,8 @@ import { applyTheme, loadTheme, saveTheme, type Theme } from '../_ui/theme';
 import { timeAgo } from '../_lib/format';
 import { fetchPlatformWallet } from '../_lib/api';
 
-const NOTIF_PREF_KEY = 'cards402.notifications';
-const DENSITY_KEY = 'cards402.density';
+const NOTIF_PREF_KEY = 'agentcard.notifications';
+const DENSITY_KEY = 'agentcard.density';
 
 type NotifPrefs = {
   browserOnAuthDead: boolean;
@@ -104,13 +104,13 @@ export default function SettingsPage() {
       theme: loadTheme(),
       density: window.localStorage.getItem(DENSITY_KEY),
       notifications: window.localStorage.getItem(NOTIF_PREF_KEY),
-      agentGroups: window.localStorage.getItem('cards402.agent_groups'),
+      agentGroups: window.localStorage.getItem('agentcard.agent_groups'),
     };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `cards402-settings-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `agentcard-settings-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
     toast.push('Settings exported', 'success');
@@ -120,10 +120,10 @@ export default function SettingsPage() {
     if (!confirm('Remove all local preferences and group assignments? This cannot be undone.')) {
       return;
     }
-    window.localStorage.removeItem('cards402.agent_groups');
+    window.localStorage.removeItem('agentcard.agent_groups');
     window.localStorage.removeItem(NOTIF_PREF_KEY);
     window.localStorage.removeItem(DENSITY_KEY);
-    window.localStorage.removeItem('cards402.theme');
+    window.localStorage.removeItem('agentcard.theme');
     toast.push('Local data cleared', 'success');
     setTimeout(() => window.location.reload(), 400);
   }
@@ -297,7 +297,7 @@ export default function SettingsPage() {
   );
 }
 
-// Platform-owner-only treasury card. Renders the cards402 Stellar treasury
+// Platform-owner-only treasury card. Renders the agentcard Stellar treasury
 // public key + live Horizon balance + a copy button + a stellar.expert link.
 // Replaces the legacy /admin treasury panel that was deleted with the
 // admin client retirement.
@@ -361,7 +361,7 @@ function PlatformTreasuryCard() {
           lineHeight: 1.5,
         }}
       >
-        The Cards402 treasury wallet on Stellar. Top this up with XLM or USDC when fulfillment runs
+        The AgentCard treasury wallet on Stellar. Top this up with XLM or USDC when fulfillment runs
         low — it's what funds CTX payments and refunds. Only visible to the platform owner.
       </div>
       {error && (

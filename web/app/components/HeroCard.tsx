@@ -18,9 +18,9 @@
 //
 // The visual language (layered gradients, chip, sheen, grid texture,
 // noise, orbs) is a faithful port of the standalone prototype at
-// ~/code/cards402animation/index.html with three deltas:
+// ~/code/agentcardanimation/index.html with three deltas:
 //   - Idle drift dialled back from ±8/±6 to ±2.5/±1.8 per pass.
-//   - The brand mark is replaced with a Cards402 wordmark rendered
+//   - The brand mark is replaced with a AgentCard wordmark rendered
 //     via mask-image so it inherits the card's cream ink.
 //   - The bottomline shows 'YOUR AGENT' instead of 'ASH / PRIMARY'.
 

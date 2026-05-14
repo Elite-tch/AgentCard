@@ -6,8 +6,8 @@ import { LegalBody } from '@/app/components/MarketingPage';
 export const metadata: Metadata = {
   title: 'Visa Reward Card cardholder agreement',
   description:
-    'Summary of the Pathward, N.A. Visa Reward Card cardholder agreement that governs every card issued through Cards402.',
-  alternates: { canonical: 'https://cards402.com/legal/cardholder-agreement' },
+    'Summary of the Pathward, N.A. Visa Reward Card cardholder agreement that governs every card issued through AgentCard.',
+  alternates: { canonical: 'https://agentcard.com/legal/cardholder-agreement' },
 };
 
 // BreadcrumbList JSON-LD — Legal → Cardholder agreement.
@@ -19,13 +19,13 @@ const breadcrumbJsonLd = {
       '@type': 'ListItem',
       position: 1,
       name: 'Legal',
-      item: 'https://cards402.com/terms',
+      item: 'https://agentcard.com/terms',
     },
     {
       '@type': 'ListItem',
       position: 2,
       name: 'Cardholder agreement',
-      item: 'https://cards402.com/legal/cardholder-agreement',
+      item: 'https://agentcard.com/legal/cardholder-agreement',
     },
   ],
 };
@@ -43,7 +43,7 @@ export default function CardholderAgreementPage() {
         accent="terms"
         intro={
           <>
-            Every Cards402 card is a Visa® Reward Card issued by{' '}
+            Every AgentCard card is a Visa® Reward Card issued by{' '}
             <strong style={{ color: 'var(--fg)' }}>Pathward, N.A., Member FDIC</strong>, pursuant to
             a license from Visa U.S.A. Inc. This page is a plain-English summary of the agreement
             between you and the issuer. In any conflict, the original Pathward agreement governs.
@@ -103,7 +103,7 @@ export default function CardholderAgreementPage() {
                     charged on purchases in a currency or country other than the card&apos;s.
                   </li>
                   <li>
-                    <strong>Cards402 service fee:</strong> $0.00. Cards402 sells the card at face
+                    <strong>AgentCard service fee:</strong> $0.00. AgentCard sells the card at face
                     value and does not add a markup or service fee on top of the Pathward fees
                     listed above.
                   </li>
@@ -269,8 +269,8 @@ export default function CardholderAgreementPage() {
                   </li>
                 </ul>
                 <p>
-                  For Cards402-specific questions (API issues, order status, failed fulfilment),
-                  contact <a href="mailto:support@cards402.com">support@cards402.com</a> directly —
+                  For AgentCard-specific questions (API issues, order status, failed fulfilment),
+                  contact <a href="mailto:support@agentcard.com">support@agentcard.com</a> directly —
                   we&apos;ll triage anything that needs to escalate to the issuer on your behalf.
                 </p>
               </>
@@ -301,7 +301,7 @@ export default function CardholderAgreementPage() {
                 </p>
                 <p>
                   <Link href="/terms" className="link-subtle">
-                    Cards402 Terms of Service →
+                    AgentCard Terms of Service →
                   </Link>
                 </p>
               </>

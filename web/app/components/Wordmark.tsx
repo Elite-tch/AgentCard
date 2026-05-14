@@ -1,4 +1,4 @@
-// Cards402 wordmark. Rendered as a CSS mask over the current text color
+// AgentCard wordmark. Rendered as a CSS mask over the current text color
 // so it inherits whatever `color` the parent sets — light on dark surfaces,
 // dark on light surfaces, a single accent for emphasis, etc. No inline
 // SVG, no children, no theme branching. Just set `color:` on the parent.
@@ -9,7 +9,7 @@
 // aspect so it doesn't skew during layout.
 //
 // Two variants:
-//   <Wordmark />    — full horizontal lockup (globe + "Cards402")
+//   <Wordmark />    — full horizontal lockup (globe + "AgentCard")
 //   <Wordmark mark /> — just the globemark, useful for tight nav bars
 //
 // Props:

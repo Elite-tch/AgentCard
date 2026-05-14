@@ -1,20 +1,21 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { PageHero, PageSection } from '@/app/components/MarketingPage';
+import { APP_URL } from '@/lib/config';
 import { ogForPage, twitterForPage } from '@/app/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Security',
   description:
-    'How Cards402 secures API keys, payments, and infrastructure. Non-custodial by design, hashed keys, signed webhooks, and a responsible-disclosure policy.',
-  alternates: { canonical: 'https://cards402.com/security' },
+    'How AgentCard secures API keys, payments, and infrastructure. Non-custodial by design, hashed keys, signed webhooks, and a responsible-disclosure policy.',
+  alternates: { canonical: `${APP_URL}/security` },
   openGraph: ogForPage({
-    title: 'Security — Cards402',
+    title: 'Security — AgentCard',
     description: 'Non-custodial by design. Hashed keys. Signed webhooks. Responsible disclosure.',
     path: '/security',
   }),
   twitter: twitterForPage({
-    title: 'Security — Cards402',
+    title: 'Security — AgentCard',
     description: 'Non-custodial by design. Responsible disclosure.',
   }),
 };
@@ -23,7 +24,7 @@ const PILLARS = [
   {
     eyebrow: 'Custody',
     title: 'Non-custodial by architecture.',
-    body: 'Agents pay the Soroban receiver contract directly. Cards402 never holds funds — we observe on-chain events and broker fulfilment. If Cards402 disappeared tomorrow, nothing is trapped in our custody, because nothing is in our custody.',
+    body: 'Agents pay the Soroban receiver contract directly. AgentCard never holds funds — we observe on-chain events and broker fulfilment. If AgentCard disappeared tomorrow, nothing is trapped in our custody, because nothing is in our custody.',
   },
   {
     eyebrow: 'Keys',
@@ -33,12 +34,12 @@ const PILLARS = [
   {
     eyebrow: 'Onboarding',
     title: 'Claim codes instead of raw keys.',
-    body: 'The cards402 dashboard mints single-use claim codes so operators never paste API keys into LLM context. The agent redeems the code for a key on its own machine, over TLS, and the code is invalidated after use. No credential lives in the transcript.',
+    body: 'The agentcard dashboard mints single-use claim codes so operators never paste API keys into LLM context. The agent redeems the code for a key on its own machine, over TLS, and the code is invalidated after use. No credential lives in the transcript.',
   },
   {
     eyebrow: 'Webhooks',
     title: 'HMAC signed, replay protected.',
-    body: 'Outgoing webhooks carry X-Cards402-Signature (HMAC-SHA256 over timestamp + body) and X-Cards402-Timestamp. The documented client reference rejects anything older than five minutes. Webhook secrets rotate automatically on key revocation.',
+    body: 'Outgoing webhooks carry X-AgentCard-Signature (HMAC-SHA256 over timestamp + body) and X-AgentCard-Timestamp. The documented client reference rejects anything older than five minutes. Webhook secrets rotate automatically on key revocation.',
   },
   {
     eyebrow: 'Circuit breaker',
@@ -71,7 +72,7 @@ export default function SecurityPage() {
         eyebrow="Security"
         title="Secure by architecture, not by"
         accent="trust"
-        intro="Cards402 is a small team running financial infrastructure. Everything below is a design choice, not a marketing bullet — we picked these specifically so a single compromise of any one component never exposes customer funds or credentials."
+        intro="AgentCard is a small team running financial infrastructure. Everything below is a design choice, not a marketing bullet — we picked these specifically so a single compromise of any one component never exposes customer funds or credentials."
       />
 
       {/* Pillars */}
@@ -176,16 +177,16 @@ export default function SecurityPage() {
       <PageSection eyebrow="Disclosure" title="Found something? Tell us. We'll pay.">
         <div style={{ maxWidth: 720 }}>
           <p className="type-body" style={{ fontSize: '0.98rem', marginBottom: '1.5rem' }}>
-            Cards402 operates a responsible-disclosure programme. If you find a vulnerability, email{' '}
+            AgentCard operates a responsible-disclosure programme. If you find a vulnerability, email{' '}
             <a
-              href="mailto:security@cards402.com"
+              href={`mailto:security@${APP_URL.replace('https://', '').replace('http://', '')}`}
               style={{
                 color: 'var(--fg)',
                 borderBottom: '1px solid var(--green-border)',
                 textDecoration: 'none',
               }}
             >
-              security@cards402.com
+              security@{APP_URL.replace('https://', '').replace('http://', '')}
             </a>{' '}
             with reproduction steps. We acknowledge within 24 hours, triage within 72, and publish a
             postmortem to{' '}

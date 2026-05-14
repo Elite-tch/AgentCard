@@ -1,12 +1,12 @@
 /* TEAM */
 
-Cards402 is built by a small distributed team focused on payment
+AgentCard is built by a small distributed team focused on payment
 infrastructure for autonomous agents. We publish every salary and we write
-everything down. Come work with us: https://cards402.com/careers
+everything down. Come work with us: https://agentcard.com/careers
 
-Contact: hello@cards402.com
-Press:   press@cards402.com
-Security: security@cards402.com
+Contact: hello@agentcard.com
+Press:   press@agentcard.com
+Security: security@agentcard.com
 Location: Remote-first · London HQ
 
 /* THANKS */

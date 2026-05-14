@@ -9,7 +9,7 @@
 
 import { useEffect, useSyncExternalStore } from 'react';
 
-const STORAGE_KEY = 'cards402.agent_groups';
+const STORAGE_KEY = 'agentcard.agent_groups';
 
 type Groups = Record<string, string>;
 

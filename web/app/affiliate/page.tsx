@@ -5,15 +5,15 @@ import { ogForPage, twitterForPage } from '@/app/lib/seo';
 export const metadata: Metadata = {
   title: 'Affiliate program',
   description:
-    'Earn on every Cards402 card issued through your referral. Lifetime tracking, monthly Stellar payouts, white-label dashboard. Coming soon.',
-  alternates: { canonical: 'https://cards402.com/affiliate' },
+    'Earn on every AgentCard card issued through your referral. Lifetime tracking, monthly Stellar payouts, white-label dashboard. Coming soon.',
+  alternates: { canonical: 'https://agentcard.com/affiliate' },
   openGraph: ogForPage({
-    title: 'Affiliate program — Cards402',
+    title: 'Affiliate program — AgentCard',
     description: 'Recurring revenue for referring agent operators. Coming soon.',
     path: '/affiliate',
   }),
   twitter: twitterForPage({
-    title: 'Affiliate program — Cards402',
+    title: 'Affiliate program — AgentCard',
     description: 'Recurring revenue for referring agent operators.',
   }),
 };
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 const PERKS = [
   {
     title: '20% of card revenue, forever',
-    body: 'Earn 20% of the revenue Cards402 makes on every card issued by operators you referred, for the full lifetime of their account. Paid monthly in USDC or XLM, on-chain, auditable. No expiring cookies, no 30-day attribution window, no capped earnings.',
+    body: 'Earn 20% of the revenue AgentCard makes on every card issued by operators you referred, for the full lifetime of their account. Paid monthly in USDC or XLM, on-chain, auditable. No expiring cookies, no 30-day attribution window, no capped earnings.',
   },
   {
     title: 'Monthly Stellar payouts',
@@ -29,7 +29,7 @@ const PERKS = [
   },
   {
     title: 'White-label dashboard',
-    body: 'Host your own sub-brand of the Cards402 onboarding experience with your logo, your colours, and a custom claim-code flow. Your referrals never see our domain.',
+    body: 'Host your own sub-brand of the AgentCard onboarding experience with your logo, your colours, and a custom claim-code flow. Your referrals never see our domain.',
   },
   {
     title: 'Live referral analytics',
@@ -53,7 +53,7 @@ export default function AffiliatePage() {
         eyebrow="Affiliate · Coming soon"
         title="Earn when your agents"
         accent="earn"
-        intro="We're building a first-class referral program for the platforms and people who bring operators to Cards402. Generous, transparent, lifetime-tracked, paid in stablecoin. Here's what's coming and how to get early access."
+        intro="We're building a first-class referral program for the platforms and people who bring operators to AgentCard. Generous, transparent, lifetime-tracked, paid in stablecoin. Here's what's coming and how to get early access."
       >
         {/* Status pill */}
         <div
@@ -224,20 +224,20 @@ export default function AffiliatePage() {
             >
               Email{' '}
               <a
-                href="mailto:affiliate@cards402.com?subject=Affiliate waitlist"
+                href="mailto:affiliate@agentcard.com?subject=Affiliate waitlist"
                 style={{
                   color: 'var(--fg)',
                   borderBottom: '1px solid var(--green-border)',
                   textDecoration: 'none',
                 }}
               >
-                affiliate@cards402.com
+                affiliate@agentcard.com
               </a>{' '}
               with a link to your platform or audience. We&apos;ll reply within a week with next
               steps and your provisional slot.
             </p>
             <a
-              href="mailto:affiliate@cards402.com?subject=Affiliate waitlist"
+              href="mailto:affiliate@agentcard.com?subject=Affiliate waitlist"
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',

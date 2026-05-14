@@ -1,4 +1,4 @@
-// Merchants — card grid of the gift-card products cards402 has
+// Merchants — card grid of the gift-card products agentcard has
 // onboarded. Phase 3 exposes exactly the merchants the backend enables;
 // browsing the full upstream catalog is deferred until more merchants
 // go live.
@@ -37,7 +37,7 @@ export default function MerchantsPage() {
     <PageContainer>
       <PageHeader
         title="Merchants"
-        subtitle="Gift card products Cards402 has onboarded. More are coming — contact support if you need a specific one enabled."
+        subtitle="Gift card products AgentCard has onboarded. More are coming — contact support if you need a specific one enabled."
       />
 
       {error ? (

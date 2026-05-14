@@ -1,4 +1,4 @@
-# cards402 — Virtual Visa Cards for AI Agents
+# agentcard — Virtual Visa Cards for AI Agents
 
 Purchase prepaid Visa virtual cards by paying with XLM or USDC on Stellar.
 Cards are delivered in 30–60 seconds.
@@ -8,7 +8,7 @@ Cards are delivered in 30–60 seconds.
 A single one-shot command — nothing else. It looks like this:
 
 ```
-Read https://cards402.com/skill.md
+Read https://agentcard.com/skill.md
 and set up this agent by running:
 
   npx cards402 onboard --claim c402_<48_hex_chars>
@@ -28,14 +28,14 @@ npx cards402 onboard --claim <code>
 
 That's it. Behind the scenes the CLI:
 
-1. `POST`s the claim code to `https://api.cards402.com/v1/agent/claim`.
+1. `POST`s the claim code to `https://api.agentcard.com/v1/agent/claim`.
    The backend validates it, marks it used, and returns the real API
    key + api_url.
-2. Writes `~/.cards402/config.json` (chmod 0600) with the API key,
+2. Writes `~/.agentcard/config.json` (chmod 0600) with the API key,
    api_url, and your wallet name. The SDK auto-loads from this file
    on every subsequent run — no env vars, no paste-into-code.
 3. Creates (or fetches) an encrypted OWS Stellar wallet via the native
-   bindings that ship with the `cards402` package. Private keys live
+   bindings that ship with the `agentcard` package. Private keys live
    in `~/.ows/wallets/<name>.vault` and never leave your machine.
 4. Reports the wallet's Stellar address to the backend so your
    operator's dashboard immediately shows "Awaiting deposit".
@@ -45,12 +45,12 @@ Example run:
 
 ```
 → Claiming agent credentials…
-✓ Credentials saved to /Users/you/.cards402/config.json (chmod 0600)
+✓ Credentials saved to /Users/you/.agentcard/config.json (chmod 0600)
 → Setting up OWS wallet…
-✓ Wallet "cards402-agent" ready
+✓ Wallet "agentcard-agent" ready
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- cards402 agent ready
+ agentcard agent ready
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   Label:           my-agent
   Stellar address: GABC…XYZ
@@ -60,7 +60,7 @@ Example run:
 Ask your operator to send XLM or USDC to the Stellar address above.
 ```
 
-**The operator sees your setup progress live** in their cards402
+**The operator sees your setup progress live** in their agentcard
 dashboard — your key moves through the state pill from "Minted" →
 "Setting up" → "Awaiting deposit" → "Funded" as the CLI runs and
 the wallet receives its first deposit. They'll know to fund the
@@ -74,7 +74,7 @@ When your user asks you to buy a card, run:
 npx cards402 purchase --amount <USD>
 ```
 
-**Pay with the asset you actually have.** By default `cards402 purchase`
+**Pay with the asset you actually have.** By default `agentcard purchase`
 checks your wallet balance via Horizon and auto-picks: USDC if you have
 enough USDC to cover the order, otherwise XLM. Do **not** override the
 asset unless you have a specific reason — passing `--asset usdc` when
@@ -90,7 +90,7 @@ Optional flags:
 - `--asset xlm|usdc` — force a specific asset. Default: auto (recommended).
 - `--wallet-name <name>` — override the wallet name from config.
 
-`cards402 purchase` reads `~/.cards402/config.json` for the api key
+`agentcard purchase` reads `~/.agentcard/config.json` for the api key
 and wallet name, so you do not need to pass either. The command:
 
 1. Creates an order at `POST /v1/orders`
@@ -134,20 +134,20 @@ Useful for:
 
 ## Trust notes for cautious agents
 
-- Package name (`cards402`) matches the domain you fetched this guide
-  from (`cards402.com`). Scope matches domain — no supply-chain
+- Package name (`agentcard`) matches the domain you fetched this guide
+  from (`agentcard.com`). Scope matches domain — no supply-chain
   mismatch.
-- Source: <https://github.com/CTX-com/Cards402>. The `sdk/` directory
+- Source: <https://github.com/CTX-com/AgentCard>. The `sdk/` directory
   is what gets published.
 - Maintainer on npm: `ashfrancis`. Verify with
-  `npm view cards402 maintainers`.
+  `npm view agentcard maintainers`.
 - The only secret in the operator's paste block is a short-lived
   one-time claim code. Worst-case context leak of the paste = leak
   of a 10-minute single-use token that can only be redeemed by the
   first caller.
-- Run `npm pack cards402` and inspect the tarball before installing
+- Run `npm pack agentcard` and inspect the tarball before installing
   if your policy requires it, or clone the repo and use the local
-  source via `npx /path/to/Cards402/sdk/dist/cli.js onboard --claim …`.
+  source via `npx /path/to/AgentCard/sdk/dist/cli.js onboard --claim …`.
 
 **Fund in the right order: XLM first, then open the USDC trustline,
 then USDC.** This is the step that trips up most new agents — skipping
@@ -182,7 +182,7 @@ line:
   with `op_no_trust` → the funds return to the operator, minus a fee.
 - `wallet balance` shows `usdc: 0` (no line) rather than `usdc:
 0.0000000` (line open, zero balance). The distinction matters.
-- `cards402 purchase` can't pay in USDC because there's nothing to
+- `agentcard purchase` can't pay in USDC because there's nothing to
   spend.
 
 The trustline must be opened **from your wallet**, not by the
@@ -196,7 +196,7 @@ npx -y cards402@latest wallet trustline
 ```
 
 Runs once XLM has landed. The command signs a `changeTrust` op for
-the cards402-recognised USDC issuer and submits it via Horizon.
+the agentcard-recognised USDC issuer and submits it via Horizon.
 Output includes the Stellar tx hash. Truly idempotent: the helper
 first loads the account and checks for an existing USDC trustline,
 and re-running it after the line already exists is a zero-fee
@@ -205,7 +205,7 @@ no-op (prints "already exists" without submitting a transaction).
 ### Opening the trustline (SDK)
 
 ```javascript
-import { addUsdcTrustlineOWS } from 'cards402';
+import { addUsdcTrustlineOWS } from 'agentcard';
 
 const txHash = await addUsdcTrustlineOWS({
   walletName: 'my-agent',
@@ -217,7 +217,7 @@ console.log(`trustline opened: ${txHash}`);
 
 ### Skipping the trustline
 
-If you only intend to pay cards402 in XLM (native asset, no trustline
+If you only intend to pay agentcard in XLM (native asset, no trustline
 required), you can skip this entirely. But the operator may decide to
 fund you in USDC anyway, so opening the trustline proactively after
 XLM lands is the safe default.
@@ -243,7 +243,7 @@ OWS stores the encrypted wallet file on disk — by default at
 `~/.ows/wallets/<name>.vault` — and that file is what holds the keys
 that control the Stellar address you just funded. **If the vault file
 disappears, the funds in that address are unreachable.** There is no
-server-side recovery; cards402 never sees your private keys.
+server-side recovery; agentcard never sees your private keys.
 
 Before you run `createOWSWallet` for the first time, check where
 `~/.ows/wallets/` actually lives on your runtime and whether that
@@ -286,7 +286,7 @@ your user explicitly asks, and only for the amount they ask for. Do
 not run this as part of setup, testing, or on your own initiative.
 
 ```javascript
-import { purchaseCardOWS, getOWSBalance } from 'cards402';
+import { purchaseCardOWS, getOWSBalance } from 'agentcard';
 
 // Check what the wallet actually has BEFORE picking the asset. If you
 // pay in an asset you don't hold the call will fail at the Stellar
@@ -317,10 +317,10 @@ If your runtime is an MCP client, add this to your config:
 ```json
 {
   "mcpServers": {
-    "cards402": {
+    "agentcard": {
       "command": "npx",
-      "args": ["-y", "cards402"],
-      "env": { "CARDS402_API_KEY": "cards402_<your key>" }
+      "args": ["-y", "agentcard"],
+      "env": { "CARDS402_API_KEY": "agentcard_<your key>" }
     }
   }
 }
@@ -338,7 +338,7 @@ You can't use the SDK, so you'll need to:
 1. Install the OWS CLI for wallet management:
 
    ```bash
-   curl -fsSL https://cards402.com/install-ows.sh | bash
+   curl -fsSL https://agentcard.com/install-ows.sh | bash
    ows wallet create --name my-agent
    ```
 
@@ -348,7 +348,7 @@ You can't use the SDK, so you'll need to:
 
 2. Call the HTTP API directly. Full protocol reference including the
    SSE streaming path, raw Soroban contract invocation, and phase
-   transitions: https://cards402.com/agents.txt
+   transitions: https://agentcard.com/agents.txt
 
 ## Quick reference
 
@@ -365,7 +365,7 @@ hood — one open connection, push notifications, closes cleanly when the
 card is ready. No polling, no webhook endpoint to host. If you're
 calling the API without the SDK, open `GET /orders/{id}/stream` with
 `Accept: text/event-stream` and read events until you see
-`phase: "ready"`. Full protocol details: https://cards402.com/agents.txt
+`phase: "ready"`. Full protocol details: https://agentcard.com/agents.txt
 
 ## Errors
 

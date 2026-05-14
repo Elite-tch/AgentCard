@@ -21,7 +21,7 @@ export default function Error({
     // OpenTelemetry, self-hosted) when we stand one up — just swap
     // this implementation without touching every call site.
     // eslint-disable-next-line no-console
-    console.error('[cards402] unhandled route error', error);
+    console.error('[agentcard] unhandled route error', error);
   }, [error]);
 
   return (
@@ -81,14 +81,14 @@ export default function Error({
           This is our fault, not yours. The error has been logged and we&apos;ll look at it. In the
           meantime you can retry the page, head home, or email{' '}
           <a
-            href="mailto:support@cards402.com"
+            href="mailto:support@agentcard.com"
             style={{
               color: 'var(--fg)',
               textDecoration: 'none',
               borderBottom: '1px solid var(--red-border)',
             }}
           >
-            support@cards402.com
+            support@agentcard.com
           </a>
           {error?.digest && (
             <>

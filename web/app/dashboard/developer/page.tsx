@@ -104,8 +104,8 @@ export default function DeveloperPage() {
           </div>
           <div style={{ fontSize: '0.7rem', color: 'var(--fg-dim)', lineHeight: 1.5 }}>
             We'll POST a sample <code>delivered</code> payload with fake card data. If you pass a
-            secret, we'll sign it with <code>X-Cards402-Signature: sha256=hex(HMAC(ts.body))</code>{' '}
-            and <code>X-Cards402-Timestamp</code>.
+            secret, we'll sign it with <code>X-AgentCard-Signature: sha256=hex(HMAC(ts.body))</code>{' '}
+            and <code>X-AgentCard-Timestamp</code>.
           </div>
           <Button
             variant="primary"
@@ -189,10 +189,10 @@ export default function DeveloperPage() {
               lineHeight: 1.55,
             }}
           >
-            The <code>cards402</code> npm package ships a CLI for onboarding and a TypeScript SDK
+            The <code>agentcard</code> npm package ships a CLI for onboarding and a TypeScript SDK
             for purchases. See{' '}
             <a
-              href="https://cards402.com/docs"
+              href="https://agentcard.com/docs"
               target="_blank"
               rel="noreferrer"
               style={{ color: 'var(--green)', textDecoration: 'none' }}
@@ -201,14 +201,14 @@ export default function DeveloperPage() {
             </a>{' '}
             for the full reference.
           </div>
-          <Snippet title="Install" code={`npm install cards402@latest`} />
+          <Snippet title="Install" code={`npm install agentcard@latest`} />
           <Snippet
             title="Onboard an agent"
             code={`npx -y cards402@latest onboard --claim <claim-code>`}
           />
           <Snippet
             title="Purchase a card"
-            code={`import { purchaseCardOWS } from 'cards402';
+            code={`import { purchaseCardOWS } from 'agentcard';
 
 const card = await purchaseCardOWS({
   apiKey: process.env.CARDS402_API_KEY!,
@@ -222,8 +222,8 @@ const card = await purchaseCardOWS({
             code={`import crypto from 'node:crypto';
 
 function verify(req, secret) {
-  const ts = req.headers['x-cards402-timestamp'];
-  const sig = req.headers['x-cards402-signature']?.replace('sha256=', '');
+  const ts = req.headers['x-agentcard-timestamp'];
+  const sig = req.headers['x-agentcard-signature']?.replace('sha256=', '');
   const expected = crypto
     .createHmac('sha256', secret)
     .update(\`\${ts}.\${req.rawBody}\`)

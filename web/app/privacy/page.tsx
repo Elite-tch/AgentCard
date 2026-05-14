@@ -1,12 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { PageHero, LegalBody } from '@/app/components/MarketingPage';
+import { APP_URL } from '@/lib/config';
 
 export const metadata: Metadata = {
   title: 'Privacy policy',
   description:
-    "What Cards402 collects, what it doesn't, who processes it, and how long we keep it. Written in plain English.",
-  alternates: { canonical: 'https://cards402.com/privacy' },
+    "What AgentCard collects, what it doesn't, who processes it, and how long we keep it. Written in plain English.",
+  alternates: { canonical: `${APP_URL}/privacy` },
 };
 
 export default function PrivacyPage() {
@@ -16,13 +17,13 @@ export default function PrivacyPage() {
         eyebrow="Legal · Privacy"
         title="We collect the minimum, and we tell you"
         accent="what"
-        intro="Cards402 is a transaction-processing company. The data we hold is the data we need to reconcile a payment against a card order, plus the bare minimum to sign you in. Nothing else."
+        intro="AgentCard is a transaction-processing company. The data we hold is the data we need to reconcile a payment against a card order, plus the bare minimum to sign you in. Nothing else."
       />
 
       <LegalBody
         intro={
           <>
-            <strong>Last updated 14 April 2026.</strong> Cards402 is operated by CTX.com Inc. We
+            <strong>Last updated 14 April 2026.</strong> AgentCard is operated by CTX.com Inc. We
             review this page every time we add a new data processor or change retention policy, and
             we publish changes here before they take effect.
           </>
@@ -99,7 +100,7 @@ export default function PrivacyPage() {
                     tests on real users, or share usage patterns with anyone.
                   </li>
                   <li>
-                    <strong>No cardholder PII.</strong> Cards are issued by Pathward. Cards402
+                    <strong>No cardholder PII.</strong> Cards are issued by Pathward. AgentCard
                     receives the PAN / CVV / expiry at issuance time, streams them to your agent
                     over the order response, and discards them from memory. They are not written to
                     disk on our infrastructure.
@@ -121,7 +122,7 @@ export default function PrivacyPage() {
                   <li>
                     <strong>Stellar Development Foundation infrastructure</strong> — the Stellar
                     mainnet itself, where on-chain payment records live permanently and publicly.
-                    Cards402 does not control this data and cannot delete it.
+                    AgentCard does not control this data and cannot delete it.
                   </li>
                   <li>
                     <strong>Resend</strong> — transactional email delivery (login codes, order
@@ -129,7 +130,7 @@ export default function PrivacyPage() {
                   </li>
                   <li>
                     <strong>Hetzner Cloud</strong> — primary infrastructure provider (EU data
-                    centre). Cards402 operates on dedicated cloud instances under our own control.
+                    centre). AgentCard operates on dedicated cloud instances under our own control.
                   </li>
                 </ul>
                 <p>
@@ -181,7 +182,7 @@ export default function PrivacyPage() {
                   <li>Object to processing or request restriction</li>
                 </ul>
                 <p>
-                  Email <a href="mailto:privacy@cards402.com">privacy@cards402.com</a> with any of
+                  Email <a href={`mailto:privacy@${APP_URL.replace('https://', '').replace('http://', '')}`}>privacy@{APP_URL.replace('https://', '').replace('http://', '')}</a> with any of
                   these requests. We respond within 30 days, usually within 48 hours.
                 </p>
               </>
@@ -212,7 +213,7 @@ export default function PrivacyPage() {
                 </p>
                 <p>
                   Questions about this policy:{' '}
-                  <a href="mailto:privacy@cards402.com">privacy@cards402.com</a>
+                  <a href={`mailto:privacy@${APP_URL.replace('https://', '').replace('http://', '')}`}>privacy@{APP_URL.replace('https://', '').replace('http://', '')}</a>
                 </p>
               </>
             ),

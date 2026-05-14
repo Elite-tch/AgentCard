@@ -1,4 +1,4 @@
-// Server-only helpers for the cards402 admin dashboard session.
+// Server-only helpers for the agentcard admin dashboard session.
 //
 // The admin UI never holds a backend Bearer token in JavaScript. Instead, on
 // successful OTP verification the Next.js route handler wraps the token in an
@@ -15,7 +15,7 @@
 
 import crypto from 'crypto';
 
-export const ADMIN_SESSION_COOKIE = 'cards402_admin_session';
+export const ADMIN_SESSION_COOKIE = 'agentcard_admin_session';
 export const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 export interface SessionPayload {
@@ -85,7 +85,7 @@ export function verifySession(cookieValue: string | undefined | null): SessionPa
 }
 
 /**
- * Resolve the upstream cards402 backend URL from env. Prefers
+ * Resolve the upstream agentcard backend URL from env. Prefers
  * `CARDS402_BACKEND_URL` (server-only) and falls back to
  * `NEXT_PUBLIC_API_BASE_URL` so existing deployments keep working without a
  * new env var. Throws on missing in production.

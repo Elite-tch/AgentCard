@@ -5,8 +5,8 @@ import { PageHero, LegalBody } from '@/app/components/MarketingPage';
 export const metadata: Metadata = {
   title: 'Terms of service',
   description:
-    'The terms under which Cards402 provides the agent card-issuance API. Plain English, no dark patterns.',
-  alternates: { canonical: 'https://cards402.com/terms' },
+    'The terms under which AgentCard provides the agent card-issuance API. Plain English, no dark patterns.',
+  alternates: { canonical: 'https://agentcard.com/terms' },
 };
 
 export default function TermsPage() {
@@ -16,25 +16,25 @@ export default function TermsPage() {
         eyebrow="Legal · Terms of service"
         title="The deal, in plain"
         accent="English"
-        intro="Cards402 is a developer tool. These terms describe what we provide, what we expect from you in return, and how the relationship can end. They are boring, deliberately."
+        intro="AgentCard is a developer tool. These terms describe what we provide, what we expect from you in return, and how the relationship can end. They are boring, deliberately."
       />
 
       <LegalBody
         intro={
           <>
-            <strong>Last updated 14 April 2026.</strong> By using Cards402 you agree to these terms.
+            <strong>Last updated 14 April 2026.</strong> By using AgentCard you agree to these terms.
             If anything here is unclear, email{' '}
-            <a href="mailto:legal@cards402.com">legal@cards402.com</a> and we&apos;ll clarify — both
+            <a href="mailto:legal@agentcard.com">legal@agentcard.com</a> and we&apos;ll clarify — both
             in email and on this page.
           </>
         }
         sections={[
           {
-            heading: '1. What Cards402 provides',
+            heading: '1. What AgentCard provides',
             body: (
               <>
                 <p>
-                  Cards402 provides an HTTP + SDK interface that lets you create a Visa prepaid
+                  AgentCard provides an HTTP + SDK interface that lets you create a Visa prepaid
                   reward card order, settle it on the Stellar network in USDC or XLM, and receive
                   the card details programmatically. The cards themselves are issued by{' '}
                   <strong>Pathward, N.A.</strong> (the &ldquo;Issuer&rdquo;) and are governed by the{' '}
@@ -45,7 +45,7 @@ export default function TermsPage() {
                   (limits, fees, disputes, chargebacks).
                 </p>
                 <p>
-                  Cards402 is <strong>not</strong> a bank, not a money services business, and not a
+                  AgentCard is <strong>not</strong> a bank, not a money services business, and not a
                   payment processor in the regulatory sense. We are a software interface on top of
                   an existing, regulated card issuance programme.
                 </p>
@@ -58,11 +58,11 @@ export default function TermsPage() {
               <>
                 <p>
                   You must not be located in a country subject to OFAC, UK, or EU comprehensive
-                  sanctions. You must not use Cards402 to issue cards to any sanctioned person or
+                  sanctions. You must not use AgentCard to issue cards to any sanctioned person or
                   entity.
                 </p>
                 <p>
-                  If you&apos;re using Cards402 on behalf of a company, you warrant that you have
+                  If you&apos;re using AgentCard on behalf of a company, you warrant that you have
                   the authority to bind that company to these terms.
                 </p>
               </>
@@ -72,7 +72,7 @@ export default function TermsPage() {
             heading: '3. Acceptable use',
             body: (
               <>
-                <p>You agree not to use Cards402 to:</p>
+                <p>You agree not to use AgentCard to:</p>
                 <ul>
                   <li>Finance illegal activity under any applicable jurisdiction;</li>
                   <li>Launder funds, evade sanctions, or circumvent know-your-customer rules;</li>
@@ -109,7 +109,7 @@ export default function TermsPage() {
                 <p>
                   We strongly recommend using claim codes (single-use onboarding tokens) instead of
                   pasting raw API keys into agent context, especially when working with LLM-backed
-                  agents. Cards402 provides the claim-code flow specifically for this reason.
+                  agents. AgentCard provides the claim-code flow specifically for this reason.
                 </p>
               </>
             ),
@@ -119,7 +119,7 @@ export default function TermsPage() {
             body: (
               <>
                 <p>
-                  Cards402 sells cards at face value — you pay exactly the stated USD amount in USDC
+                  AgentCard sells cards at face value — you pay exactly the stated USD amount in USDC
                   or the quoted XLM equivalent. No service fee, no markup, no hidden spread. See the{' '}
                   <Link href="/pricing">Pricing</Link> page for details.
                 </p>
@@ -131,7 +131,7 @@ export default function TermsPage() {
                 </p>
                 <p>
                   Once a card is issued, the funds are loaded on the card and are not refundable by
-                  Cards402. The card can still be spent, and the cardholder (you or your agent) owns
+                  AgentCard. The card can still be spent, and the cardholder (you or your agent) owns
                   the balance subject to the issuer&apos;s terms.
                 </p>
                 <p>
@@ -148,14 +148,14 @@ export default function TermsPage() {
             body: (
               <>
                 <p>
-                  Cards402 aims for 99.9% monthly uptime on the HTTP API. We publish status and
+                  AgentCard aims for 99.9% monthly uptime on the HTTP API. We publish status and
                   incident postmortems at{' '}
-                  <a href="https://status.cards402.com">status.cards402.com</a>. Scheduled
+                  <a href="https://status.agentcard.com">status.agentcard.com</a>. Scheduled
                   maintenance windows are announced at least 48 hours in advance on the same page.
                 </p>
                 <p>
                   The Issuer&apos;s upstream systems are outside our direct control. If Pathward
-                  experiences an outage, Cards402 order fulfilment may stall until upstream
+                  experiences an outage, AgentCard order fulfilment may stall until upstream
                   recovers. We will not charge you for orders that cannot complete due to upstream
                   outage — the payment is refunded automatically.
                 </p>
@@ -168,12 +168,12 @@ export default function TermsPage() {
               <>
                 <p>
                   The service is provided &ldquo;as is&rdquo; and &ldquo;as available&rdquo;. To the
-                  maximum extent permitted by law, Cards402 disclaims all warranties, express or
+                  maximum extent permitted by law, AgentCard disclaims all warranties, express or
                   implied, including merchantability, fitness for a particular purpose, and
                   non-infringement.
                 </p>
                 <p>
-                  Cards402 is not responsible for the behaviour of any agent or program you build on
+                  AgentCard is not responsible for the behaviour of any agent or program you build on
                   top of the service. If your agent spends $500 on cat food because you told it to
                   buy cat food and your supplier only stocks tuna, that is not our problem.
                 </p>
@@ -185,9 +185,9 @@ export default function TermsPage() {
             body: (
               <>
                 <p>
-                  To the maximum extent permitted by law, Cards402&apos;s total liability for any
+                  To the maximum extent permitted by law, AgentCard&apos;s total liability for any
                   claim arising out of or relating to the service is limited to the fees paid by you
-                  to Cards402 in the twelve months preceding the claim.
+                  to AgentCard in the twelve months preceding the claim.
                 </p>
                 <p>
                   We are not liable for indirect, incidental, consequential, special, or punitive
@@ -253,7 +253,7 @@ export default function TermsPage() {
             body: (
               <>
                 <p>
-                  Legal questions: <a href="mailto:legal@cards402.com">legal@cards402.com</a>.
+                  Legal questions: <a href="mailto:legal@agentcard.com">legal@agentcard.com</a>.
                 </p>
               </>
             ),

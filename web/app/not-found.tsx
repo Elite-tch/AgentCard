@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Not found',
-  description: 'The page you are looking for does not exist on Cards402.',
+  description: 'The page you are looking for does not exist on AgentCard.',
   robots: { index: false, follow: false },
 };
 
@@ -86,17 +86,17 @@ export default function NotFound() {
             margin: '0 auto 3rem',
           }}
         >
-          The URL you hit doesn&apos;t resolve to a Cards402 page. If you landed here from a link on
+          The URL you hit doesn&apos;t resolve to a AgentCard page. If you landed here from a link on
           our site, please email{' '}
           <a
-            href="mailto:support@cards402.com"
+            href="mailto:support@agentcard.com"
             style={{
               color: 'var(--fg)',
               textDecoration: 'none',
               borderBottom: '1px solid var(--green-border)',
             }}
           >
-            support@cards402.com
+            support@agentcard.com
           </a>{' '}
           so we can fix it.
         </p>

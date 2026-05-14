@@ -5,8 +5,8 @@ import { CopyCodeBlock } from '@/app/components/CopyCodeBlock';
 export const metadata: Metadata = {
   title: 'Quickstart',
   description:
-    'Issue your first Cards402 card in five minutes. Install the SDK, claim a key, pay a Soroban contract, stream the card.',
-  alternates: { canonical: 'https://cards402.com/docs/quickstart' },
+    'Issue your first AgentCard card in five minutes. Install the SDK, claim a key, pay a Soroban contract, stream the card.',
+  alternates: { canonical: 'https://agentcard.com/docs/quickstart' },
 };
 
 // BreadcrumbList JSON-LD — tells Google this page sits Docs → Quickstart
@@ -19,13 +19,13 @@ const breadcrumbJsonLd = {
       '@type': 'ListItem',
       position: 1,
       name: 'Docs',
-      item: 'https://cards402.com/docs',
+      item: 'https://agentcard.com/docs',
     },
     {
       '@type': 'ListItem',
       position: 2,
       name: 'Quickstart',
-      item: 'https://cards402.com/docs/quickstart',
+      item: 'https://agentcard.com/docs/quickstart',
     },
   ],
 };
@@ -37,12 +37,12 @@ const breadcrumbJsonLd = {
 const howToJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'HowTo',
-  name: 'Issue your first Cards402 card in five minutes',
+  name: 'Issue your first AgentCard card in five minutes',
   description:
-    'Install the Cards402 SDK, claim an API key, fund a Stellar wallet, purchase a card, and wire it into an agent runtime.',
+    'Install the AgentCard SDK, claim an API key, fund a Stellar wallet, purchase a card, and wire it into an agent runtime.',
   totalTime: 'PT5M',
   supply: [
-    { '@type': 'HowToSupply', name: 'A Cards402 claim code from an operator' },
+    { '@type': 'HowToSupply', name: 'A AgentCard claim code from an operator' },
     { '@type': 'HowToSupply', name: 'Stellar wallet with USDC or XLM' },
   ],
   tool: [
@@ -54,36 +54,36 @@ const howToJsonLd = {
       '@type': 'HowToStep',
       position: 1,
       name: 'Install the SDK',
-      text: 'Run npm install cards402 — the single package ships the TypeScript SDK, the CLI, and the MCP server.',
-      url: 'https://cards402.com/docs/quickstart#install-the-sdk',
+      text: 'Run npm install agentcard — the single package ships the TypeScript SDK, the CLI, and the MCP server.',
+      url: 'https://agentcard.com/docs/quickstart#install-the-sdk',
     },
     {
       '@type': 'HowToStep',
       position: 2,
       name: 'Claim your first API key',
-      text: 'Exchange a single-use claim code for an API key via npx -y cards402@latest onboard --claim c402_<code>. Always pin @latest on npx so you re-resolve against the registry and never run a stale cached version of the CLI.',
-      url: 'https://cards402.com/docs/quickstart#claim-your-first-api-key',
+      text: 'Exchange a single-use claim code for an API key via npx -y agentcard@latest onboard --claim c402_<code>. Always pin @latest on npx so you re-resolve against the registry and never run a stale cached version of the CLI.',
+      url: 'https://agentcard.com/docs/quickstart#claim-your-first-api-key',
     },
     {
       '@type': 'HowToStep',
       position: 3,
       name: 'Fund a wallet',
-      text: 'Create a Stellar wallet via createOWSWallet() and fund it with at least 2 XLM (1 XLM minimum balance + 0.5 XLM USDC trustline reserve + headroom). Open the USDC trustline via `cards402 wallet trustline` before the operator sends USDC — USDC is an issued asset on Stellar and payments to a wallet without a trustline bounce back to the sender.',
-      url: 'https://cards402.com/docs/quickstart#fund-a-wallet',
+      text: 'Create a Stellar wallet via createOWSWallet() and fund it with at least 2 XLM (1 XLM minimum balance + 0.5 XLM USDC trustline reserve + headroom). Open the USDC trustline via `agentcard wallet trustline` before the operator sends USDC — USDC is an issued asset on Stellar and payments to a wallet without a trustline bounce back to the sender.',
+      url: 'https://agentcard.com/docs/quickstart#fund-a-wallet',
     },
     {
       '@type': 'HowToStep',
       position: 4,
       name: 'Purchase your first card',
       text: 'Call purchaseCardOWS() with the API key, wallet name, and USD amount. The SDK creates the order, signs the Soroban payment, and resolves with the card PAN, CVV, and expiry.',
-      url: 'https://cards402.com/docs/quickstart#purchase-your-first-card',
+      url: 'https://agentcard.com/docs/quickstart#purchase-your-first-card',
     },
     {
       '@type': 'HowToStep',
       position: 5,
       name: 'Wire it into your agent',
-      text: 'Add the Cards402 MCP server to your claude_desktop_config.json or other MCP host so the purchase_vcc tool is available to the LLM.',
-      url: 'https://cards402.com/docs/quickstart#wire-it-into-your-agent',
+      text: 'Add the AgentCard MCP server to your claude_desktop_config.json or other MCP host so the purchase_vcc tool is available to the LLM.',
+      url: 'https://agentcard.com/docs/quickstart#wire-it-into-your-agent',
     },
   ],
 };
@@ -118,20 +118,20 @@ const STEPS = [
     body: (
       <>
         <p>
-          Cards402 ships as a single npm package with an included CLI. One install gets you the
+          AgentCard ships as a single npm package with an included CLI. One install gets you the
           TypeScript SDK, the CLI, and the MCP server.
         </p>
-        <CodeBlock label="Shell">{`npm install cards402@latest
-# or: pnpm add cards402@latest / bun add cards402@latest`}</CodeBlock>
+        <CodeBlock label="Shell">{`npm install agentcard@latest
+# or: pnpm add agentcard@latest / bun add agentcard@latest`}</CodeBlock>
         <p>
           The package exports <Code>purchaseCardOWS</Code>, <Code>createOrder</Code>,{' '}
-          <Code>waitForCard</Code>, and a <Code>Cards402</Code> client class for lower-level usage.
+          <Code>waitForCard</Code>, and a <Code>AgentCard</Code> client class for lower-level usage.
         </p>
         <p>
           If you&apos;re running the CLI through <Code>npx</Code> (the recommended path for
           ephemeral agent invocations), always pin <Code>@latest</Code>:
         </p>
-        <CodeBlock label="Shell">{`npx -y cards402@latest --help`}</CodeBlock>
+        <CodeBlock label="Shell">{`npx -y agentcard@latest --help`}</CodeBlock>
         <p>
           Without <Code>@latest</Code>, <Code>npx</Code> caches the first version it resolves and
           serves that indefinitely. SDK fixes affecting on-chain payment paths ship as patch
@@ -152,7 +152,7 @@ const STEPS = [
           6-digit login code by return) and open the <strong>Agents</strong> tab. Click{' '}
           <strong>Create Agent</strong>, copy the claim code, and give it to the agent to run:
         </p>
-        <CodeBlock label="Shell">{`npx -y cards402@latest onboard --claim c402_abc123...`}</CodeBlock>
+        <CodeBlock label="Shell">{`npx -y agentcard@latest onboard --claim c402_abc123...`}</CodeBlock>
         <p>
           Claim codes are single-use. The agent exchanges one for a real API key on first run and
           invalidates the claim in the same round trip. Credentials never appear in the LLM
@@ -172,7 +172,7 @@ const STEPS = [
           for the USDC trustline subentry, and ~0.5 XLM headroom for fees. The SDK creates the
           wallet for you, stored encrypted in an OWS vault:
         </p>
-        <CodeBlock label="TypeScript">{`import { createOWSWallet, getOWSBalance } from 'cards402';
+        <CodeBlock label="TypeScript">{`import { createOWSWallet, getOWSBalance } from 'agentcard';
 
 // Creates or loads a vault entry for 'my-agent'. Idempotent.
 const { walletId, publicKey } = createOWSWallet('my-agent');
@@ -189,9 +189,9 @@ const { xlm, usdc } = await getOWSBalance('my-agent');`}</CodeBlock>
           to disappear and everyone wastes a round trip.
         </p>
         <p>Run this once, after XLM has landed:</p>
-        <CodeBlock label="CLI">{`npx -y cards402@latest wallet trustline`}</CodeBlock>
+        <CodeBlock label="CLI">{`npx -y agentcard@latest wallet trustline`}</CodeBlock>
         <p>Or from TypeScript:</p>
-        <CodeBlock label="TypeScript">{`import { addUsdcTrustlineOWS } from 'cards402';
+        <CodeBlock label="TypeScript">{`import { addUsdcTrustlineOWS } from 'agentcard';
 
 const txHash = await addUsdcTrustlineOWS({
   walletName: 'my-agent',
@@ -204,7 +204,7 @@ console.log('trustline opened:', txHash);`}</CodeBlock>
           skip this entirely — XLM is native and needs no trustline.
         </p>
         <p>
-          Cards402 never sees or touches the secret key — it lives in an encrypted OWS vault on the
+          AgentCard never sees or touches the secret key — it lives in an encrypted OWS vault on the
           machine running the SDK, protected by an optional passphrase. The same vault is what the
           MCP server uses, so Claude Desktop and your TypeScript code share one wallet identity.
         </p>
@@ -220,7 +220,7 @@ console.log('trustline opened:', txHash);`}</CodeBlock>
           One SDK call creates the order, signs the Soroban payment, streams the fulfilment phases,
           and resolves with the card:
         </p>
-        <CodeBlock label="TypeScript">{`import { purchaseCardOWS } from 'cards402';
+        <CodeBlock label="TypeScript">{`import { purchaseCardOWS } from 'agentcard';
 
 const card = await purchaseCardOWS({
   apiKey: process.env.CARDS402_API_KEY!,
@@ -250,16 +250,16 @@ console.log(card);
     body: (
       <>
         <p>
-          Cards402 ships an MCP server so Claude Desktop and any other MCP-aware runtime can call it
+          AgentCard ships an MCP server so Claude Desktop and any other MCP-aware runtime can call it
           as a tool. Add it to your MCP config:
         </p>
         <CodeBlock label="claude_desktop_config.json">{`{
   "mcpServers": {
-    "cards402": {
+    "agentcard": {
       "command": "npx",
-      "args": ["cards402", "mcp"],
+      "args": ["agentcard", "mcp"],
       "env": {
-        "CARDS402_API_KEY": "cards402_..."
+        "CARDS402_API_KEY": "agentcard_..."
       }
     }
   }
@@ -322,7 +322,7 @@ export default function QuickstartPage() {
           margin: '0 0 3.25rem',
         }}
       >
-        This walk-through covers a full Cards402 integration from scratch: install the SDK, claim a
+        This walk-through covers a full AgentCard integration from scratch: install the SDK, claim a
         key, fund a wallet, issue a card, and wire it into an agent runtime. Copy-pasteable at every
         step.
       </p>

@@ -4,8 +4,8 @@
 
 import { CHANGELOG_ENTRIES as ENTRIES } from '../entries';
 
-const SITE = 'https://cards402.com';
-const SITE_NAME = 'Cards402';
+const SITE = 'https://agentcard.com';
+const SITE_NAME = 'AgentCard';
 
 function escapeXml(s: string): string {
   return s
@@ -48,10 +48,10 @@ export async function GET() {
     <title>${SITE_NAME} changelog</title>
     <link>${SITE}/changelog</link>
     <atom:link href="${SITE}/changelog/feed.xml" rel="self" type="application/rss+xml" />
-    <description>Everything shipped to Cards402. API changes, dashboard polish, security fixes, and upstream-issuer updates — chronologically.</description>
+    <description>Everything shipped to AgentCard. API changes, dashboard polish, security fixes, and upstream-issuer updates — chronologically.</description>
     <language>en-GB</language>
     <lastBuildDate>${lastBuild}</lastBuildDate>
-    <generator>Cards402 changelog route</generator>
+    <generator>AgentCard changelog route</generator>
     ${items}
   </channel>
 </rss>`;

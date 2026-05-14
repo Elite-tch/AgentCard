@@ -1,14 +1,14 @@
-# cards402 — Agent Guide
+# agentcard — Agent Guide
 
-cards402 issues prepaid Visa virtual cards on demand. AI agents pay USDC or XLM on Stellar via a smart contract and get back a card number, CVV, and expiry — ready to use for online purchases.
+agentcard issues prepaid Visa virtual cards on demand. AI agents pay USDC or XLM on Stellar via a smart contract and get back a card number, CVV, and expiry — ready to use for online purchases.
 
 ## Quick orientation
 
-- **API base**: `https://api.cards402.com/v1`
-- **Auth**: `X-Api-Key: cards402_...` header on every request
+- **API base**: `https://api.agentcard.com/v1`
+- **Auth**: `X-Api-Key: agentcard_...` header on every request
 - **Payment**: Stellar network — USDC or XLM via Soroban contract call
 - **Typical latency**: 45–120 seconds from payment confirmation to card delivery
-- **SDK**: `npm install cards402` — includes MCP server and `purchaseCardOWS()` all-in-one
+- **SDK**: `npm install agentcard` — includes MCP server and `purchaseCardOWS()` all-in-one
 
 ## Core flow
 
@@ -26,7 +26,7 @@ Use card.number, card.cvv, card.expiry
 
 ```http
 POST /v1/orders
-X-Api-Key: cards402_...
+X-Api-Key: agentcard_...
 Content-Type: application/json
 Idempotency-Key: <uuid>     ← always send this; safe to retry on network error
 
@@ -50,7 +50,7 @@ backend; older drafts of this doc said otherwise (see audit F14).
   "status": "pending_payment",
   "payment": {
     "type": "soroban_contract",
-    "contract_id": "C...",                      ← Cards402 receiver contract ID
+    "contract_id": "C...",                      ← AgentCard receiver contract ID
     "order_id": "uuid",                         ← pass this to the contract call
     "usdc": {
       "amount": "25.00",                        ← USDC amount (decimal string)
@@ -76,7 +76,7 @@ SDK helpers pick the right function based on `paymentAsset`.
 Use the SDK's `purchaseCardOWS()` which does everything in one call:
 
 ```typescript
-import { purchaseCardOWS } from 'cards402';
+import { purchaseCardOWS } from 'agentcard';
 
 const card = await purchaseCardOWS({
   apiKey: process.env.CARDS402_API_KEY!,
@@ -91,9 +91,9 @@ Or step by step with `payViaContractOWS()` — pass the `payment` object from
 the `POST /v1/orders` response directly:
 
 ```typescript
-import { Cards402Client, payViaContractOWS } from 'cards402';
+import { AgentCardClient, payViaContractOWS } from 'agentcard';
 
-const client = new Cards402Client({ apiKey: process.env.CARDS402_API_KEY! });
+const client = new AgentCardClient({ apiKey: process.env.CARDS402_API_KEY! });
 const order = await client.createOrder({ amount_usdc: '25.00' });
 
 const txHash = await payViaContractOWS({
@@ -117,7 +117,7 @@ If you're using a raw Stellar secret instead of an OWS wallet, replace
 
 ```http
 GET /v1/orders/:id
-X-Api-Key: cards402_...
+X-Api-Key: agentcard_...
 ```
 
 **Response when ready:**
@@ -169,7 +169,7 @@ The internal status has more granularity for debugging.
 
 ## Webhook events
 
-Optionally provide `webhook_url` in `POST /v1/orders`. cards402 will POST to that URL on delivery or failure.
+Optionally provide `webhook_url` in `POST /v1/orders`. agentcard will POST to that URL on delivery or failure.
 
 **Delivery event:**
 
@@ -191,11 +191,11 @@ Optionally provide `webhook_url` in `POST /v1/orders`. cards402 will POST to tha
 }
 ```
 
-Webhooks include `X-Cards402-Signature: sha256=<hmac>` and `X-Cards402-Timestamp: <unix-ms>` headers. The signature covers `<timestamp>.<body>` — verify the HMAC and reject if the timestamp is >5 minutes old.
+Webhooks include `X-AgentCard-Signature: sha256=<hmac>` and `X-AgentCard-Timestamp: <unix-ms>` headers. The signature covers `<timestamp>.<body>` — verify the HMAC and reject if the timestamp is >5 minutes old.
 
 **Delivery guarantees.** Webhook delivery is best-effort but retried. Each
 event is attempted immediately; on any non-2xx response or network error,
-cards402 queues a retry on an exponential backoff (~30s, ~5m, ~30m) for up to
+agentcard queues a retry on an exponential backoff (~30s, ~5m, ~30m) for up to
 four total deliveries (one initial + three retries, about 35 minutes end-to-end). After the final failure,
 the event is marked abandoned and not retried. **Your handler must be
 idempotent** — the same event may arrive more than once, and the signature
@@ -205,7 +205,7 @@ plus `order_id` + terminal `status` let you dedupe safely.
 
 ```http
 GET /v1/usage
-X-Api-Key: cards402_...
+X-Api-Key: agentcard_...
 ```
 
 ```json
@@ -248,17 +248,17 @@ Always send `Idempotency-Key: <uuid>` on `POST /v1/orders`. If the request fails
 
 ## Wallet setup
 
-Cards402 agents use OWS (Open Wallet Standard) — keys are stored encrypted in a local vault file, never as plaintext env vars.
+AgentCard agents use OWS (Open Wallet Standard) — keys are stored encrypted in a local vault file, never as plaintext env vars.
 
 1. **Set env vars**:
    ```
    OWS_WALLET_NAME=my-agent       # wallet identifier
    OWS_WALLET_PASSPHRASE=secret   # encryption passphrase (recommended)
-   CARDS402_API_KEY=cards402_...  # your API key from cards402.com
+   CARDS402_API_KEY=agentcard_...  # your API key from agentcard.com
    ```
 2. **Create the wallet** — run `setup_wallet` via MCP, or:
    ```typescript
-   import { createOWSWallet } from 'cards402';
+   import { createOWSWallet } from 'agentcard';
    const { publicKey } = createOWSWallet('my-agent', process.env.OWS_WALLET_PASSPHRASE);
    ```
 3. **Send at least 2 XLM** to the public key — activates the Stellar account and covers network reserves.
@@ -274,11 +274,11 @@ For Claude Desktop, Cursor, or any MCP host:
 ```json
 {
   "mcpServers": {
-    "cards402": {
+    "agentcard": {
       "command": "npx",
-      "args": ["cards402"],
+      "args": ["agentcard"],
       "env": {
-        "CARDS402_API_KEY": "cards402_...",
+        "CARDS402_API_KEY": "agentcard_...",
         "OWS_WALLET_NAME": "my-agent",
         "OWS_WALLET_PASSPHRASE": "...",
         "OWS_VAULT_PATH": "/path/to/vault"
@@ -288,7 +288,7 @@ For Claude Desktop, Cursor, or any MCP host:
 }
 ```
 
-The `cards402` bin defaults to the `mcp` subcommand when no other
+The `agentcard` bin defaults to the `mcp` subcommand when no other
 subcommand is passed, so `npx cards402` with no args boots the MCP
 server. `npx cards402 mcp` is equivalent and more explicit.
 

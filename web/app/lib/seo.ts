@@ -6,8 +6,8 @@
 
 import type { Metadata } from 'next';
 
-export const SITE_URL = 'https://cards402.com';
-export const SITE_NAME = 'Cards402';
+export const SITE_URL = 'https://agentcard.com';
+export const SITE_NAME = 'AgentCard';
 
 // Canonical OG image URL. The image itself is generated dynamically
 // by app/opengraph-image.tsx (Next.js file convention) and served at
@@ -25,7 +25,7 @@ export const SHARED_OG: Metadata['openGraph'] = {
       url: OG_IMAGE_URL,
       width: 1200,
       height: 630,
-      alt: 'Cards402 — Virtual Visa cards for AI agents',
+      alt: 'AgentCard — Virtual Visa cards for AI agents',
     },
   ],
 };
@@ -48,8 +48,8 @@ export function ogForPage(args: {
 // override title/description.
 export const SHARED_TWITTER: Metadata['twitter'] = {
   card: 'summary_large_image',
-  site: '@cards402',
-  creator: '@cards402',
+  site: '@agentcard',
+  creator: '@agentcard',
 };
 
 export function twitterForPage(args: { title: string; description: string }): Metadata['twitter'] {

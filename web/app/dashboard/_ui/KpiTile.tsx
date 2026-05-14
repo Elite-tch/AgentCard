@@ -8,9 +8,10 @@ interface Props {
   value: ReactNode;
   delta?: { value: string; positive?: boolean } | null;
   hint?: ReactNode;
+  tone?: 'green' | 'red' | 'yellow';
 }
 
-export function KpiTile({ label, value, delta, hint }: Props) {
+export function KpiTile({ label, value, delta, hint, tone }: Props) {
   return (
     <div
       className="kpi-tile"
@@ -49,7 +50,7 @@ export function KpiTile({ label, value, delta, hint }: Props) {
         style={{
           fontSize: 'clamp(1.25rem, 2.6vw + 0.5rem, 1.65rem)',
           fontWeight: 500,
-          color: 'var(--fg)',
+          color: tone ? `var(--${tone})` : 'var(--fg)',
           fontFamily: 'var(--font-mono)',
           fontVariantNumeric: 'tabular-nums',
           lineHeight: 1.1,

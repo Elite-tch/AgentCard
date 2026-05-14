@@ -1,6 +1,6 @@
-# cards402 — Web frontend
+# agentcard — Web frontend
 
-Next.js 16 app for [cards402.com](https://cards402.com). Marketing site, API docs, and admin dashboard.
+Next.js 16 app for [agentcard.com](https://agentcard.com). Marketing site, API docs, and admin dashboard.
 
 ## Development
 
@@ -15,7 +15,7 @@ npm run lint              # ESLint (run from monorepo root)
 
 | Variable                   | Required        | Description                                           |
 | -------------------------- | --------------- | ----------------------------------------------------- |
-| `NEXT_PUBLIC_API_BASE_URL` | Production only | Backend API base URL, e.g. `https://api.cards402.com` |
+| `NEXT_PUBLIC_API_BASE_URL` | Production only | Backend API base URL, e.g. `https://api.agentcard.com` |
 
 In development the dashboard defaults to `http://localhost:4000` for its API base.
 

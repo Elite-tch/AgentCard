@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ogForPage, twitterForPage } from '@/app/lib/seo';
 
-const POST_URL = 'https://cards402.com/blog/sse-beats-polling-for-agent-apis';
+const POST_URL = 'https://agentcard.com/blog/sse-beats-polling-for-agent-apis';
 const POST_DATE = '2026-04-14';
 
 export const metadata: Metadata = {
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     'Server-Sent Events are almost always the right primitive for long-lived order tracking with autonomous agents. Latency, reconnects, and why we default to SSE.',
   alternates: { canonical: POST_URL },
   openGraph: ogForPage({
-    title: 'Why SSE beats polling for agent-facing APIs — Cards402',
+    title: 'Why SSE beats polling for agent-facing APIs — AgentCard',
     description:
       'Server-Sent Events are almost always the right primitive for long-lived order tracking with autonomous agents.',
     path: '/blog/sse-beats-polling-for-agent-apis',
@@ -33,13 +33,13 @@ const blogJsonLd = {
     'Server-Sent Events are almost always the right primitive for long-lived order tracking with autonomous agents.',
   datePublished: POST_DATE,
   dateModified: POST_DATE,
-  author: { '@type': 'Organization', name: 'Cards402', url: 'https://cards402.com' },
+  author: { '@type': 'Organization', name: 'AgentCard', url: 'https://agentcard.com' },
   publisher: {
     '@type': 'Organization',
-    name: 'Cards402',
-    logo: { '@type': 'ImageObject', url: 'https://cards402.com/icon.png' },
+    name: 'AgentCard',
+    logo: { '@type': 'ImageObject', url: 'https://agentcard.com/icon.png' },
   },
-  image: 'https://cards402.com/opengraph-image',
+  image: 'https://agentcard.com/opengraph-image',
   keywords: 'sse, server-sent events, polling, long-lived http, agent api, fallback',
 };
 
@@ -47,7 +47,7 @@ const breadcrumbJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Blog', item: 'https://cards402.com/blog' },
+    { '@type': 'ListItem', position: 1, name: 'Blog', item: 'https://agentcard.com/blog' },
     {
       '@type': 'ListItem',
       position: 2,
@@ -126,13 +126,13 @@ export default function BlogPost() {
             <span>·</span>
             <span>6 min read</span>
             <span>·</span>
-            <span>by Cards402 engineering</span>
+            <span>by AgentCard engineering</span>
           </div>
         </header>
 
         <div className="post-body">
           <p className="lede">
-            When Cards402 launched, <code>GET /v1/orders/:id</code> was the only way to watch an
+            When AgentCard launched, <code>GET /v1/orders/:id</code> was the only way to watch an
             order. It worked — poll every few seconds until <code>phase: &quot;ready&quot;</code>{' '}
             showed up — and it was the wrong primitive for agents. This post explains why we default
             to Server-Sent Events now, why we kept the polling endpoint as a fallback rather than
@@ -211,7 +211,7 @@ export default function BlogPost() {
           </p>
 
           <p>
-            <strong>Delivery semantics need work.</strong> Cards402 webhooks are retried with
+            <strong>Delivery semantics need work.</strong> AgentCard webhooks are retried with
             exponential backoff (30s, 5m, 30m), signed with HMAC, and require the receiver to be
             idempotent. That&apos;s absolutely the right design — see the{' '}
             <Link href="/docs#webhooks">webhooks section of /docs</Link> for the details — but
@@ -244,7 +244,7 @@ export default function BlogPost() {
               and in a Lambda.
             </li>
             <li>
-              <strong>Resumable.</strong> Every SSE event from Cards402 carries the full current
+              <strong>Resumable.</strong> Every SSE event from AgentCard carries the full current
               state as its <code>data:</code> payload — not a delta. A client that reconnects always
               sees the latest phase on the first message, without needing <code>Last-Event-ID</code>{' '}
               replay. If the agent crashes mid- order, it just re-opens the stream and gets the
@@ -349,7 +349,7 @@ export default function BlogPost() {
           <h2>When you should still use polling</h2>
 
           <p>
-            If you&apos;re integrating Cards402 and for whatever reason SSE isn&apos;t available — a
+            If you&apos;re integrating AgentCard and for whatever reason SSE isn&apos;t available — a
             framework that makes streaming responses hard, a corporate proxy that fingerprints and
             blocks long-lived connections, a test environment where you&apos;d rather not manage
             socket lifetimes — <code>GET /v1/orders/:id</code> is a first-class supported path, not
@@ -372,7 +372,7 @@ export default function BlogPost() {
               non-custodial card issuance on Soroban
             </Link>
             , the 33-second timeline of a full order is at{' '}
-            <Link href="/blog/anatomy-of-a-cards402-order">anatomy of a Cards402 order</Link>, and
+            <Link href="/blog/anatomy-of-a-agentcard-order">anatomy of a AgentCard order</Link>, and
             the full API reference for the SSE endpoint is in the{' '}
             <Link href="/docs#stream-order">stream section of /docs</Link>.
           </p>

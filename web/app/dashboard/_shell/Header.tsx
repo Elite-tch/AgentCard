@@ -64,7 +64,7 @@ export function Header() {
   const pendingApprovals = approvals.length;
   const isPlatformOwner = !!user?.is_platform_owner;
   // Regular users should never see the platform-level "frozen" state —
-  // that's a cards402 operator concern (the tenant circuit breaker).
+  // that's a agentcard operator concern (the tenant circuit breaker).
   // Non-owners always see "Live" as long as they can load the page;
   // if the API is really down, the dashboard wouldn't render at all.
   const systemHealthy = isPlatformOwner ? (info ? !info.frozen : true) : true;

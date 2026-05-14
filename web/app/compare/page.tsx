@@ -6,29 +6,29 @@ import { ogForPage, twitterForPage } from '@/app/lib/seo';
 export const metadata: Metadata = {
   title: 'Compare',
   description:
-    'How Cards402 compares to traditional corporate cards, shared team cards, and other agent-payment rails. Honest trade-offs, not a sales table.',
-  alternates: { canonical: 'https://cards402.com/compare' },
+    'How AgentCard compares to traditional corporate cards, shared team cards, and other agent-payment rails. Honest trade-offs, not a sales table.',
+  alternates: { canonical: 'https://agentcard.com/compare' },
   openGraph: ogForPage({
-    title: 'Compare — Cards402',
+    title: 'Compare — AgentCard',
     description:
-      'Cards402 versus corporate cards, shared team cards, and other agent-payment rails.',
+      'AgentCard versus corporate cards, shared team cards, and other agent-payment rails.',
     path: '/compare',
   }),
   twitter: twitterForPage({
-    title: 'Compare — Cards402',
+    title: 'Compare — AgentCard',
     description:
-      'Cards402 versus corporate cards, shared team cards, and other agent-payment rails.',
+      'AgentCard versus corporate cards, shared team cards, and other agent-payment rails.',
   }),
 };
 
-// Feature rows for the head-to-head matrix. `cards402` is the canonical
+// Feature rows for the head-to-head matrix. `agentcard` is the canonical
 // value we want to highlight; `corporate` and `shared` describe the two
 // most common alternatives operators actually consider. Kept honest —
-// every "worse" value for Cards402 is explicitly noted, not hidden.
+// every "worse" value for AgentCard is explicitly noted, not hidden.
 type Cell = { value: string; note?: string; win?: boolean };
 type Row = {
   label: string;
-  cards402: Cell;
+  agentcard: Cell;
   corporate: Cell;
   shared: Cell;
 };
@@ -36,7 +36,7 @@ type Row = {
 const ROWS: Row[] = [
   {
     label: 'Onboarding',
-    cards402: {
+    agentcard: {
       value: 'Single command (claim code)',
       note: 'No forms, no approval wait',
       win: true,
@@ -49,19 +49,19 @@ const ROWS: Row[] = [
   },
   {
     label: 'Card issuance',
-    cards402: { value: 'Per purchase', note: '~60s on mainnet', win: true },
+    agentcard: { value: 'Per purchase', note: '~60s on mainnet', win: true },
     corporate: { value: 'Per cardholder', note: 'Physical mail or virtual via admin' },
     shared: { value: 'One card, many users', note: 'Blast radius = shared' },
   },
   {
     label: 'Spend control',
-    cards402: { value: 'Per-key spend cap', note: 'Policy-gated approvals optional' },
+    agentcard: { value: 'Per-key spend cap', note: 'Policy-gated approvals optional' },
     corporate: { value: 'Per-cardholder limit', note: 'Re-approval for changes' },
     shared: { value: 'Trust-based', note: 'No technical enforcement' },
   },
   {
     label: 'Credentials in agent context',
-    cards402: {
+    agentcard: {
       value: 'Single-use claim code',
       note: 'Worthless after redemption',
       win: true,
@@ -71,7 +71,7 @@ const ROWS: Row[] = [
   },
   {
     label: 'Custody',
-    cards402: {
+    agentcard: {
       value: 'Non-custodial',
       note: 'Agents pay the receiver contract directly',
       win: true,
@@ -81,7 +81,7 @@ const ROWS: Row[] = [
   },
   {
     label: 'Funding source',
-    cards402: {
+    agentcard: {
       value: 'USDC or XLM on Stellar',
       note: 'Face value, no markup',
       win: true,
@@ -91,13 +91,13 @@ const ROWS: Row[] = [
   },
   {
     label: 'Per-order latency',
-    cards402: { value: '~60s' },
+    agentcard: { value: '~60s' },
     corporate: { value: 'Instant', note: 'Card already exists', win: true },
     shared: { value: 'Instant', note: 'Card already exists', win: true },
   },
   {
     label: 'Per-order cost',
-    cards402: {
+    agentcard: {
       value: '$0 markup',
       note: 'Only issuer fees ($2 + 2% FX)',
       win: true,
@@ -110,19 +110,19 @@ const ROWS: Row[] = [
   },
   {
     label: 'Maximum per order',
-    cards402: { value: '$10,000', note: "Pathward's per-card balance ceiling" },
+    agentcard: { value: '$10,000', note: "Pathward's per-card balance ceiling" },
     corporate: { value: 'Credit-line limit', note: 'Typically $10k+' },
     shared: { value: 'Card balance', note: 'Whatever is loaded' },
   },
   {
     label: 'Works in the EU',
-    cards402: { value: 'Yes', note: '$2 + 2% foreign txn fee' },
+    agentcard: { value: 'Yes', note: '$2 + 2% foreign txn fee' },
     corporate: { value: 'Yes', note: 'Native local rail' },
     shared: { value: 'Yes', note: 'Same terms as the shared card' },
   },
   {
     label: 'Agent-to-agent handoff',
-    cards402: {
+    agentcard: {
       value: 'Fresh card per agent',
       note: 'Bounded blast radius',
       win: true,
@@ -142,36 +142,36 @@ const SCENARIOS = [
   {
     title: 'You have one agent that makes occasional low-value purchases',
     verdict:
-      'Either a shared team card or Cards402 works. Shared is faster to set up; Cards402 is safer if the agent is LLM-driven.',
+      'Either a shared team card or AgentCard works. Shared is faster to set up; AgentCard is safer if the agent is LLM-driven.',
   },
   {
     title: 'You have ten agents and want per-agent blast radius',
     verdict:
-      'Cards402. Shared team cards collapse into one compromised credential; corporate-card provisioning takes days per agent.',
+      'AgentCard. Shared team cards collapse into one compromised credential; corporate-card provisioning takes days per agent.',
   },
   {
     title: 'You need a single recurring subscription paid from one card',
-    verdict: 'Not Cards402 — Pathward reward cards block recurring charges. Use a corporate card.',
+    verdict: 'Not AgentCard — Pathward reward cards block recurring charges. Use a corporate card.',
   },
   {
     title: 'You want predictable cost per transaction without platform markup',
-    verdict: 'Cards402. Face value + issuer fees only, no per-order platform cut.',
+    verdict: 'AgentCard. Face value + issuer fees only, no per-order platform cut.',
   },
   {
     title: 'Your agents run on stablecoin-native infrastructure',
     verdict:
-      'Cards402. Skip fiat on/off ramps entirely — pay the receiver contract directly in USDC or XLM.',
+      'AgentCard. Skip fiat on/off ramps entirely — pay the receiver contract directly in USDC or XLM.',
   },
   {
     title: 'You need a physical card or ATM access',
     verdict:
-      'Not Cards402. Reward cards are virtual-only with no cash access. Use a corporate card.',
+      'Not AgentCard. Reward cards are virtual-only with no cash access. Use a corporate card.',
   },
 ];
 
 // Renders one cell. Highlights the row's winning cell with a subtle
 // border accent on the left side so the honest comparisons stay
-// honest — we don't paint every Cards402 cell green.
+// honest — we don't paint every AgentCard cell green.
 function MatrixCell({ cell }: { cell: Cell }) {
   return (
     <td
@@ -214,9 +214,9 @@ export default function ComparePage() {
     <>
       <PageHero
         eyebrow="Compare"
-        title="Cards402 vs the"
+        title="AgentCard vs the"
         accent="alternatives"
-        intro="Cards402 isn't the right answer for every agent-payment use case. This page is the honest matrix we'd show in a sales call — every row where a corporate card or a shared team card wins is explicitly marked. Use it to pick the right tool for the job you actually have."
+        intro="AgentCard isn't the right answer for every agent-payment use case. This page is the honest matrix we'd show in a sales call — every row where a corporate card or a shared team card wins is explicitly marked. Use it to pick the right tool for the job you actually have."
       />
 
       {/* Head-to-head matrix */}
@@ -257,7 +257,7 @@ export default function ComparePage() {
                     letterSpacing: '-0.015em',
                   }}
                 >
-                  Cards402
+                  AgentCard
                 </th>
                 <th
                   style={{
@@ -303,7 +303,7 @@ export default function ComparePage() {
                   >
                     {row.label}
                   </td>
-                  <MatrixCell cell={row.cards402} />
+                  <MatrixCell cell={row.agentcard} />
                   <MatrixCell cell={row.corporate} />
                   <MatrixCell cell={row.shared} />
                 </tr>
@@ -322,7 +322,7 @@ export default function ComparePage() {
           }}
         >
           Rows with the <span style={{ color: 'var(--green)' }}>green accent</span> are ones we
-          think Cards402 genuinely wins. The others are either tied or lost — we&apos;re not
+          think AgentCard genuinely wins. The others are either tied or lost — we&apos;re not
           painting the whole column green.
         </p>
       </PageSection>
@@ -407,7 +407,7 @@ export default function ComparePage() {
                 maxWidth: 620,
               }}
             >
-              Email us — we&apos;ll tell you if Cards402 is wrong for your use case.
+              Email us — we&apos;ll tell you if AgentCard is wrong for your use case.
             </h2>
             <p
               className="type-body"
@@ -415,14 +415,14 @@ export default function ComparePage() {
             >
               A short email to{' '}
               <a
-                href="mailto:hello@cards402.com"
+                href="mailto:hello@agentcard.com"
                 style={{
                   color: 'var(--fg)',
                   textDecoration: 'none',
                   borderBottom: '1px solid var(--green-border)',
                 }}
               >
-                hello@cards402.com
+                hello@agentcard.com
               </a>{' '}
               with what your agent is trying to do and how often. We&apos;ll come back with an
               honest answer in under a day. If the better tool for your use case is a corporate card

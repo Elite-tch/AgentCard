@@ -52,7 +52,7 @@ const TONE_STYLES: Record<Tone, { bg: string; border: string; dot: string; text:
 };
 
 export function AnnouncementBanner({ id, href, tone = 'info', children }: Props) {
-  const storageKey = `cards402.announcement.dismissed.${id}`;
+  const storageKey = `agentcard.announcement.dismissed.${id}`;
   const [dismissed, setDismissed] = useState<boolean | null>(null);
 
   // Resolve the dismissed state after mount. We deliberately render

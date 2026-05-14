@@ -6,25 +6,25 @@ import { CHANGELOG_ENTRIES as ENTRIES, type ChangelogTag as Tag } from './entrie
 export const metadata: Metadata = {
   title: 'Changelog',
   description:
-    'Everything shipped to Cards402. API changes, dashboard polish, security fixes, and upstream-issuer updates — chronologically.',
+    'Everything shipped to AgentCard. API changes, dashboard polish, security fixes, and upstream-issuer updates — chronologically.',
   alternates: {
-    canonical: 'https://cards402.com/changelog',
+    canonical: 'https://agentcard.com/changelog',
     // Feed reader auto-discovery: this inserts
     // <link rel="alternate" type="application/rss+xml" href=".../feed.xml">
     // on the changelog head. NetNewsWire, Feedbin, Reeder et al.
     // pick this up when you paste /changelog into "add feed".
     types: {
-      'application/rss+xml': 'https://cards402.com/changelog/feed.xml',
+      'application/rss+xml': 'https://agentcard.com/changelog/feed.xml',
     },
   },
   openGraph: ogForPage({
-    title: 'Changelog — Cards402',
-    description: 'Everything shipped to Cards402, chronologically.',
+    title: 'Changelog — AgentCard',
+    description: 'Everything shipped to AgentCard, chronologically.',
     path: '/changelog',
   }),
   twitter: twitterForPage({
-    title: 'Changelog — Cards402',
-    description: 'Everything shipped to Cards402, chronologically.',
+    title: 'Changelog — AgentCard',
+    description: 'Everything shipped to AgentCard, chronologically.',
   }),
 };
 
@@ -101,14 +101,14 @@ const changelogJsonLd = {
       headline: e.version ? `v${e.version} — ${e.title}` : e.title,
       datePublished: e.date,
       description: e.body,
-      url: `https://cards402.com/changelog#${e.date}-${slug(e.title)}`,
-      author: { '@type': 'Organization', name: 'Cards402' },
+      url: `https://agentcard.com/changelog#${e.date}-${slug(e.title)}`,
+      author: { '@type': 'Organization', name: 'AgentCard' },
       publisher: {
         '@type': 'Organization',
-        name: 'Cards402',
+        name: 'AgentCard',
         logo: {
           '@type': 'ImageObject',
-          url: 'https://cards402.com/icon.png',
+          url: 'https://agentcard.com/icon.png',
         },
       },
     },
@@ -126,7 +126,7 @@ export default function ChangelogPage() {
         eyebrow="Changelog"
         title="Everything we've"
         accent="shipped"
-        intro="Cards402 is a platform, so every change matters. This page is updated the same day a change lands in production. Security-sensitive fixes are disclosed here after the patch is out. Breaking API changes are always announced 30 days before they take effect."
+        intro="AgentCard is a platform, so every change matters. This page is updated the same day a change lands in production. Security-sensitive fixes are disclosed here after the patch is out. Breaking API changes are always announced 30 days before they take effect."
       />
 
       <section style={{ padding: '3rem 1.35rem 6rem' }}>

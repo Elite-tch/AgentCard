@@ -54,3 +54,6 @@ codex-audit.md
 # OWS tarball (local build artifact)
 sdk/open-wallet-standard-core-*.tgz
 web/.env.production
+
+#depreciated assets
+depreciated

@@ -5,15 +5,15 @@ import { ogForPage, twitterForPage } from '@/app/lib/seo';
 export const metadata: Metadata = {
   title: 'Press',
   description:
-    'Press, media, and podcast inquiries for Cards402. Contact, press kit, quick facts, and expert quotes on agent payments.',
-  alternates: { canonical: 'https://cards402.com/press' },
+    'Press, media, and podcast inquiries for AgentCard. Contact, press kit, quick facts, and expert quotes on agent payments.',
+  alternates: { canonical: 'https://agentcard.com/press' },
   openGraph: ogForPage({
-    title: 'Press — Cards402',
+    title: 'Press — AgentCard',
     description: 'Press kit, media contact, and expert quotes on autonomous agent payments.',
     path: '/press',
   }),
   twitter: twitterForPage({
-    title: 'Press — Cards402',
+    title: 'Press — AgentCard',
     description: 'Press kit, media contact, and expert quotes.',
   }),
 };
@@ -53,7 +53,7 @@ export default function PressPage() {
         eyebrow="Press"
         title="Writing about agent payments? Let's"
         accent="talk"
-        intro="Cards402 is one of a small number of teams shipping live infrastructure at the intersection of autonomous agents and traditional card rails. We're happy to do on-the-record interviews, background calls, podcast appearances, and expert quotes for anything in our lane."
+        intro="AgentCard is one of a small number of teams shipping live infrastructure at the intersection of autonomous agents and traditional card rails. We're happy to do on-the-record interviews, background calls, podcast appearances, and expert quotes for anything in our lane."
       />
 
       {/* Contact block */}
@@ -80,7 +80,7 @@ export default function PressPage() {
                 lineHeight: 1.05,
               }}
             >
-              press@cards402.com
+              press@agentcard.com
             </h2>
             <p
               className="type-body"
@@ -291,7 +291,7 @@ export default function PressPage() {
             maxWidth: 720,
           }}
         >
-          Cards402, the Cards402 wordmark, and the Cards402 mark are trademarks of CTX.com Inc. Use
+          AgentCard, the AgentCard wordmark, and the AgentCard mark are trademarks of CTX.com Inc. Use
           them to reference us accurately in editorial contexts — don&apos;t modify, recolour, or
           combine them with other marks.
         </p>

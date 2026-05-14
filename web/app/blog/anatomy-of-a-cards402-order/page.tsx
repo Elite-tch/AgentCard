@@ -2,21 +2,21 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ogForPage, twitterForPage } from '@/app/lib/seo';
 
-const POST_URL = 'https://cards402.com/blog/anatomy-of-a-cards402-order';
+const POST_URL = 'https://agentcard.com/blog/anatomy-of-a-agentcard-order';
 const POST_DATE = '2026-04-14';
 
 export const metadata: Metadata = {
-  title: 'Anatomy of a Cards402 order',
+  title: 'Anatomy of a AgentCard order',
   description:
     'Every millisecond of the 33-second path from purchaseCardOWS() to PAN in hand: payment, watcher, Stage 1 + 2 fulfilment, SSE event.',
   alternates: { canonical: POST_URL },
   openGraph: ogForPage({
-    title: 'Anatomy of a Cards402 order — Cards402',
+    title: 'Anatomy of a AgentCard order — AgentCard',
     description: 'Every millisecond of the 33-second path from purchaseCard() to PAN-in-hand.',
-    path: '/blog/anatomy-of-a-cards402-order',
+    path: '/blog/anatomy-of-a-agentcard-order',
   }),
   twitter: twitterForPage({
-    title: 'Anatomy of a Cards402 order',
+    title: 'Anatomy of a AgentCard order',
     description: 'Every millisecond of the 33-second path from purchaseCard() to PAN-in-hand.',
   }),
 };
@@ -30,24 +30,24 @@ const blogJsonLd = {
   '@type': 'BlogPosting',
   '@id': POST_URL,
   mainEntityOfPage: POST_URL,
-  headline: 'Anatomy of a Cards402 order',
+  headline: 'Anatomy of a AgentCard order',
   description: 'Every millisecond of the 33-second path from agent.purchaseCard() to PAN-in-hand.',
   datePublished: POST_DATE,
   dateModified: POST_DATE,
   author: {
     '@type': 'Organization',
-    name: 'Cards402',
-    url: 'https://cards402.com',
+    name: 'AgentCard',
+    url: 'https://agentcard.com',
   },
   publisher: {
     '@type': 'Organization',
-    name: 'Cards402',
+    name: 'AgentCard',
     logo: {
       '@type': 'ImageObject',
-      url: 'https://cards402.com/icon.png',
+      url: 'https://agentcard.com/icon.png',
     },
   },
-  image: 'https://cards402.com/opengraph-image',
+  image: 'https://agentcard.com/opengraph-image',
   keywords: 'stellar, soroban, card issuance, sse, fulfilment pipeline',
 };
 
@@ -60,12 +60,12 @@ const breadcrumbJsonLd = {
       '@type': 'ListItem',
       position: 1,
       name: 'Blog',
-      item: 'https://cards402.com/blog',
+      item: 'https://agentcard.com/blog',
     },
     {
       '@type': 'ListItem',
       position: 2,
-      name: 'Anatomy of a Cards402 order',
+      name: 'Anatomy of a AgentCard order',
       item: POST_URL,
     },
   ],
@@ -195,7 +195,7 @@ export default function BlogPost() {
               lineHeight: 0.98,
             }}
           >
-            Anatomy of a Cards402 order.
+            Anatomy of a AgentCard order.
           </h1>
           <div
             style={{
@@ -217,7 +217,7 @@ export default function BlogPost() {
             <span>·</span>
             <span>8 min read</span>
             <span>·</span>
-            <span>by Cards402 engineering</span>
+            <span>by AgentCard engineering</span>
           </div>
         </header>
 
@@ -235,7 +235,7 @@ export default function BlogPost() {
             We&apos;re writing this because &ldquo;how does this actually work&rdquo; is the single
             most common question we get on integration calls — and because the chain is genuinely
             interesting. Payment rails don&apos;t usually have a 30-second end-to-end budget, and
-            the fact that Cards402 can hit that reliably is a function of every component in the
+            the fact that AgentCard can hit that reliably is a function of every component in the
             chain being cooperative about latency.
           </p>
 
@@ -291,7 +291,7 @@ export default function BlogPost() {
 
           <h2>Why SSE and not polling</h2>
           <p>
-            When Cards402 launched, <code>GET /v1/orders/:id</code> was the only way to watch order
+            When AgentCard launched, <code>GET /v1/orders/:id</code> was the only way to watch order
             state. It worked — poll every 3 seconds, eventually see{' '}
             <code>phase: &quot;ready&quot;</code> — but it was a bad fit for agent-facing clients.
             Every poll is a full HTTP round-trip; every round-trip is either too slow (if you back
@@ -331,10 +331,10 @@ export default function BlogPost() {
           </ul>
 
           <p>
-            If you&apos;re building on Cards402 and want to dig deeper, the full HTTP API reference
+            If you&apos;re building on AgentCard and want to dig deeper, the full HTTP API reference
             is at <Link href="/docs">/docs</Link>, the 5-minute quickstart is at{' '}
             <Link href="/docs/quickstart">/docs/quickstart</Link>, and questions go to{' '}
-            <a href="mailto:api@cards402.com">api@cards402.com</a>.
+            <a href="mailto:api@agentcard.com">api@agentcard.com</a>.
           </p>
         </div>
 

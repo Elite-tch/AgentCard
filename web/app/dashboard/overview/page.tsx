@@ -1,12 +1,11 @@
-// Overview — default dashboard landing. Shows the highest-value
-// signals in one glance: KPI tiles (spend + fleet health), spend
-// chart, system health card, recent activity feed.
-
-'use client';
-
-import { useMemo } from 'react';
+// web/app/dashboard/overview/page.tsx
 import Link from 'next/link';
-import { useDashboard } from '../_lib/DashboardProvider';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { getDashboardStats } from '@/lib/backend/services/stats';
+import { getOrders } from '@/lib/backend/services/orders';
+import { getApiKeys } from '@/lib/backend/services/api-keys';
 import { KpiTile, KpiRow } from '../_ui/KpiTile';
 import { Card } from '../_ui/Card';
 import { Pill } from '../_ui/Pill';
@@ -17,100 +16,85 @@ import { PageContainer } from '../_ui/PageContainer';
 import { PageHeader } from '../_ui/PageHeader';
 import { formatUsd, parseTimestamp, timeAgo, bucketSpendByDay } from '../_lib/format';
 import { IN_FLIGHT_ORDER_STATUSES } from '../_lib/constants';
+import type { Order, ApiKey } from '../_lib/types';
 
-export default function OverviewPage() {
-  const { user, info, agents, orders } = useDashboard();
-  const isPlatformOwner = !!user?.is_platform_owner;
+export default async function OverviewPage() {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session?.user) redirect('/dashboard');
 
-  const stats = useMemo(() => {
-    const now = Date.now();
-    const DAY = 86_400_000;
-    const in24h = orders.filter((o) => now - parseTimestamp(o.created_at) < DAY);
-    const in7d = orders.filter((o) => now - parseTimestamp(o.created_at) < 7 * DAY);
-    const delivered7d = in7d.filter((o) => o.status === 'delivered');
-    const failed7d = in7d.filter((o) => o.status === 'failed' || o.status === 'refunded');
-    const spend24h = in24h
-      .filter((o) => o.status === 'delivered')
-      .reduce((s, o) => s + (parseFloat(o.amount_usdc) || 0), 0);
-    const spend7d = delivered7d.reduce((s, o) => s + (parseFloat(o.amount_usdc) || 0), 0);
-    const successRate =
-      in7d.length > 0
-        ? (delivered7d.length / (delivered7d.length + failed7d.length || 1)) * 100
-        : 100;
-    const activeAgents = agents.filter(
-      (a) => a.agent?.state === 'active' || a.agent?.state === 'funded',
-    ).length;
-    const inFlight = orders.filter((o) => IN_FLIGHT_ORDER_STATUSES.has(o.status)).length;
+  const [stats, orders, agents] = await Promise.all([
+    getDashboardStats(session.user.id),
+    getOrders(session.user.id, 50) as Promise<Order[]>,
+    getApiKeys(session.user.id) as Promise<ApiKey[]>,
+  ]);
 
-    // Top 5 spenders over the 7d window — surfaced to regular users in
-    // place of the platform-level System health card.
-    const spendByAgentId = new Map<string, number>();
-    for (const o of delivered7d) {
-      spendByAgentId.set(
-        o.api_key_id,
-        (spendByAgentId.get(o.api_key_id) || 0) + (parseFloat(o.amount_usdc) || 0),
-      );
-    }
-    const topAgents = [...spendByAgentId.entries()]
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 5)
-      .map(([id, spent]) => {
-        const agent = agents.find((a) => a.id === id);
-        return { id, label: agent?.label ?? null, spent };
-      });
 
-    return {
-      spend24h,
-      spend7d,
-      successRate,
-      activeAgents,
-      inFlight,
-      delivered7d: delivered7d.length,
-      topAgents,
-    };
-  }, [orders, agents]);
+  // Derive top agents for the 7d window
+  const now = Date.now();
+  const DAY = 86_400_000;
+  const in7d = orders.filter((o) => now - parseTimestamp(o.created_at) < 7 * DAY);
+  const delivered7d = in7d.filter((o) => o.status === 'delivered');
+  
+  const spendByAgentId = new Map<string, number>();
+  for (const o of delivered7d) {
+    spendByAgentId.set(
+      o.api_key_id,
+      (spendByAgentId.get(o.api_key_id) || 0) + (parseFloat(o.amount_usdc) || 0),
+    );
+  }
+  const topAgents = [...spendByAgentId.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([id, spent]) => {
+      const agent = agents.find((a) => a.id === id);
+      return { id, label: agent?.label ?? null, spent };
+    });
 
-  const chartData = useMemo(() => bucketSpendByDay(orders, 14), [orders]);
-
-  const recentActivity = useMemo(() => orders.slice(0, 10), [orders]);
+  const chartData = bucketSpendByDay(orders, 14);
+  const recentActivity = orders.slice(0, 10);
 
   return (
     <PageContainer>
       <PageHeader
         title="Overview"
-        subtitle={
-          info?.created_at
-            ? `${info.name || 'Dashboard'} · created ${timeAgo(info.created_at)}`
-            : info?.name || 'Dashboard'
-        }
+        subtitle="Dashboard metrics and activity"
       />
 
       <KpiRow>
         <KpiTile
-          label="Spend 24h"
-          value={formatUsd(stats.spend24h)}
-          hint={`${stats.delivered7d} delivered (7d)`}
+          label="Total Spend"
+          value={formatUsd(stats.total_gmv)}
+          hint={`${stats.total_orders} orders`}
         />
         <KpiTile
-          label="Spend 7d"
-          value={formatUsd(stats.spend7d)}
-          hint={`${orders.filter((o) => parseTimestamp(o.created_at) > Date.now() - 7 * 86400000).length} orders`}
+          label="Delivered"
+          value={stats.delivered}
+          hint={`${((stats.delivered / (stats.total_orders || 1)) * 100).toFixed(1)}% success`}
         />
         <KpiTile
-          label="Success rate 7d"
-          value={`${stats.successRate.toFixed(1)}%`}
-          hint="delivered / attempted"
+          label="Pending"
+          value={stats.pending}
+          hint="Awaiting payment"
         />
-        <KpiTile label="Active agents" value={stats.activeAgents} hint={`${agents.length} total`} />
-        <KpiTile label="In flight" value={stats.inFlight} hint="orders being fulfilled" />
+        <KpiTile 
+          label="Active agents" 
+          value={stats.active_keys} 
+          hint={`${agents.length} total`} 
+        />
+        <KpiTile 
+          label="Approvals" 
+          value={stats.pending_approvals} 
+          hint="Awaiting review" 
+          tone={stats.pending_approvals > 0 ? "yellow" : "green"}
+        />
       </KpiRow>
 
       <div
-        className="overview-split"
         style={{
           display: 'grid',
           gridTemplateColumns: 'minmax(0, 2fr) minmax(0, 1fr)',
           gap: '1.25rem',
+          marginBottom: '1.5rem'
         }}
       >
         <Card
@@ -131,71 +115,51 @@ export default function OverviewPage() {
           <SpendChart data={chartData} height={220} />
         </Card>
 
-        {isPlatformOwner ? (
-          <Card title="System health">
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.7rem' }}>
-              <HealthRow
-                label="Fulfillment"
-                ok={!info?.frozen}
-                okLabel="Operational"
-                failLabel="Frozen"
-              />
-              <HealthRow
-                label="Mainnet watcher"
-                ok={true}
-                okLabel="Synced"
-                failLabel="Disconnected"
-              />
-              <HealthRow label="CTX auth" ok={true} okLabel="Valid" failLabel="Re-auth required" />
-            </div>
-          </Card>
-        ) : (
-          <Card title="Top agents (7d)">
-            {stats.topAgents.length === 0 ? (
-              <EmptyState
-                title="No active agents yet"
-                description="Your highest-spending agents this week will show up here."
-              />
-            ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
-                {stats.topAgents.map((a) => (
-                  <div
-                    key={a.id}
+        <Card title="Top agents (7d)">
+          {topAgents.length === 0 ? (
+            <EmptyState
+              title="No active agents yet"
+              description="Your highest-spending agents this week will show up here."
+            />
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
+              {topAgents.map((a) => (
+                <div
+                  key={a.id}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    fontSize: '0.8rem',
+                  }}
+                >
+                  <Link
+                    href={`/dashboard/agents/${a.id}`}
                     style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      fontSize: '0.8rem',
+                      color: 'var(--fg)',
+                      textDecoration: 'none',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                      maxWidth: '65%',
                     }}
                   >
-                    <Link
-                      href={`/dashboard/agents/${a.id}`}
-                      style={{
-                        color: 'var(--fg)',
-                        textDecoration: 'none',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        maxWidth: '65%',
-                      }}
-                    >
-                      {a.label || 'Unnamed'}
-                    </Link>
-                    <span
-                      style={{
-                        fontFamily: 'var(--font-mono)',
-                        color: 'var(--fg-dim)',
-                        fontSize: '0.75rem',
-                      }}
-                    >
-                      {formatUsd(a.spent)}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </Card>
-        )}
+                    {a.label || 'Unnamed'}
+                  </Link>
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-mono)',
+                      color: 'var(--fg-dim)',
+                      fontSize: '0.75rem',
+                    }}
+                  >
+                    {formatUsd(a.spent)}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </Card>
       </div>
 
       <Card
@@ -239,35 +203,9 @@ export default function OverviewPage() {
                 </tr>
               ))}
             </tbody>
-          </table>
-        )}
-      </Card>
-    </PageContainer>
-  );
-}
-
-function HealthRow({
-  label,
-  ok,
-  okLabel,
-  failLabel,
-}: {
-  label: string;
-  ok: boolean;
-  okLabel: string;
-  failLabel: string;
-}) {
-  return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        fontSize: '0.8rem',
-      }}
-    >
-      <span style={{ color: 'var(--fg-muted)' }}>{label}</span>
-      <Pill tone={ok ? 'green' : 'red'}>{ok ? okLabel : failLabel}</Pill>
-    </div>
-  );
+            </table>
+          )}
+        </Card>
+      </PageContainer>
+    );
 }

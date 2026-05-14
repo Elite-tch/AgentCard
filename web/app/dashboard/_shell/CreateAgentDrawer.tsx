@@ -12,12 +12,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useDashboard } from '../_lib/DashboardProvider';
+import { createAgentAction } from '../actions';
 import { useToast } from '../_ui/Toast';
 import { Drawer } from '../_ui/Drawer';
 import { Input } from '../_ui/Input';
 import { Button } from '../_ui/Button';
-import { createAgent } from '../_lib/api';
 import type { NewKeyData } from '../_lib/types';
+import { APP_URL } from '@/lib/config';
 
 interface Props {
   open: boolean;
@@ -51,9 +52,10 @@ export function CreateAgentDrawer({ open, onClose }: Props) {
   async function submit() {
     setBusy(true);
     try {
-      const data = await createAgent({ label: label || 'Unnamed agent' });
-      setCreated(data);
+      const data = await createAgentAction({ label: label || 'Unnamed agent' });
+      setCreated(data as any);
       await refresh();
+      router.refresh(); // Trigger Server Component re-validation
     } catch (err) {
       toast.push((err as Error).message || 'create failed', 'error');
     } finally {
@@ -102,8 +104,8 @@ export function CreateAgentDrawer({ open, onClose }: Props) {
   // without knowing why.
   const snippet = created?.claim
     ? [
-        'Read https://cards402.com/skill.md and set up this agent by running:',
-        `npx -y cards402@latest onboard --claim ${created.claim.code}`,
+        `Read ${APP_URL}/skill.md and set up this agent by running:`,
+        `AGENTCARD_API_URL=${APP_URL} npx -y cards402@latest onboard --claim ${created.claim.code}`,
       ].join('\n')
     : '';
 
@@ -271,7 +273,7 @@ export function CreateAgentDrawer({ open, onClose }: Props) {
             <StepRow
               state={stepState(step, 'awaiting_deposit')}
               title="Awaiting deposit"
-              detail="Send at least 2 XLM to activate the wallet and cover reserves. To receive USDC, the agent must first open a trustline (run `cards402 wallet trustline` after funding with XLM)."
+              detail="Send at least 2 XLM to activate the wallet and cover reserves. To receive USDC, the agent must first open a trustline (run `agentcard wallet trustline` after funding with XLM)."
             />
             <StepRow
               state={stepState(step, 'funded')}
@@ -357,7 +359,7 @@ export function CreateAgentDrawer({ open, onClose }: Props) {
               >
                 Send at least 2 XLM (1 XLM account minimum + 0.5 XLM trustline + 0.5 headroom). To
                 receive USDC, the agent must first open a USDC trustline by running{' '}
-                <code>cards402 wallet trustline</code>. The stepper will flip to{' '}
+                <code>agentcard wallet trustline</code>. The stepper will flip to{' '}
                 <strong>Funded</strong> automatically once Horizon sees the deposit.
               </div>
             </div>

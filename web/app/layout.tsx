@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Fraunces, IBM_Plex_Sans, IBM_Plex_Mono } from 'next/font/google';
 import { headers } from 'next/headers';
 import { MarketingChrome } from '@/app/components/MarketingChrome';
+import { APP_URL } from '@/lib/config';
 import './globals.css';
 
 // Typography system. The marketing + docs surface runs Fraunces for
@@ -9,7 +10,7 @@ import './globals.css';
 // Sans by inheritance and Plex Mono for every place it currently uses
 // var(--font-mono) (tables, addresses, api keys, order ids). Avoiding
 // Geist / Inter / Space Grotesk on purpose — those are the three fonts
-// every AI-generated app ships with, and Cards402 should read as
+// every AI-generated app ships with, and AgentCard should read as
 // engineering-led finance, not yet-another-startup.
 const displayFont = Fraunces({
   subsets: ['latin'],
@@ -36,7 +37,7 @@ const monoFont = IBM_Plex_Mono({
   weight: ['400', '500', '600', '700'],
 });
 
-const SITE_URL = 'https://agentcard.com';
+const SITE_URL = APP_URL;
 const SITE_NAME = 'AgentCard';
 const SITE_DESCRIPTION =
   'The elite digital identity for modern agents. Secure, effortless, exclusive virtual Visa cards issued on Stellar. Pay with USDC or XLM and get a premium card in ~60 seconds.';
@@ -65,37 +66,7 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  openGraph: {
-    type: 'website',
-    locale: 'en_GB',
-    url: SITE_URL,
-    siteName: SITE_NAME,
-    title: `${SITE_NAME} — Premium Virtual Visa Cards for AI Agents`,
-    description:
-      'The elite digital identity for modern agents. Issued on Stellar in ~60 seconds. Non-custodial and secure.',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: `${SITE_NAME} — Premium Virtual Visa Cards for AI Agents`,
-    description:
-      'The elite digital identity for modern agents. Issued on Stellar in ~60 seconds. Non-custodial and secure.',
-    site: '@agentcard',
-    creator: '@agentcard',
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  // Search-engine verification tokens. Drop real values when the
-  // corresponding properties are registered in Google Search Console
-  // / Bing Webmaster Tools / Yandex etc. Empty strings are omitted
-  // by Next.js so leaving them undefined here is fine.
+ 
   verification: {
     // google: 'paste Search Console HTML-tag token',
     // yandex: 'paste Yandex Webmaster token',
@@ -123,23 +94,23 @@ const jsonLdOrg = {
   url: SITE_URL,
   logo: `${SITE_URL}/icon.png`,
   description: SITE_DESCRIPTION,
-  sameAs: ['https://x.com/cards402', 'https://github.com/CTX-com/Cards402'],
+  sameAs: ['https://x.com/agentcard', 'https://github.com/CTX-com/AgentCard'],
   contactPoint: [
     {
       '@type': 'ContactPoint',
       contactType: 'customer support',
-      email: 'support@cards402.com',
+      email: `support@${SITE_URL.replace('https://', '').replace('http://', '')}`,
       availableLanguage: ['English'],
     },
     {
       '@type': 'ContactPoint',
       contactType: 'press',
-      email: 'press@cards402.com',
+      email: `press@${SITE_URL.replace('https://', '').replace('http://', '')}`,
     },
     {
       '@type': 'ContactPoint',
       contactType: 'security',
-      email: 'security@cards402.com',
+      email: `security@${SITE_URL.replace('https://', '').replace('http://', '')}`,
     },
   ],
 };
@@ -160,7 +131,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Suppress marketing chrome on the status.cards402.com subdomain.
+  // Suppress marketing chrome on the status.agentcard.com subdomain.
   // The subdomain is a standalone "is the API up" surface — rendering
   // the marketing nav + footer there would both pollute the page and
   // create broken navigation links (every /pricing, /docs, /blog etc.
@@ -170,7 +141,8 @@ export default async function RootLayout({
   const hdrs = await headers();
   const host = hdrs.get('host') || '';
   const isStatusSubdomain =
-    host === 'status.cards402.com' || host.startsWith('status.cards402.com:');
+    host === `status.${SITE_URL.replace('https://', '').replace('http://', '')}` || 
+    host.startsWith(`status.${SITE_URL.replace('https://', '').replace('http://', '')}:`);
 
   return (
     <html
