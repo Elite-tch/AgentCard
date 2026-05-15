@@ -7,7 +7,7 @@ Virtual Visa cards for AI agents — pay with USDC or XLM on Stellar, get a card
 ## Install
 
 ```bash
-npm install agentcard
+npm install agentcard-sdk
 ```
 
 Requires Node.js 18 or newer (the SDK uses native `fetch`, `ReadableStream`, and `WebCrypto`). Supported platforms via the bundled `@ctx.com/stellar-ows-core` native wallet bindings: macOS (arm64 + x64), Linux (arm64 + x64). Windows is not currently supported.
@@ -31,7 +31,7 @@ then `rm -rf node_modules package-lock.json && npm install`. `npm audit` returns
 ## Quick start
 
 ```typescript
-import { createOWSWallet, getOWSBalance, purchaseCardOWS } from 'agentcard';
+import { createOWSWallet, getOWSBalance, purchaseCardOWS } from 'agentcard-sdk';
 
 // 1. Create (or fetch existing) encrypted wallet. Idempotent.
 const { publicKey } = createOWSWallet('my-agent');
@@ -71,7 +71,7 @@ Stellar accounts need a minimum balance to be activated on-chain:
 ## Step-by-step API (for more control)
 
 ```typescript
-import { AgentcardClient } from 'agentcard';
+import { AgentcardClient } from 'agentcard-sdk';
 
 const client = new AgentcardClient({
   apiKey: process.env.AGENTCARD_API_KEY!,
@@ -98,7 +98,7 @@ Add to your client's `mcpServers` config:
   "mcpServers": {
     "agentcard": {
       "command": "npx",
-      "args": ["-y", "agentcard"],
+      "args": ["-y", "agentcard-sdk"],
       "env": { "AGENTCARD_API_KEY": "agentcard_<your key>" }
     }
   }
@@ -121,7 +121,7 @@ import {
   InvalidAmountError,
   OrderFailedError,
   WaitTimeoutError,
-} from 'agentcard';
+} from 'agentcard-sdk';
 
 try {
   const card = await purchaseCardOWS({ ... });
@@ -143,7 +143,7 @@ try {
 - [agentcard.com/docs](https://agentcard.com/docs) — full API reference
 - [agentcard.com/skill.md](https://agentcard.com/skill.md) — drop-in agent onboarding brief
 - [agentcard.com/llms.txt](https://agentcard.com/llms.txt) — LLM-index of every docs surface
-- [github.com/CTX-com/Agentcard](https://github.com/CTX-com/Agentcard) — source
+- [github.com/Elite-tch/Agentcard](https://github.com/Elite-tch/Agentcard) — source
 
 ## License
 

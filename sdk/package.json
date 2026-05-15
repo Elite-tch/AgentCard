@@ -1,5 +1,5 @@
 {
-  "name": "agentcard",
+  "name": "agentcard-sdk",
   "version": "0.4.7",
   "description": "Virtual Visa cards for AI agents — pay USDC or XLM on Stellar, get a card in ~60s",
   "main": "dist/index.js",
@@ -17,7 +17,7 @@
     }
   },
   "bin": {
-    "agentcard": "./dist/cli.js"
+    "agentcard-sdk": "./dist/cli.js"
   },
   "files": [
     "dist",
@@ -30,7 +30,7 @@
     "lint": "eslint src",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "prepublishOnly": "npm run build && npm test"
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "stellar",

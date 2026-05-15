@@ -15,7 +15,7 @@ When invoked with an order ID:
 2. Fetch the order:
 
    ```typescript
-   import { AgentcardClient } from 'agentcard';
+   import { AgentcardClient } from 'agentcard-sdk';
 
    const client = new AgentcardClient({ apiKey: process.env.AGENTCARD_API_KEY! });
    const order = await client.getOrder('<order_id>');

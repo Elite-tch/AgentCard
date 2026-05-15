@@ -14,7 +14,7 @@ When invoked:
    - `AGENTCARD_API_KEY` — get one at agentcard.com
    - `OWS_WALLET_NAME` — the OWS wallet identifier; run `setup_wallet` (MCP) or:
      ```typescript
-     import { createOWSWallet } from 'agentcard';
+     import { createOWSWallet } from 'agentcard-sdk';
      const { publicKey } = createOWSWallet(process.env.OWS_WALLET_NAME!);
      // Fund publicKey with XLM and USDC, then come back
      ```
@@ -24,7 +24,7 @@ When invoked:
 3. Before purchasing, check the budget:
 
    ```typescript
-   import { AgentcardClient } from 'agentcard';
+   import { AgentcardClient } from 'agentcard-sdk';
    const client = new AgentcardClient({ apiKey: process.env.AGENTCARD_API_KEY! });
    const usage = await client.getUsage();
    ```
@@ -34,7 +34,7 @@ When invoked:
 4. Purchase the card:
 
    ```typescript
-   import { purchaseCardOWS } from 'agentcard';
+   import { purchaseCardOWS } from 'agentcard-sdk';
 
    const card = await purchaseCardOWS({
      apiKey: process.env.AGENTCARD_API_KEY!,

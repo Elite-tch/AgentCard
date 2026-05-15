@@ -5,7 +5,7 @@
 //   onboard    Trade a one-time claim code for an api key + create an
 //              OWS wallet. The agent-facing setup path (see skill.md).
 //   mcp        Start the MCP server over stdio (default when no
-//              subcommand is given, so `npx agentcard` in an MCP
+//              subcommand is given, so `npx agentcard-sdk` in an MCP
 //              client's config "just works").
 //   version    Print the installed SDK version and exit.
 //
