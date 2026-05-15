@@ -17,16 +17,13 @@
     "build": "npm run build -w sdk && npm run build -w web",
     "api:generate": "openapi-typescript contract/api/agent-api.openapi.yaml -o contract/api/agent-api.d.ts && openapi-typescript contract/api/vcc-internal.openapi.yaml -o contract/api/vcc-internal.d.ts",
     "api:validate": "openapi-typescript contract/api/agent-api.openapi.yaml -o /dev/null && openapi-typescript contract/api/vcc-internal.openapi.yaml -o /dev/null",
-    "verify": "./scripts/verify.sh",
-    "prepare": "husky"
+    "verify": "./scripts/verify.sh"
   },
   "overrides": {
     "axios": "^1.15.0",
     "postcss": "^8.5.10"
   },
   "devDependencies": {
-    "@commitlint/cli": "^20.5.2",
-    "@commitlint/config-conventional": "^20.0.0",
     "@eslint/js": "^9.0.0",
     "@typescript-eslint/eslint-plugin": "^8.59.0",
     "@typescript-eslint/parser": "^8.59.0",
@@ -35,8 +32,6 @@
     "eslint-plugin-react": "^7.37.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^15.0.0",
-    "husky": "^9.0.0",
-    "lint-staged": "^16.0.0",
     "openapi-typescript": "^7.13.0",
     "prettier": "^3.8.3",
     "typescript-eslint": "^8.59.0"
