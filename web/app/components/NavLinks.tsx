@@ -7,55 +7,31 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const PRIMARY: { href: string; label: string }[] = [
   { href: '/pricing', label: 'Pricing' },
   { href: '/docs', label: 'Docs' },
-  { href: '/changelog', label: 'Changelog' },
-  { href: '/company', label: 'Company' },
-];
-
-const MORE: { href: string; label: string; body: string }[] = [
-  { href: '/compare', label: 'Compare', body: 'vs corporate + shared cards' },
-  { href: '/security', label: 'Security', body: 'Architecture + disclosure' },
-  { href: '/careers', label: 'Careers', body: 'Open roles + benefits' },
-  { href: '/press', label: 'Press', body: 'Media kit + contact' },
-  { href: '/affiliate', label: 'Affiliate', body: 'Earn on every card · soon' },
 ];
 
 export function NavLinks() {
   const pathname = usePathname();
-  const [moreOpen, setMoreOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const moreWrapRef = useRef<HTMLDivElement>(null);
 
   // ESC closes any open menu.
   useEffect(() => {
-    if (!moreOpen && !menuOpen) return;
+    if (!menuOpen) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        setMoreOpen(false);
         setMenuOpen(false);
       }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [moreOpen, menuOpen]);
-
-  // Click outside closes the More dropdown. Only wired while open.
-  useEffect(() => {
-    if (!moreOpen) return;
-    const onClick = (e: globalThis.MouseEvent) => {
-      if (!moreWrapRef.current?.contains(e.target as Node)) setMoreOpen(false);
-    };
-    window.addEventListener('mousedown', onClick);
-    return () => window.removeEventListener('mousedown', onClick);
-  }, [moreOpen]);
+  }, [menuOpen]);
 
   // Route change closes everything.
   useEffect(() => {
-    setMoreOpen(false);
     setMenuOpen(false);
   }, [pathname]);
 
@@ -90,59 +66,6 @@ export function NavLinks() {
             {l.label}
           </Link>
         ))}
-
-        {/* More — dropdown on desktop, items flow inline on mobile */}
-        <div
-          ref={moreWrapRef}
-          className="nav-more"
-          onMouseEnter={() => setMoreOpen(true)}
-          onMouseLeave={() => setMoreOpen(false)}
-        >
-          <button
-            className="nav-more-btn"
-            onClick={() => setMoreOpen(true)}
-            aria-expanded={moreOpen}
-            aria-haspopup="true"
-          >
-            More
-            <svg
-              width="10"
-              height="10"
-              viewBox="0 0 12 12"
-              fill="none"
-              aria-hidden
-              style={{
-                opacity: 0.6,
-                transform: moreOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                transition: 'transform 0.3s var(--ease-out)',
-              }}
-            >
-              <path
-                d="M3 4.5 6 7.5 9 4.5"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
-          <div className={`nav-more-dropdown${moreOpen ? ' nav-more-dropdown--open' : ''}`}>
-            <div className="nav-more-dropdown-card">
-              {MORE.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="nav-more-item"
-                  data-active={isActive(item.href) || undefined}
-                  onClick={() => setMoreOpen(false)}
-                >
-                  <div className="nav-more-item-label">{item.label}</div>
-                  <div className="nav-more-item-body">{item.body}</div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
 
         <Link
           href="/dashboard"
@@ -226,62 +149,6 @@ export function NavLinks() {
         .nav-menu-link[data-active] { color: var(--fg); }
         .nav-menu-link--dashboard { margin-left: 0.25rem; }
 
-        .nav-more { position: relative; }
-        .nav-more-btn {
-          color: var(--fg-muted);
-          font-size: 0.95rem;
-          font-family: var(--font-body);
-          font-weight: 500;
-          padding: 0.45rem 0.7rem;
-          border-radius: 6px;
-          transition: color 0.3s var(--ease-out);
-          white-space: nowrap;
-          background: transparent;
-          border: none;
-          cursor: pointer;
-          display: inline-flex;
-          align-items: center;
-          gap: 0.35rem;
-        }
-        .nav-more-dropdown {
-          display: none;
-          position: absolute;
-          top: 100%;
-          padding-top: 0.5rem;
-          right: 0;
-          min-width: 280px;
-          z-index: 60;
-        }
-        .nav-more-dropdown--open { display: block; }
-        .nav-more-dropdown-card {
-          background: var(--surface);
-          border: 1px solid var(--border);
-          border-radius: 12px;
-          box-shadow: var(--shadow-float);
-          padding: 0.45rem;
-        }
-        .nav-more-item {
-          display: block;
-          padding: 0.65rem 0.75rem;
-          text-decoration: none;
-          color: var(--fg);
-          border-radius: 8px;
-          transition: background 0.2s var(--ease-out);
-        }
-        .nav-more-item:hover { background: var(--surface-hover); }
-        .nav-more-item-label {
-          font-family: var(--font-body);
-          font-size: 0.85rem;
-          font-weight: 500;
-          color: var(--fg);
-          margin-bottom: 0.15rem;
-        }
-        .nav-more-item-body {
-          font-family: var(--font-body);
-          font-size: 0.72rem;
-          color: var(--fg-dim);
-        }
-
         .nav-cta {
           margin-left: 0.6rem;
           text-decoration: none;
@@ -355,27 +222,6 @@ export function NavLinks() {
             white-space: normal;
           }
           .nav-menu-link--dashboard { margin-left: 0; }
-
-          /* Flatten the More wrapper so its items flow in the column */
-          .nav-more { display: contents; }
-          .nav-more-btn { display: none; }
-          .nav-more-dropdown { display: contents !important; }
-          .nav-more-dropdown-card { display: contents; }
-          .nav-more-item {
-            padding: 1rem 0;
-            font-size: 1.2rem;
-            font-family: var(--font-display);
-            color: var(--fg);
-            border-bottom: 1px solid var(--border);
-            border-radius: 0;
-          }
-          .nav-more-item:hover { background: transparent; }
-          .nav-more-item-label {
-            font-size: inherit;
-            font-family: inherit;
-            margin-bottom: 0;
-          }
-          .nav-more-item-body { display: none; }
         }
       `}</style>
     </div>

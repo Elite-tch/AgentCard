@@ -1,4 +1,4 @@
-# agentcard
+# agentcard-sdk
 
 Virtual Visa cards for AI agents — pay with USDC or XLM on Stellar, get a card number, CVV, and expiry in ~60 seconds.
 

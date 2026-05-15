@@ -1,4 +1,4 @@
-# agentcard · Agent skill
+# agentcard-sdk · Agent skill
 
 You are an autonomous agent that has been given access to agentcard — a service
 that turns a Stellar network payment into a real, usable Visa card. This
@@ -23,7 +23,7 @@ It looks like `acard_abc123def456…` and is single-use. To exchange the claim
 for a usable API key, run:
 
 ```bash
-npx -y agentcard@latest onboard --claim acard_<code>
+npx -y agentcard-sdk@latest onboard --claim acard_<code>
 ```
 
 > **Always pin `@latest`.** The `@latest` flag forces `npx` to re-resolve
@@ -40,7 +40,7 @@ This does four things in one call:
    into any env var yourself.
 3. Creates an encrypted OWS Stellar wallet in the default vault at
    `~/.ows/wallets` and prints its public key.
-4. Reports the wallet address to the agentcard backend so your operator sees
+4. Reports the wallet address to the agentcard-sdk backend so your operator sees
    "Awaiting deposit" in their dashboard immediately.
 
 Run it **once**. Do not save the claim code in conversation history — once
@@ -58,7 +58,7 @@ to the public key the command printed. The breakdown:
 Check the balance any time with:
 
 ```bash
-npx -y agentcard@latest wallet balance
+npx -y agentcard-sdk@latest wallet balance
 ```
 
 **Step 2 — open the USDC trustline.** This is the step that trips up
@@ -76,7 +76,7 @@ The trustline must be opened **by your wallet**, not by the operator.
 Run this once, after XLM has landed:
 
 ```bash
-npx -y agentcard@latest wallet trustline
+npx -y agentcard-sdk@latest wallet trustline
 ```
 
 Behind the scenes that signs and submits a `changeTrust` operation
@@ -85,15 +85,15 @@ your account's minimum reserve by 0.5 XLM. After it lands, `wallet
 balance` will show `usdc: 0.0000000` (line open, zero balance) rather
 than `usdc: 0` (no line).
 
-If you only intend to pay agentcard in XLM you can skip this step — XLM
+If you only intend to pay agentcard-sdk in XLM you can skip this step — XLM
 is the native asset on Stellar and needs no trustline. But the operator
 may want to fund you in USDC either way, so opening the trustline
 proactively after XLM lands is the safe default.
 
 **Step 3 — ask the operator to send USDC** (or more XLM if paying in
-XLM). Once the balance updates, `agentcard purchase` works.
+XLM). Once the balance updates, `npx -y agentcard-sdk@latest purchase` works.
 
-After onboarding, any subsequent agentcard command uses the cached key
+After onboarding, any subsequent `npx -y agentcard-sdk@latest` command uses the cached key
 automatically. There is no need to pass credentials on subsequent calls.
 
 ## Purchasing a card
@@ -102,13 +102,13 @@ The simplest path — a single CLI call that creates an order, signs the
 Soroban payment, and waits for the card:
 
 ```bash
-npx -y agentcard@latest purchase --amount 25
+npx -y agentcard-sdk@latest purchase --amount 25
 ```
 
 Or from TypeScript:
 
 ```ts
-import { purchaseCardOWS } from 'agentcard';
+import { purchaseCardOWS } from 'agentcard-sdk';
 
 const card = await purchaseCardOWS({
   apiKey: process.env.AGENTCARD_API_KEY!,

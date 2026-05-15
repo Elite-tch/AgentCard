@@ -45,6 +45,9 @@ export function AuthGate() {
     setError(null);
     setBusy(true);
     try {
+      if (password.length < 8) {
+        throw new Error('Password must be at least 8 characters long');
+      }
       const { error: authError } = await authClient.signUp.email({
         email,
         password,
@@ -222,7 +225,7 @@ export function AuthGate() {
             <Button
               type="submit"
               variant="primary"
-              disabled={busy || !email || password.length < 8}
+              disabled={busy || !email || !password}
               style={{ width: '100%', justifyContent: 'center' }}
             >
               {busy ? 'Creating account…' : 'Create account'}

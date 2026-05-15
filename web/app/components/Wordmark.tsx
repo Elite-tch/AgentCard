@@ -80,7 +80,7 @@ export function Wordmark({
         ...style,
       }}
     >
-      agentcard
+      AgentCard
     </span>
   );
 }

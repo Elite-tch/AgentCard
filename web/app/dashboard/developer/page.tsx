@@ -189,26 +189,25 @@ export default function DeveloperPage() {
               lineHeight: 1.55,
             }}
           >
-            The <code>agentcard</code> npm package ships a CLI for onboarding and a TypeScript SDK
-            for purchases. See{' '}
+            The <code>agentcard-sdk</code> npm package ships a CLI for onboarding and a TypeScript SDK
+            for node/bun/edge environments. Full reference is available at{' '}
             <a
               href="https://agentcard.com/docs"
               target="_blank"
-              rel="noreferrer"
-              style={{ color: 'var(--green)', textDecoration: 'none' }}
+              style={{ color: 'var(--accent)', textDecoration: 'underline' }}
             >
-              docs
-            </a>{' '}
-            for the full reference.
+              agentcard.com/docs
+            </a>
+            .
           </div>
-          <Snippet title="Install" code={`npm install agentcard@latest`} />
+          <Snippet title="Install" code={`npm install agentcard-sdk@latest`} />
           <Snippet
-            title="Onboard an agent"
-            code={`npx -y agentcard@latest onboard --claim <claim-code>`}
+            title="CLI Onboarding"
+            code={`npx -y agentcard-sdk@latest onboard --claim <claim-code>`}
           />
           <Snippet
-            title="Purchase a card"
-            code={`import { purchaseCardOWS } from 'agentcard';
+            title="SDK Usage"
+            code={`import { purchaseCardOWS } from 'agentcard-sdk';
 
 const card = await purchaseCardOWS({
   apiKey: process.env.AGENTCARD_API_KEY!,

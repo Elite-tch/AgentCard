@@ -105,7 +105,7 @@ export function CreateAgentDrawer({ open, onClose }: Props) {
   const snippet = created?.claim
     ? [
         `Read ${APP_URL}/skill.md and set up this agent by running:`,
-        `AGENTCARD_API_URL=${APP_URL} npx -y agentcard@latest onboard --claim ${created.claim.code}`,
+        `AGENTCARD_API_URL=${APP_URL} npx -y agentcard-sdk@latest onboard --claim ${created.claim.code}`,
       ].join('\n')
     : '';
 
@@ -273,7 +273,7 @@ export function CreateAgentDrawer({ open, onClose }: Props) {
             <StepRow
               state={stepState(step, 'awaiting_deposit')}
               title="Awaiting deposit"
-              detail="Send at least 2 XLM to activate the wallet and cover reserves. To receive USDC, the agent must first open a trustline (run `agentcard wallet trustline` after funding with XLM)."
+              detail="Send at least 2 XLM to activate the wallet and cover reserves. To receive USDC, the agent must first open a trustline (run `agentcard-sdk wallet trustline` after funding with XLM)."
             />
             <StepRow
               state={stepState(step, 'funded')}
@@ -359,7 +359,7 @@ export function CreateAgentDrawer({ open, onClose }: Props) {
               >
                 Send at least 2 XLM (1 XLM account minimum + 0.5 XLM trustline + 0.5 headroom). To
                 receive USDC, the agent must first open a USDC trustline by running{' '}
-                <code>agentcard wallet trustline</code>. The stepper will flip to{' '}
+                <code>agentcard-sdk wallet trustline</code>. The stepper will flip to{' '}
                 <strong>Funded</strong> automatically once Horizon sees the deposit.
               </div>
             </div>
