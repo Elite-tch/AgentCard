@@ -1,0 +1,66 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy to production
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: root
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script: |
+            set -e
+            cd /opt/agentcard
+
+            echo "=== Syncing to origin/main (fetch + hard reset + clean) ==="
+            # Strategy: prod is a pure mirror of origin/main. Anything edited
+            # or rsync'd onto prod outside the deploy pipeline is treated as
+            # cruft and removed. Earlier deploys used `git pull` which fails
+            # when untracked files accumulate (a previous rsync had landed
+            # the dashboard rewrite as untracked, and the subsequent pull
+            # refused to overwrite). fetch + reset + clean is idempotent and
+            # self-healing.
+            #
+            # SAFETY: .env files, *.db / *.db-wal / *.db-shm, and node_modules
+            # are all in .gitignore so `git clean -fd` skips them. If you
+            # need to keep something else under /opt/agentcard that isn't
+            # tracked, add it to .gitignore BEFORE the next deploy.
+            git fetch origin main
+            git reset --hard origin/main
+            git clean -fd
+
+            echo "=== Root workspace (installs web + sdk) ==="
+            npm ci
+
+            echo "=== Build SDK ==="
+            npm run build -w sdk
+
+            echo "=== Build web (Next.js production) ==="
+            npm run build -w web
+
+            echo "=== Backend (separate package, not a workspace) ==="
+            cd backend && npm ci --omit=dev && cd ..
+
+            echo "=== Restarting services ==="
+            pm2 describe agentcard-api > /dev/null 2>&1 && pm2 restart agentcard-api --update-env || \
+              pm2 start "node src/index.js" --name agentcard-api --cwd /opt/agentcard/backend
+
+            # Force a clean recreate so the command switches from 'next dev'
+            # to 'next start' on the first deploy after this change.
+            pm2 delete agentcard-web > /dev/null 2>&1 || true
+            pm2 start "npx next start -p 3100" --name agentcard-web --cwd /opt/agentcard/web
+
+            pm2 save
+            echo "=== Deploy complete ==="

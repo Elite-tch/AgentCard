@@ -1,0 +1,13 @@
+Contact: mailto:security@agentcard.com
+Contact: https://agentcard.com/security
+Expires: 2027-04-14T00:00:00Z
+Preferred-Languages: en
+Canonical: https://agentcard.com/.well-known/security.txt
+Policy: https://agentcard.com/security
+Acknowledgments: https://agentcard.com/security
+
+# AgentCard responsible disclosure
+# Report vulnerabilities to security@agentcard.com.
+# We acknowledge within 24 hours, triage within 72, and publish a
+# postmortem to https://agentcard.com/changelog once the fix is live.
+# See https://agentcard.com/security for bounty tiers and scope.

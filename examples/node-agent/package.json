@@ -1,0 +1,11 @@
+{
+  "name": "agentcard-node-agent-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node index.mjs"
+  },
+  "dependencies": {
+    "agentcard": "^0.1.0"
+  }
+}

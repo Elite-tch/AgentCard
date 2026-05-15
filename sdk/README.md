@@ -1,0 +1,150 @@
+# agentcard
+
+Virtual Visa cards for AI agents — pay with USDC or XLM on Stellar, get a card number, CVV, and expiry in ~60 seconds.
+
+[agentcard.com](https://agentcard.com) issues prepaid Visa virtual cards on demand. This SDK lets AI agents create an order, pay the agentcard Soroban receiver contract on Stellar, and receive card details programmatically — all in one call.
+
+## Install
+
+```bash
+npm install agentcard-sdk
+```
+
+Requires Node.js 18 or newer (the SDK uses native `fetch`, `ReadableStream`, and `WebCrypto`). Supported platforms via the bundled `@ctx.com/stellar-ows-core` native wallet bindings: macOS (arm64 + x64), Linux (arm64 + x64). Windows is not currently supported.
+
+### A note on `npm audit`
+
+You'll see 3 critical advisories on `axios <= 1.14.0` after installing. They come from `@stellar/stellar-sdk`, which hard-pins an older axios version that we can't override from inside this package. The SDK's own HTTP calls only talk to hardcoded Stellar RPC / Horizon endpoints, so neither advisory (NO_PROXY SSRF, header-injection metadata exfil) is reachable through agentcard code — it's noise for our use, but noise you should still silence at your own project root.
+
+Fix in your own `package.json`:
+
+```json
+{
+  "overrides": {
+    "axios": "^1.15.0"
+  }
+}
+```
+
+then `rm -rf node_modules package-lock.json && npm install`. `npm audit` returns clean. Upstream fix tracked at [stellar/js-stellar-sdk#1381](https://github.com/stellar/js-stellar-sdk/pull/1381); this note will be removed as soon as it merges and a new stellar-sdk ships.
+
+## Quick start
+
+```typescript
+import { createOWSWallet, getOWSBalance, purchaseCardOWS } from 'agentcard-sdk';
+
+// 1. Create (or fetch existing) encrypted wallet. Idempotent.
+const { publicKey } = createOWSWallet('my-agent');
+console.log('Fund this Stellar address:', publicKey);
+
+// 2. Pause here until the address has funds. Re-run to check:
+const bal = await getOWSBalance('my-agent');
+console.log(`XLM: ${bal.xlm}  USDC: ${bal.usdc}`);
+
+// 3. Purchase a card — only do this when the user explicitly asks.
+const card = await purchaseCardOWS({
+  apiKey: process.env.AGENTCARD_API_KEY!,
+  walletName: 'my-agent',
+  amountUsdc: '10.00',
+  paymentAsset: 'xlm', // or 'usdc' (trustline added automatically)
+});
+
+console.log(card.number, card.cvv, card.expiry);
+```
+
+`purchaseCardOWS` handles the whole flow:
+
+1. `POST /v1/orders` with the amount
+2. Sign + submit the Soroban payment from your OWS wallet
+3. Subscribe to the SSE stream at `/v1/orders/:id/stream`
+4. Return the card details as soon as the `ready` event arrives
+
+No polling loops, no webhook endpoint required.
+
+## Funding your wallet
+
+Stellar accounts need a minimum balance to be activated on-chain:
+
+- **Pay with XLM:** send ≥ 1 XLM to cover the base reserve, plus whatever XLM the card costs at the current spot rate (shown in `payment.xlm.amount` when you create an order).
+- **Pay with USDC:** send ≥ 2 XLM (1 base reserve + 1 for the USDC trustline entry), plus the USDC card amount. The SDK will add the trustline automatically the first time you purchase with USDC, so you just need the ≥ 2 XLM on-chain before calling `purchaseCardOWS`.
+
+## Step-by-step API (for more control)
+
+```typescript
+import { AgentcardClient } from 'agentcard-sdk';
+
+const client = new AgentcardClient({
+  apiKey: process.env.AGENTCARD_API_KEY!,
+  // baseUrl defaults to https://api.agentcard.com/v1
+});
+
+// Create the order
+const order = await client.createOrder({ amount_usdc: '10.00' });
+console.log(`Pay ${order.payment.xlm.amount} XLM to contract ${order.payment.contract_id}`);
+
+// ... submit the Soroban transaction yourself, or use the payViaContract helpers ...
+
+// Wait for delivery (uses SSE under the hood, with polling fallback)
+const card = await client.waitForCard(order.order_id, { timeoutMs: 120000 });
+console.log(card.number, card.cvv, card.expiry);
+```
+
+## MCP server — for Claude Desktop, Cursor, and other MCP clients
+
+Add to your client's `mcpServers` config:
+
+```json
+{
+  "mcpServers": {
+    "agentcard": {
+      "command": "npx",
+      "args": ["-y", "agentcard-sdk"],
+      "env": { "AGENTCARD_API_KEY": "agentcard_<your key>" }
+    }
+  }
+}
+```
+
+The MCP server exposes four tools: `setup_wallet`, `check_budget`, `check_order`, and `purchase_vcc`.
+
+## Error handling
+
+All SDK errors inherit from `AgentcardError`. Typed subclasses let you react to specific failure modes:
+
+```typescript
+import {
+  AgentcardError,
+  AuthError,
+  SpendLimitError,
+  RateLimitError,
+  ServiceUnavailableError,
+  InvalidAmountError,
+  OrderFailedError,
+  WaitTimeoutError,
+} from 'agentcard-sdk';
+
+try {
+  const card = await purchaseCardOWS({ ... });
+} catch (err) {
+  if (err instanceof SpendLimitError) { /* cap reached — ask owner to raise */ }
+  else if (err instanceof OrderFailedError) { /* check err.refund for refund tx */ }
+  else if (err instanceof WaitTimeoutError) { /* network flake or stalled fulfillment */ }
+  else if (err instanceof AuthError) { /* bad key */ }
+}
+```
+
+## Keeping card details safe
+
+`purchaseCardOWS` returns the card PAN, CVV, and expiry as plain strings. **Treat them as secrets.** Don't log them, don't write them to disk, don't send them to observability pipelines unless those pipelines are explicitly PCI-compliant.
+
+## Links
+
+- [agentcard.com](https://agentcard.com) — dashboard and docs
+- [agentcard.com/docs](https://agentcard.com/docs) — full API reference
+- [agentcard.com/skill.md](https://agentcard.com/skill.md) — drop-in agent onboarding brief
+- [agentcard.com/llms.txt](https://agentcard.com/llms.txt) — LLM-index of every docs surface
+- [github.com/Elite-tch/Agentcard](https://github.com/Elite-tch/Agentcard) — source
+
+## License
+
+MIT — see [LICENSE](./LICENSE).
