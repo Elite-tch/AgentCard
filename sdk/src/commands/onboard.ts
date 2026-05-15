@@ -1,9 +1,9 @@
-// `cards402 onboard --claim <code>` — one-shot agent setup.
+// `agentcard onboard --claim <code>` — one-shot agent setup.
 //
 // 1. Trade the one-time claim code for the real api key via
 //    POST /v1/agent/claim. The raw api key is returned over HTTPS, not
 //    pasted into the agent's conversation transcript.
-// 2. Persist the api key + api_url in ~/.cards402/config.json (0600)
+// 2. Persist the api key + api_url in ~/.agentcard/config.json (0600)
 //    so the SDK can load it automatically on future runs.
 // 3. Create (or fetch) the OWS wallet under a default name. Private
 //    keys never leave the local OWS vault.
@@ -11,9 +11,9 @@
 //    "Awaiting deposit" in their dashboard immediately.
 // 5. Print the Stellar address + next steps.
 
-import { assertSafeBaseUrl, loadCards402Config, saveCards402Config } from '../config';
+import { assertSafeBaseUrl, loadAgentcardConfig, saveAgentcardConfig } from '../config';
 import { createOWSWallet, getOWSBalance } from '../ows';
-import { Cards402Client } from '../client';
+import { AgentcardClient } from '../client';
 
 // Exported for tests — see src/commands/onboard.test.ts
 export { deriveDefaultWalletName as _deriveDefaultWalletName };
@@ -50,13 +50,13 @@ function parseArgs(argv: string[]): OnboardArgs {
 
 function usage(): void {
   process.stderr
-    .write(`Usage: cards402 onboard --claim <code> [--wallet-name <name>] [--vault-path <path>] [--passphrase-env <ENVNAME>] [--api-base <url>]
+    .write(`Usage: agentcard onboard --claim <code> [--wallet-name <name>] [--vault-path <path>] [--passphrase-env <ENVNAME>] [--api-base <url>]
 
-Exchanges a one-time claim code (from the cards402 dashboard) for an
+Exchanges a one-time claim code (from the agentcard dashboard) for an
 api key, creates an OWS Stellar wallet, and registers its address with
 the backend so your operator sees live setup progress.
 
-The raw api key is stored at ~/.cards402/config.json (chmod 0600) and
+The raw api key is stored at ~/.agentcard/config.json (chmod 0600) and
 is auto-loaded by the SDK on subsequent runs. You do NOT need to paste
 the api key into any env var yourself.
 
@@ -73,11 +73,11 @@ Options:
                              Persisted to config so subsequent purchase/wallet
                              commands use the same vault automatically.
   --passphrase-env <ENVNAME> Name of the environment variable that holds the
-                             OWS passphrase (e.g. CARDS402_OWS_PASSPHRASE). The
+                             OWS passphrase (e.g. AGENTCARD_OWS_PASSPHRASE). The
                              passphrase value is read from process.env at call
                              time; only the variable NAME is persisted to
-                             ~/.cards402/config.json, never the value itself.
-  --api-base <url>           Override the default https://api.cards402.com/v1
+                             ~/.agentcard/config.json, never the value itself.
+  --api-base <url>           Override the default https://api.agentcard.com/v1
   -h, --help                 Show this message
 `);
 }
@@ -85,7 +85,7 @@ Options:
 /**
  * Derive a unique, deterministic wallet name from the agent label and
  * claim code. Two different claims always produce different names, so
- * running `cards402 onboard` multiple times on the same machine gives
+ * running `agentcard onboard` multiple times on the same machine gives
  * each agent its own OWS wallet file instead of silently reusing the
  * previous agent's private keys. The claim-code suffix is what makes
  * it unique; the label is just there to make the vault file readable
@@ -106,7 +106,7 @@ function deriveDefaultWalletName(claim: string, label: string | null): string {
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-+|-+$/g, '')
       .slice(0, 24) || 'agent';
-  return `cards402-${slug}-${suffix}`;
+  return `agentcard-${slug}-${suffix}`;
 }
 
 export async function onboardCommand(argv: string[]): Promise<number> {
@@ -136,27 +136,27 @@ export async function onboardCommand(argv: string[]): Promise<number> {
     return 2;
   }
 
-  let apiBase = args.apiBase || process.env.CARDS402_BASE_URL || 'https://api.cards402.com/v1';
+  let apiBase = args.apiBase || process.env.AGENTCARD_BASE_URL || 'https://api.agentcard.com/v1';
   // Refuse a non-HTTPS base URL unless the local-dev escape hatch is
   // set. Without this, an attacker who tricks the user into passing
   // --api-base http://evil/ sees the claim code AND the returned api
-  // key in plaintext. The escape hatch (CARDS402_ALLOW_INSECURE_BASE_URL=1)
+  // key in plaintext. The escape hatch (AGENTCARD_ALLOW_INSECURE_BASE_URL=1)
   // exists only for onboarding against a local backend.
   try {
-    apiBase = assertSafeBaseUrl(apiBase, { context: '--api-base / CARDS402_BASE_URL' });
+    apiBase = assertSafeBaseUrl(apiBase, { context: '--api-base / AGENTCARD_BASE_URL' });
   } catch (err) {
     process.stderr.write(`error: ${err instanceof Error ? err.message : String(err)}\n`);
     return 2;
   }
 
-  // If the machine already has a Cards402 config, warn before
+  // If the machine already has a Agentcard config, warn before
   // overwriting. A re-onboard is legitimate (rotated key, replaced
   // agent) but silently stomping the old file orphans the previous
   // OWS wallet and locks the operator out of any funds sitting in it.
-  const existing = loadCards402Config();
+  const existing = loadAgentcardConfig();
   if (existing) {
     process.stderr.write(
-      '⚠ An existing cards402 config was found at ~/.cards402/config.json\n' +
+      '⚠ An existing agentcard config was found at ~/.agentcard/config.json\n' +
         `   previous wallet: ${existing.wallet_name ?? '(unknown)'}\n` +
         `   created_at:      ${existing.created_at ?? '(unknown)'}\n` +
         '   The old OWS wallet file (if present) is NOT deleted — keep it\n' +
@@ -198,7 +198,7 @@ export async function onboardCommand(argv: string[]): Promise<number> {
         }\n`,
       );
       process.stderr.write(
-        'If the code is expired, ask your operator to mint a new one in the cards402 dashboard.\n',
+        'If the code is expired, ask your operator to mint a new one in the agentcard dashboard.\n',
       );
       return 1;
     }
@@ -209,16 +209,16 @@ export async function onboardCommand(argv: string[]): Promise<number> {
     if (typeof data.api_key !== 'string' || !data.api_key) {
       process.stderr.write(
         'error: claim succeeded but the response is missing api_key — aborting.\n' +
-          'This is a backend bug. Report it to api@cards402.com with the response.\n',
+          'This is a backend bug. Report it to api@agentcard.com with the response.\n',
       );
       return 1;
     }
     // F2-onboard (2026-04-16): validate the api_key for header-safe
     // printable ASCII before persisting to config. A MITM or compromised
     // backend that returns an api_key containing CRLF would be written
-    // to ~/.cards402/config.json and then crash every subsequent SDK
+    // to ~/.agentcard/config.json and then crash every subsequent SDK
     // call via Node's ERR_INVALID_CHAR on the X-Api-Key header. The
-    // load-time check in config.ts::loadCards402Config catches it on
+    // load-time check in config.ts::loadAgentcardConfig catches it on
     // next run, but the current onboard session's reportStatus calls
     // would also crash. Catch it here at persist time so the corrupt
     // key never touches disk.
@@ -231,7 +231,7 @@ export async function onboardCommand(argv: string[]): Promise<number> {
     }
     if (typeof data.api_key_id !== 'string' || !data.api_key_id) {
       process.stderr.write(
-        'error: claim response missing api_key_id — aborting. Report to api@cards402.com.\n',
+        'error: claim response missing api_key_id — aborting. Report to api@agentcard.com.\n',
       );
       return 1;
     }
@@ -241,7 +241,7 @@ export async function onboardCommand(argv: string[]): Promise<number> {
     // backend instance could overwrite api_url with an attacker
     // target, and every subsequent SDK call (including /v1/orders,
     // which carries the api key in the Authorization header) would
-    // go to the attacker. Persisting the poisoned url to ~/.cards402/
+    // go to the attacker. Persisting the poisoned url to ~/.agentcard/
     // config.json turns a transient MITM into a permanent compromise.
     if (data.api_url !== undefined && data.api_url !== null) {
       if (typeof data.api_url !== 'string') {
@@ -261,7 +261,7 @@ export async function onboardCommand(argv: string[]): Promise<number> {
         );
         return 1;
       }
-      if (claimUrl.protocol !== 'https:' && process.env.CARDS402_ALLOW_INSECURE_BASE_URL !== '1') {
+      if (claimUrl.protocol !== 'https:' && process.env.AGENTCARD_ALLOW_INSECURE_BASE_URL !== '1') {
         process.stderr.write(
           `error: claim response api_url uses ${claimUrl.protocol} — refusing to persist a non-HTTPS api_url.\n`,
         );
@@ -289,11 +289,11 @@ export async function onboardCommand(argv: string[]): Promise<number> {
   // the agent label + the claim code so every onboarding run produces
   // a distinct wallet. This closes the "second agent inherited the
   // first agent's wallet" bug where both claims used the static
-  // default 'cards402-agent' name.
+  // default 'agentcard-agent' name.
   const walletName = args.walletName || deriveDefaultWalletName(args.claim, claimResponse.label);
 
   // F12: resolve passphrase from the named env var. Only the var NAME
-  // is persisted to config; the value never touches disk in cards402.
+  // is persisted to config; the value never touches disk in agentcard.
   let passphrase: string | undefined;
   if (args.passphraseEnv) {
     passphrase = process.env[args.passphraseEnv];
@@ -307,7 +307,7 @@ export async function onboardCommand(argv: string[]): Promise<number> {
   }
 
   // Step 2 — persist config so the SDK finds it on next run.
-  const { path: configPath } = saveCards402Config({
+  const { path: configPath } = saveAgentcardConfig({
     api_key: claimResponse.api_key,
     api_url: claimResponse.api_url || apiBase,
     webhook_secret: claimResponse.webhook_secret,
@@ -320,7 +320,7 @@ export async function onboardCommand(argv: string[]): Promise<number> {
 
   // Step 3 — create or fetch the OWS wallet.
   process.stdout.write('→ Setting up OWS wallet…\n');
-  const client = new Cards402Client({
+  const client = new AgentcardClient({
     apiKey: claimResponse.api_key,
     baseUrl: claimResponse.api_url || apiBase,
   });
@@ -365,7 +365,7 @@ export async function onboardCommand(argv: string[]): Promise<number> {
 
   process.stdout.write('\n');
   process.stdout.write('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-  process.stdout.write(' cards402 agent ready\n');
+  process.stdout.write(' agentcard agent ready\n');
   process.stdout.write('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
   process.stdout.write(`  Label:           ${claimResponse.label ?? '(none)'}\n`);
   process.stdout.write(`  Stellar address: ${publicKey}\n`);
@@ -386,11 +386,11 @@ export async function onboardCommand(argv: string[]): Promise<number> {
       // Call this out explicitly — without it, any USDC payment sent
       // to the address bounces.
       process.stdout.write('  To receive USDC from the operator, open the USDC trustline first:\n');
-      process.stdout.write('    npx -y cards402@latest wallet trustline\n');
+      process.stdout.write('    npx -y agentcard@latest wallet trustline\n');
       process.stdout.write('\n');
     }
     process.stdout.write('  Try a test purchase:\n');
-    process.stdout.write('    npx -y cards402@latest purchase --amount 0.01\n');
+    process.stdout.write('    npx -y agentcard@latest purchase --amount 0.01\n');
     if (usdcNum > 0) {
       process.stdout.write('\n');
       process.stdout.write(`  (USDC balance ${balance.usdc} will be auto-picked for USDC-paid\n`);
@@ -404,7 +404,7 @@ export async function onboardCommand(argv: string[]): Promise<number> {
     process.stdout.write('      base reserve) + 0.5 XLM trustline subentry + ~0.5 headroom.\n');
     process.stdout.write('\n');
     process.stdout.write('  Step 2 — open the USDC trustline before any USDC payment:\n');
-    process.stdout.write('    npx -y cards402@latest wallet trustline\n');
+    process.stdout.write('    npx -y agentcard@latest wallet trustline\n');
     process.stdout.write('\n');
     process.stdout.write('    USDC is an ISSUED asset on Stellar — the holder account must\n');
     process.stdout.write('    authorize the issuer before it can hold any balance. A USDC\n');
@@ -416,10 +416,10 @@ export async function onboardCommand(argv: string[]): Promise<number> {
     process.stdout.write('  Step 3 — ask the operator to send USDC (or more XLM).\n');
     process.stdout.write('\n');
     process.stdout.write('  Step 4 — buy a card:\n');
-    process.stdout.write('    npx -y cards402@latest purchase --amount <USD>\n');
+    process.stdout.write('    npx -y agentcard@latest purchase --amount <USD>\n');
   }
   process.stdout.write('\n');
-  process.stdout.write('Your operator sees setup progress live in the cards402 dashboard.\n');
+  process.stdout.write('Your operator sees setup progress live in the agentcard dashboard.\n');
   process.stdout.write('\n');
   return 0;
 }

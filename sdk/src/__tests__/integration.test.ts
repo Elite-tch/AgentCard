@@ -1,5 +1,5 @@
 /**
- * SDK integration test — exercises Cards402Client's HTTP serialisation
+ * SDK integration test — exercises AgentcardClient's HTTP serialisation
  * against the OpenAPI contract shapes by stubbing global fetch. No
  * Stellar, no VCC, no CTX.
  */
@@ -7,27 +7,27 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 
 // Allow http:// base URLs in tests (assertSafeBaseUrl rejects them otherwise)
-process.env.CARDS402_ALLOW_INSECURE_BASE_URL = '1';
+process.env.AGENTCARD_ALLOW_INSECURE_BASE_URL = '1';
 
-import type { Cards402Client as Cards402ClientType } from '../client';
+import type { AgentcardClient as AgentcardClientType } from '../client';
 
 describe('SDK integration (sandbox mode)', () => {
-  let Cards402Client: typeof Cards402ClientType;
+  let AgentcardClient: typeof AgentcardClientType;
 
   beforeAll(async () => {
     const mod = await import('../client');
-    Cards402Client = mod.Cards402Client;
+    AgentcardClient = mod.AgentcardClient;
   });
 
-  it('Cards402Client constructor validates API key', () => {
-    expect(() => new Cards402Client({ apiKey: '' })).toThrow();
-    expect(() => new Cards402Client({ apiKey: '  ' })).toThrow();
-    const client = new Cards402Client({ apiKey: 'test_key', baseUrl: 'http://localhost:1234/v1' });
+  it('AgentcardClient constructor validates API key', () => {
+    expect(() => new AgentcardClient({ apiKey: '' })).toThrow();
+    expect(() => new AgentcardClient({ apiKey: '  ' })).toThrow();
+    const client = new AgentcardClient({ apiKey: 'test_key', baseUrl: 'http://localhost:1234/v1' });
     expect(client).toBeDefined();
   });
 
-  it('Cards402Client has all expected methods', () => {
-    const client = new Cards402Client({ apiKey: 'test_key' });
+  it('AgentcardClient has all expected methods', () => {
+    const client = new AgentcardClient({ apiKey: 'test_key' });
     expect(typeof client.createOrder).toBe('function');
     expect(typeof client.getOrder).toBe('function');
     expect(typeof client.waitForCard).toBe('function');
@@ -65,15 +65,15 @@ describe('SDK integration (sandbox mode)', () => {
     }) as typeof fetch;
 
     try {
-      const client = new Cards402Client({
-        apiKey: 'cards402_testkey',
+      const client = new AgentcardClient({
+        apiKey: 'agentcard_testkey',
         baseUrl: 'http://test/v1',
         retry: { attempts: 0 },
       });
       const result = await client.createOrder({ amount_usdc: '10.00' });
 
       expect(capturedUrl).toBe('http://test/v1/orders');
-      expect(capturedHeaders['X-Api-Key']).toBe('cards402_testkey');
+      expect(capturedHeaders['X-Api-Key']).toBe('agentcard_testkey');
       expect(capturedHeaders['Content-Type']).toBe('application/json');
       expect(capturedHeaders['Idempotency-Key']).toBeTruthy();
 
@@ -93,7 +93,7 @@ describe('SDK integration (sandbox mode)', () => {
     globalThis.fetch = (async (url: string | URL, init?: RequestInit) => {
       expect(String(url)).toContain('/orders/order-123');
       const headers = (init?.headers || {}) as Record<string, string>;
-      expect(headers['X-Api-Key']).toBe('cards402_testkey');
+      expect(headers['X-Api-Key']).toBe('agentcard_testkey');
       return new Response(
         JSON.stringify({
           order_id: 'order-123',
@@ -110,8 +110,8 @@ describe('SDK integration (sandbox mode)', () => {
     }) as typeof fetch;
 
     try {
-      const client = new Cards402Client({
-        apiKey: 'cards402_testkey',
+      const client = new AgentcardClient({
+        apiKey: 'agentcard_testkey',
         baseUrl: 'http://test/v1',
         retry: { attempts: 0 },
       });
@@ -135,8 +135,8 @@ describe('SDK integration (sandbox mode)', () => {
     }) as typeof fetch;
 
     try {
-      const client = new Cards402Client({
-        apiKey: 'cards402_testkey',
+      const client = new AgentcardClient({
+        apiKey: 'agentcard_testkey',
         baseUrl: 'http://test/v1',
         retry: { attempts: 0 },
       });
@@ -177,8 +177,8 @@ describe('SDK integration (sandbox mode)', () => {
     };
 
     try {
-      const client = new Cards402Client({
-        apiKey: 'cards402_testkey',
+      const client = new AgentcardClient({
+        apiKey: 'agentcard_testkey',
         baseUrl: 'http://test/v1',
         retry: { attempts: 2, baseDelayMs: 10, maxDelayMs: 50 },
       });

@@ -1,7 +1,7 @@
 // Soroban contract payment helpers — shared by raw-keypair (stellar.ts) and
 // OWS-wallet (ows.ts) payment paths. The receiver contract's pay_usdc/pay_xlm
 // functions take (from: Address, amount: i128, order_id: Bytes) and emit a
-// payment event that the cards402 backend watcher indexes.
+// payment event that the agentcard backend watcher indexes.
 
 import {
   Account,
@@ -161,7 +161,7 @@ export async function buildContractPaymentTx(
  * status. Returns the transaction hash on success.
  *
  * Important: a successful return only guarantees the tx has been accepted
- * onto the ledger. The cards402 backend's contract watcher is the source
+ * onto the ledger. The agentcard backend's contract watcher is the source
  * of truth for "the order has been credited" — the SDK's purchaseCardOWS
  * always follows up with waitForCard against the order id, so even if
  * this function gives up before finalization, the watcher still has a
@@ -366,7 +366,7 @@ export async function submitSorobanTx(
   // Soroban RPC never saw a terminal state AND Horizon is unreachable
   // (or the response was neither 2xx nor 404). We genuinely don't know
   // whether the tx landed, so attach txHash and let purchaseCardOWS
-  // give the cards402 backend watcher a chance to credit the order.
+  // give the agentcard backend watcher a chance to credit the order.
   const err = new Error(
     `Soroban transaction ${send.hash} did not finalize within ${POLL_DEADLINE_MS / 1000}s and Horizon is unreachable`,
   );

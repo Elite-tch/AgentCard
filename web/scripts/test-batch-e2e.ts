@@ -49,7 +49,7 @@ async function main() {
 
   await connectToDatabase();
 
-  const testToken = `AgentCard_${crypto.randomBytes(24).toString('hex')}`;
+  const testToken = `agentcard_${crypto.randomBytes(24).toString('hex')}`;
   const keyHash = await bcrypt.hash(testToken, 10);
   const keyPrefix = testToken.slice(10, 22);
   

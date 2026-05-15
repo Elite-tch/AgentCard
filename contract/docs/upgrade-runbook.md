@@ -27,7 +27,7 @@ needing to burn the key.
 
    ```
    stellar contract install \
-     --wasm target/wasm32-unknown-unknown/release/cards402_receiver.wasm \
+     --wasm target/wasm32-unknown-unknown/release/agentcard_receiver.wasm \
      --source <ADMIN_SECRET> \
      --network mainnet
    ```

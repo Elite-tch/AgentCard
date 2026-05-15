@@ -1,11 +1,11 @@
 # Contributing
 
-Thanks for wanting to improve cards402. This repo has four main pieces:
+Thanks for wanting to improve agentcard. This repo has four main pieces:
 
 | Path        | Language                           | What it does                               |
 | ----------- | ---------------------------------- | ------------------------------------------ |
 | `backend/`  | Node.js + Express + better-sqlite3 | The 402-payment API that agents talk to    |
-| `sdk/`      | TypeScript                         | `cards402` npm package + MCP server        |
+| `sdk/`      | TypeScript                         | `agentcard` npm package + MCP server        |
 | `web/`      | Next.js + TypeScript               | Owner dashboard (admin + per-agent views)  |
 | `contract/` | Rust / Soroban                     | On-chain receiver contract agents pay into |
 
@@ -85,7 +85,7 @@ Closes C-4. See docs/audits/2026-04-12-full-findings.md.
 - [ ] `ARCHITECTURE.md` updated if the contract between modules changed
 - [ ] `CHANGELOG.md` updated under `[Unreleased]`
 - [ ] `.env.example` updated if you added / renamed an env var
-- [ ] If you touched the vcc-cards402 callback protocol: update both
+- [ ] If you touched the vcc-agentcard callback protocol: update both
       repos in lockstep and run `backend/test-batch-e2e.js` against the
       real vcc before merging
 

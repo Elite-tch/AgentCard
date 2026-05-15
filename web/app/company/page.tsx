@@ -5,15 +5,15 @@ import { ogForPage, twitterForPage } from '@/app/lib/seo';
 export const metadata: Metadata = {
   title: 'Company',
   description:
-    "AgentCard is a small team building payment infrastructure for AI agents. Here's who we are and where we're going.",
+    "agentcard is a small team building payment infrastructure for AI agents. Here's who we are and where we're going.",
   alternates: { canonical: 'https://agentcard.com/company' },
   openGraph: ogForPage({
-    title: 'Company — AgentCard',
+    title: 'Company — agentcard',
     description: 'Payment infrastructure for AI agents. Built by a small, focused team.',
     path: '/company',
   }),
   twitter: twitterForPage({
-    title: 'Company — AgentCard',
+    title: 'Company — agentcard',
     description: 'Payment infrastructure for AI agents.',
   }),
 };
@@ -25,7 +25,7 @@ const PRINCIPLES = [
   },
   {
     title: 'Ship one good thing.',
-    body: 'AgentCard does one job: turn a Stellar payment into a Visa card. We will not bolt on a rewards programme, a fiat on-ramp, or a chat widget. Depth over breadth, forever.',
+    body: 'agentcard does one job: turn a Stellar payment into a Visa card. We will not bolt on a rewards programme, a fiat on-ramp, or a chat widget. Depth over breadth, forever.',
   },
   {
     title: 'Write it down.',
@@ -47,7 +47,7 @@ const MILESTONES = [
   {
     date: 'Q2 2026',
     title: 'Non-custodial v2 + MCP server',
-    body: 'Agents now pay the receiver contract directly. Claude Desktop integration via the AgentCard MCP server.',
+    body: 'Agents now pay the receiver contract directly. Claude Desktop integration via the agentcard MCP server.',
     status: 'Shipped',
   },
   {
@@ -59,7 +59,7 @@ const MILESTONES = [
   {
     date: 'Q4 2026',
     title: 'EU IBAN + on-chain reporting',
-    body: 'European IBAN accounts for agents that need a non-card rail. Transparent on-chain reporting of AgentCard treasury flow.',
+    body: 'European IBAN accounts for agents that need a non-card rail. Transparent on-chain reporting of agentcard treasury flow.',
     status: 'Planned',
   },
 ];
@@ -71,7 +71,7 @@ export default function CompanyPage() {
         eyebrow="Company"
         title="Payment infrastructure for autonomous"
         accent="agents"
-        intro="AgentCard was started because there was no way for an LLM agent to buy something on the open internet without a human holding its hand. Not without pasting a card number into a chat. Not without a human approving every transaction. Not without giving up custody. We're fixing that — carefully, one primitive at a time."
+        intro="agentcard was started because there was no way for an LLM agent to buy something on the open internet without a human holding its hand. Not without pasting a card number into a chat. Not without a human approving every transaction. Not without giving up custody. We're fixing that — carefully, one primitive at a time."
       />
 
       {/* Mission */}
@@ -109,7 +109,7 @@ export default function CompanyPage() {
               &ldquo;let the agent ask the human&rdquo;. Neither scales.
             </p>
             <p className="type-body" style={{ fontSize: '1rem', marginBottom: '1.2rem' }}>
-              AgentCard is the middle answer. A stablecoin payment in, a real card out, and a
+              agentcard is the middle answer. A stablecoin payment in, a real card out, and a
               non-custodial architecture so no single party — not us, not a custodian, not a
               compromised operator — can divert agent funds in flight. Boring, correct, and mostly
               invisible. That&apos;s the job.

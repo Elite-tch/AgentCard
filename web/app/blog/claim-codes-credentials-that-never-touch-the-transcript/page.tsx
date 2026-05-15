@@ -9,10 +9,10 @@ const POST_DATE = '2026-04-14';
 export const metadata: Metadata = {
   title: 'Claim codes: credentials that never touch the transcript',
   description:
-    'Why AgentCard onboards agents with single-use claim codes instead of raw API keys, and how the exchange flow avoids credential-in-prompt failure.',
+    'Why agentcard onboards agents with single-use claim codes instead of raw API keys, and how the exchange flow avoids credential-in-prompt failure.',
   alternates: { canonical: POST_URL },
   openGraph: ogForPage({
-    title: 'Claim codes: credentials that never touch the transcript — AgentCard',
+    title: 'Claim codes: credentials that never touch the transcript — agentcard',
     description:
       'Single-use claim codes instead of raw API keys for agent onboarding. The threat model, the exchange, and why it matters when the operator is talking to an LLM.',
     path: '/blog/claim-codes-credentials-that-never-touch-the-transcript',
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   twitter: twitterForPage({
     title: 'Claim codes: credentials that never touch the transcript',
     description:
-      'Why AgentCard onboards agents with single-use claim codes instead of raw API keys.',
+      'Why agentcard onboards agents with single-use claim codes instead of raw API keys.',
   }),
 };
 
@@ -30,13 +30,13 @@ const blogJsonLd = {
   '@id': POST_URL,
   mainEntityOfPage: POST_URL,
   headline: 'Claim codes: credentials that never touch the transcript',
-  description: 'Why AgentCard onboards agents with single-use claim codes instead of raw API keys.',
+  description: 'Why agentcard onboards agents with single-use claim codes instead of raw API keys.',
   datePublished: POST_DATE,
   dateModified: POST_DATE,
-  author: { '@type': 'Organization', name: 'AgentCard', url: 'https://agentcard.com' },
+  author: { '@type': 'Organization', name: 'agentcard', url: 'https://agentcard.com' },
   publisher: {
     '@type': 'Organization',
-    name: 'AgentCard',
+    name: 'agentcard',
     logo: { '@type': 'ImageObject', url: 'https://agentcard.com/icon.png' },
   },
   image: 'https://agentcard.com/opengraph-image',
@@ -127,13 +127,13 @@ export default function BlogPost() {
             <span>·</span>
             <span>7 min read</span>
             <span>·</span>
-            <span>by AgentCard engineering</span>
+            <span>by agentcard engineering</span>
           </div>
         </header>
 
         <div className="post-body">
           <p className="lede">
-            The first version of AgentCard onboarded agents the same way every API has onboarded
+            The first version of agentcard onboarded agents the same way every API has onboarded
             developers since the early 2000s: an operator copies a raw API key out of the dashboard
             and pastes it into the agent. When the agent in question is an LLM, this turns out to be
             a terrible idea for reasons that aren&apos;t obvious until you&apos;ve watched an
@@ -144,7 +144,7 @@ export default function BlogPost() {
           <h2>The failure mode</h2>
 
           <p>
-            Picture an operator using a Claude Desktop or Cursor agent to set up a new AgentCard
+            Picture an operator using a Claude Desktop or Cursor agent to set up a new agentcard
             integration. They mint an API key in the dashboard, copy it to their clipboard, and
             paste it into the conversation with the assistant. The assistant stores it, builds the
             integration, and does something correct with it.
@@ -188,7 +188,7 @@ export default function BlogPost() {
           <p>
             <strong>OAuth.</strong> Agents initiate a device-code flow, operator approves it in a
             browser, no credential ever leaves our server. This is the right answer for long-lived
-            web apps. It was the wrong answer for AgentCard because the agent doesn&apos;t have a
+            web apps. It was the wrong answer for agentcard because the agent doesn&apos;t have a
             browser — it runs in an MCP server or a headless script — and because device-code flows
             add a multi- minute human-in-the-loop step to what should be a one-command setup.
           </p>
@@ -328,7 +328,7 @@ export default function BlogPost() {
           </p>
 
           <p>
-            AgentCard is the result of auditing each of those assumptions one at a time and fixing
+            agentcard is the result of auditing each of those assumptions one at a time and fixing
             them structurally. Claim codes fix the onboarding one. The other two we&apos;ve covered
             in <Link href="/blog/sse-beats-polling-for-agent-apis">why SSE beats polling</Link> and{' '}
             <Link href="/blog/non-custodial-card-issuance-on-soroban">

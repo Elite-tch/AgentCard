@@ -1,5 +1,5 @@
 /**
- * Structured error types for the cards402 SDK.
+ * Structured error types for the agentcard SDK.
  *
  * Catch by type so your agent can handle each case without string-parsing:
  *
@@ -11,8 +11,8 @@
  *   }
  */
 
-/** Base class — all cards402 errors extend this. */
-export class Cards402Error extends Error {
+/** Base class — all agentcard errors extend this. */
+export class AgentcardError extends Error {
   constructor(
     message: string,
     public readonly code: string,
@@ -20,13 +20,13 @@ export class Cards402Error extends Error {
     public readonly raw?: unknown,
   ) {
     super(message);
-    this.name = 'Cards402Error';
+    this.name = 'AgentcardError';
     Object.setPrototypeOf(this, new.target.prototype);
   }
 }
 
 /** The API key's spend limit has been reached. */
-export class SpendLimitError extends Cards402Error {
+export class SpendLimitError extends AgentcardError {
   constructor(
     public readonly limit: string,
     public readonly spent: string,
@@ -49,7 +49,7 @@ export class SpendLimitError extends Cards402Error {
  * error code, so we forward the message verbatim instead of hardcoding
  * the wrong explanation.
  */
-export class RateLimitError extends Cards402Error {
+export class RateLimitError extends AgentcardError {
   constructor(message = 'Rate limit exceeded. Back off and retry.') {
     super(message, 'rate_limit_exceeded', 429);
     this.name = 'RateLimitError';
@@ -58,7 +58,7 @@ export class RateLimitError extends Cards402Error {
 }
 
 /** Service is temporarily suspended (fulfillment circuit breaker tripped). */
-export class ServiceUnavailableError extends Cards402Error {
+export class ServiceUnavailableError extends AgentcardError {
   constructor(message = 'Card fulfillment is temporarily suspended. Retry in a few minutes.') {
     super(message, 'service_temporarily_unavailable', 503);
     this.name = 'ServiceUnavailableError';
@@ -67,7 +67,7 @@ export class ServiceUnavailableError extends Cards402Error {
 }
 
 /** XLM price feed is unavailable — retry or use USDC. */
-export class PriceUnavailableError extends Cards402Error {
+export class PriceUnavailableError extends AgentcardError {
   constructor(
     message = 'XLM price is temporarily unavailable. Retry shortly, or use payment_asset: "usdc".',
   ) {
@@ -84,7 +84,7 @@ export class PriceUnavailableError extends Cards402Error {
  * "9.99999999" (too many decimals) gets the specific reason instead
  * of the generic bounds message.
  */
-export class InvalidAmountError extends Cards402Error {
+export class InvalidAmountError extends AgentcardError {
   constructor(
     message = 'Invalid amount_usdc — must be a decimal string between "0.01" and "10000.00" (e.g. "10.00").',
   ) {
@@ -95,10 +95,10 @@ export class InvalidAmountError extends Cards402Error {
 }
 
 /** The API key is missing or invalid. */
-export class AuthError extends Cards402Error {
+export class AuthError extends AgentcardError {
   constructor() {
     super(
-      'Invalid or missing API key. Pass it as the X-Api-Key header, or set CARDS402_API_KEY.',
+      'Invalid or missing API key. Pass it as the X-Api-Key header, or set AGENTCARD_API_KEY.',
       'invalid_api_key',
       401,
     );
@@ -108,7 +108,7 @@ export class AuthError extends Cards402Error {
 }
 
 /** Order failed during fulfillment. A refund may be in progress. */
-export class OrderFailedError extends Cards402Error {
+export class OrderFailedError extends AgentcardError {
   constructor(
     public readonly orderId: string,
     reason: string,
@@ -131,7 +131,7 @@ export class OrderFailedError extends Cards402Error {
  * Thrown by purchaseCardOWS when the order was created (and possibly paid)
  * but the flow couldn't finish — e.g. Soroban RPC finalization timed out,
  * or waitForCard hit its deadline. Always carries the orderId so the caller
- * can resume via `cards402 purchase --resume <order-id>` without minting a
+ * can resume via `agentcard purchase --resume <order-id>` without minting a
  * new order (which would strand the original one until it expires).
  *
  * `txHash` is present when the payment was submitted onto the ledger (even
@@ -142,7 +142,7 @@ export class OrderFailedError extends Cards402Error {
  * should skip straight to waitForCard. `phase: 'unpaid'` means the payment
  * never went out and resume may need to retry the Soroban submit.
  */
-export class ResumableError extends Cards402Error {
+export class ResumableError extends AgentcardError {
   constructor(
     public readonly orderId: string,
     reason: string,
@@ -153,7 +153,7 @@ export class ResumableError extends Cards402Error {
     const hashNote = txHash ? ` (tx: ${txHash})` : '';
     super(
       `Purchase could not finish for order ${orderId}: ${reason}${hashNote}. ` +
-        `Resume with: cards402 purchase --resume ${orderId}`,
+        `Resume with: agentcard purchase --resume ${orderId}`,
       'resumable',
       0,
       { orderId, reason, phase, txHash },
@@ -164,7 +164,7 @@ export class ResumableError extends Cards402Error {
 }
 
 /** Waiting for a card timed out — order may still be processing. */
-export class WaitTimeoutError extends Cards402Error {
+export class WaitTimeoutError extends AgentcardError {
   constructor(
     public readonly orderId: string,
     timeoutMs: number,
@@ -182,9 +182,9 @@ export class WaitTimeoutError extends Cards402Error {
 
 /**
  * Parse a raw API error response into the appropriate typed error.
- * Falls back to generic Cards402Error for unknown codes.
+ * Falls back to generic AgentcardError for unknown codes.
  */
-export function parseApiError(status: number, body: Record<string, unknown>): Cards402Error {
+export function parseApiError(status: number, body: Record<string, unknown>): AgentcardError {
   const code = String(body.error ?? 'unknown');
   const message = String(body.message ?? body.error ?? 'Unknown error');
 
@@ -207,6 +207,6 @@ export function parseApiError(status: number, body: Record<string, unknown>): Ca
     case 'invalid_api_key':
       return new AuthError();
     default:
-      return new Cards402Error(message, code, status, body);
+      return new AgentcardError(message, code, status, body);
   }
 }

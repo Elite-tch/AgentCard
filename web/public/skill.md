@@ -1,12 +1,12 @@
-# AgentCard · Agent skill
+# agentcard · Agent skill
 
-You are an autonomous agent that has been given access to AgentCard — a service
+You are an autonomous agent that has been given access to agentcard — a service
 that turns a Stellar network payment into a real, usable Visa card. This
 document is the setup and reference you should read **once**, on first use.
 
-## What AgentCard does
+## What agentcard does
 
-AgentCard lets you buy a Visa reward card, funded in USDC or XLM over the
+agentcard lets you buy a Visa reward card, funded in USDC or XLM over the
 Stellar mainnet, and receive the card number, CVV, and expiry back over the
 same HTTP request you made. There is no human in the loop, no hosted
 checkout, no redirect. One transaction in, one card out, typically in under
@@ -23,7 +23,7 @@ It looks like `acard_abc123def456…` and is single-use. To exchange the claim
 for a usable API key, run:
 
 ```bash
-npx -y cards402@latest onboard --claim acard_<code>
+npx -y agentcard@latest onboard --claim acard_<code>
 ```
 
 > **Always pin `@latest`.** The `@latest` flag forces `npx` to re-resolve
@@ -58,7 +58,7 @@ to the public key the command printed. The breakdown:
 Check the balance any time with:
 
 ```bash
-npx -y cards402@latest wallet balance
+npx -y agentcard@latest wallet balance
 ```
 
 **Step 2 — open the USDC trustline.** This is the step that trips up
@@ -76,7 +76,7 @@ The trustline must be opened **by your wallet**, not by the operator.
 Run this once, after XLM has landed:
 
 ```bash
-npx -y cards402@latest wallet trustline
+npx -y agentcard@latest wallet trustline
 ```
 
 Behind the scenes that signs and submits a `changeTrust` operation
@@ -93,7 +93,7 @@ proactively after XLM lands is the safe default.
 **Step 3 — ask the operator to send USDC** (or more XLM if paying in
 XLM). Once the balance updates, `agentcard purchase` works.
 
-After onboarding, any subsequent AgentCard command uses the cached key
+After onboarding, any subsequent agentcard command uses the cached key
 automatically. There is no need to pass credentials on subsequent calls.
 
 ## Purchasing a card
@@ -102,7 +102,7 @@ The simplest path — a single CLI call that creates an order, signs the
 Soroban payment, and waits for the card:
 
 ```bash
-npx -y cards402@latest purchase --amount 25
+npx -y agentcard@latest purchase --amount 25
 ```
 
 Or from TypeScript:
@@ -126,7 +126,7 @@ explicit instruction.
 
 ## Fees you should know about
 
-AgentCard charges no markup to agents — you pay face value and get a
+agentcard charges no markup to agents — you pay face value and get a
 card worth face value. The card issuer (Pathward) imposes:
 
 - **Foreign transaction fee** — $2.00 + 2% on any purchase in a non-USD
@@ -154,7 +154,7 @@ no ATM access, no recurring payments.
 
 ## Error handling
 
-AgentCard returns errors as JSON bodies with a stable `error` field. The
+agentcard returns errors as JSON bodies with a stable `error` field. The
 relevant ones for agent logic:
 
 - `invalid_amount` (400) — `amount_usdc` must be a decimal string between
@@ -175,12 +175,12 @@ wallet with a `refund_stellar_txid`.
 
 ## When to ask the human
 
-AgentCard is designed to run without a human, but you should escalate if:
+agentcard is designed to run without a human, but you should escalate if:
 
 - You are about to spend more than your per-card budget on a single order.
 - A purchase would push the card balance above $10,000 (not possible, but
   worth checking).
-- You repeatedly get `service_temporarily_unavailable` — this means AgentCard
+- You repeatedly get `service_temporarily_unavailable` — this means agentcard
   or the upstream issuer has a problem and the operator should know.
 - You receive any error that isn't in the list above and you can't parse it.
 
@@ -194,13 +194,13 @@ AgentCard is designed to run without a human, but you should escalate if:
 
 ## A note on trust
 
-AgentCard does not store API keys in plaintext — they are hashed (bcrypt)
+agentcard does not store API keys in plaintext — they are hashed (bcrypt)
 before they touch the database. The raw key is never returned to the
 dashboard or logged; it is delivered to the agent exactly once during
 claim-code redemption over TLS, then the sealed payload is wiped.
 Treat your key like a wallet private key. Similarly, the Stellar wallet
 you bind during onboarding lives in an encrypted OWS vault on the machine
-running the SDK. AgentCard never sees or touches the secret.
+running the SDK. agentcard never sees or touches the secret.
 
 If you ever need to revoke an agent's access, open
 <https://agentcard.com/dashboard>, go to the **Agents** tab, and click

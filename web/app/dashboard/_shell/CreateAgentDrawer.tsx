@@ -105,7 +105,7 @@ export function CreateAgentDrawer({ open, onClose }: Props) {
   const snippet = created?.claim
     ? [
         `Read ${APP_URL}/skill.md and set up this agent by running:`,
-        `AGENTCARD_API_URL=${APP_URL} npx -y cards402@latest onboard --claim ${created.claim.code}`,
+        `AGENTCARD_API_URL=${APP_URL} npx -y agentcard@latest onboard --claim ${created.claim.code}`,
       ].join('\n')
     : '';
 

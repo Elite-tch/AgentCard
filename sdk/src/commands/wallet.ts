@@ -1,14 +1,14 @@
-// `cards402 wallet address` / `cards402 wallet balance` — read-only
+// `agentcard wallet address` / `agentcard wallet balance` — read-only
 // helpers that wrap the OWS SDK so agents don't have to spawn Node
 // one-liners to find out their own Stellar address or check whether
 // funding has landed.
 
-import { loadCards402Config } from '../config';
+import { loadAgentcardConfig } from '../config';
 import { getOWSPublicKey, getOWSBalance, addUsdcTrustlineOWS } from '../ows';
 
 function usage(): void {
   process.stderr
-    .write(`Usage: cards402 wallet <subcommand> [--vault-path <path>] [--name <walletname>] [--passphrase-env <ENVNAME>]
+    .write(`Usage: agentcard wallet <subcommand> [--vault-path <path>] [--name <walletname>] [--passphrase-env <ENVNAME>]
 
 Subcommands:
   address              Print the Stellar address for this agent's wallet
@@ -20,14 +20,14 @@ Subcommands:
   -h, --help           Show this message
 
 Standard onboarding flow:
-  1. cards402 onboard --claim <code>
+  1. agentcard onboard --claim <code>
   2. Operator sends at least 2 XLM to the wallet's Stellar address
-  3. cards402 wallet trustline    (opens the USDC trustline)
+  3. agentcard wallet trustline    (opens the USDC trustline)
   4. Operator sends USDC
-  5. cards402 purchase --amount <USD>
+  5. agentcard purchase --amount <USD>
 
-Both subcommands read ~/.cards402/config.json for the wallet name and
-vault path so you don't need to pass anything after 'cards402 onboard'.
+Both subcommands read ~/.agentcard/config.json for the wallet name and
+vault path so you don't need to pass anything after 'agentcard onboard'.
 Override either with --name=<walletname> / --vault-path=<path>.
 `);
 }
@@ -49,10 +49,10 @@ export async function walletCommand(argv: string[]): Promise<number> {
     return sub ? 0 : 2;
   }
 
-  const config = loadCards402Config();
+  const config = loadAgentcardConfig();
   if (!config) {
     process.stderr.write(
-      "error: no cards402 config found. Run 'cards402 onboard --claim <code>' first.\n",
+      "error: no agentcard config found. Run 'agentcard onboard --claim <code>' first.\n",
     );
     return 1;
   }
@@ -64,8 +64,8 @@ export async function walletCommand(argv: string[]): Promise<number> {
   const walletName = parseFlag(rest, '--name') || config.wallet_name;
   if (!walletName) {
     process.stderr.write(
-      'error: no wallet_name in ~/.cards402/config.json and no --name passed.\n' +
-        "Either pass --name <walletname>, or re-run 'cards402 onboard --claim <code>'\n" +
+      'error: no wallet_name in ~/.agentcard/config.json and no --name passed.\n' +
+        "Either pass --name <walletname>, or re-run 'agentcard onboard --claim <code>'\n" +
         'to write a fresh config with a unique wallet name.\n',
     );
     return 1;
@@ -117,7 +117,7 @@ export async function walletCommand(argv: string[]): Promise<number> {
           // Send at least 2 XLM — 1 for the Stellar base reserve plus
           // 1 for a future USDC trustline entry. Matches the onboard
           // command's funding instructions, the MCP setup_wallet tool,
-          // and the quickstart docs on cards402.com.
+          // and the quickstart docs on agentcard.com.
           process.stdout.write(`xlm:     0 (unactivated — send at least 2 XLM to activate)\n`);
           process.stdout.write(`usdc:    0\n`);
           return 0;
@@ -131,7 +131,7 @@ export async function walletCommand(argv: string[]): Promise<number> {
   }
 
   if (sub === 'trustline') {
-    // `cards402 wallet trustline` — opens a USDC trustline on the
+    // `agentcard wallet trustline` — opens a USDC trustline on the
     // agent's Stellar account. The operator's typical onboarding flow
     // is: fund with XLM → agent runs this → operator sends USDC →
     // agent runs `purchase`. Without the trustline, any USDC payment
@@ -155,7 +155,7 @@ export async function walletCommand(argv: string[]): Promise<number> {
       }
       process.stdout.write(`✓ USDC trustline opened (txid: ${txHash})\n`);
       process.stdout.write(
-        `\nThe wallet can now receive USDC from your operator. Run 'cards402 wallet balance'\n` +
+        `\nThe wallet can now receive USDC from your operator. Run 'agentcard wallet balance'\n` +
           `to confirm the USDC line appears (shown as '0.0000000' when open and empty).\n`,
       );
       return 0;
@@ -167,8 +167,8 @@ export async function walletCommand(argv: string[]): Promise<number> {
       if (/not found/i.test(msg) || /404/.test(msg)) {
         process.stderr.write(
           `error: wallet is not activated on mainnet yet. Ask your operator to send\n` +
-            `at least 2 XLM to the address printed by 'cards402 wallet address',\n` +
-            `then re-run 'cards402 wallet trustline'.\n`,
+            `at least 2 XLM to the address printed by 'agentcard wallet address',\n` +
+            `then re-run 'agentcard wallet trustline'.\n`,
         );
         return 1;
       }

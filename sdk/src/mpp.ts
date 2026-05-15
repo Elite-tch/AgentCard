@@ -6,7 +6,7 @@
 // declared method, retry with an Authorization: Payment credential,
 // collect the resource from the 200 (or poll the 202 Location).
 //
-// For cards402 specifically, the challenge's Stellar method maps onto
+// For agentcard specifically, the challenge's Stellar method maps onto
 // the SDK's existing payViaContractOWS helper — so the OWS wallet,
 // fee-retry logic, and on-chain confirmation all come for free.
 
@@ -15,13 +15,13 @@ import { payViaContractOWS, type PayViaContractOwsDeps } from './ows';
 
 export interface MppChargeOpts {
   /**
-   * The full MPP resource URL. E.g. 'https://api.cards402.com/v1/cards/visa/10.00'.
+   * The full MPP resource URL. E.g. 'https://api.agentcard.com/v1/cards/visa/10.00'.
    * This is the standards-compliant mode — works against any MPP server.
    */
   url?: string;
 
   /**
-   * Convenience: build the URL from the cards402 base URL + USD amount.
+   * Convenience: build the URL from the agentcard base URL + USD amount.
    * Only one of `url` or `{baseUrl, amountUsdc}` is required.
    */
   baseUrl?: string;

@@ -1,4 +1,4 @@
-// AgentCard wordmark. Rendered as a CSS mask over the current text color
+// agentcard wordmark. Rendered as a CSS mask over the current text color
 // so it inherits whatever `color` the parent sets — light on dark surfaces,
 // dark on light surfaces, a single accent for emphasis, etc. No inline
 // SVG, no children, no theme branching. Just set `color:` on the parent.
@@ -9,7 +9,7 @@
 // aspect so it doesn't skew during layout.
 //
 // Two variants:
-//   <Wordmark />    — full horizontal lockup (globe + "AgentCard")
+//   <Wordmark />    — full horizontal lockup (globe + "agentcard")
 //   <Wordmark mark /> — just the globemark, useful for tight nav bars
 //
 // Props:
@@ -31,7 +31,7 @@ interface Props {
 export function Wordmark({
   height = 28,
   mark = false,
-  title = 'AgentCard',
+  title = 'agentcard',
   className,
   style,
 }: Props) {
@@ -80,7 +80,7 @@ export function Wordmark({
         ...style,
       }}
     >
-      AgentCard
+      agentcard
     </span>
   );
 }

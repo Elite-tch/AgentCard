@@ -100,7 +100,7 @@ describe('mppCharge — happy path', () => {
     };
 
     const result = await mppCharge({
-      url: 'https://api.cards402.test/v1/cards/visa/10.00',
+      url: 'https://api.agentcard.test/v1/cards/visa/10.00',
       walletName: 'test-wallet',
       _deps: {
         fetch: fetchStub,
@@ -209,14 +209,14 @@ describe('mppCharge — async 202 path', () => {
     const sleep = async (_ms: number) => {};
 
     const result = await mppCharge({
-      url: 'https://api.cards402.test/v1/cards/visa/10.00',
+      url: 'https://api.agentcard.test/v1/cards/visa/10.00',
       walletName: 'w',
       _deps: { fetch: fetchStub, payViaContractOWS: stubPay as never, sleep },
     });
 
     expect(result.delivery).toBe('async');
     expect(result.card.number).toBe('4');
-    expect(result.receiptUrl).toBe('https://api.cards402.test/v1/mpp/receipts/mpp_r_abc');
+    expect(result.receiptUrl).toBe('https://api.agentcard.test/v1/mpp/receipts/mpp_r_abc');
   });
 
   it('throws on 502 from receipt endpoint', async () => {
@@ -321,12 +321,12 @@ describe('mppCharge — url resolution', () => {
     const stubPay = async () => 'aa'.repeat(32);
 
     await mppCharge({
-      baseUrl: 'https://api.cards402.test/v1/',
+      baseUrl: 'https://api.agentcard.test/v1/',
       amountUsdc: '10.00',
       walletName: 'w',
       _deps: { fetch: fetchStub, payViaContractOWS: stubPay as never },
     });
 
-    expect(calls[0].url).toBe('https://api.cards402.test/v1/cards/visa/10.00');
+    expect(calls[0].url).toBe('https://api.agentcard.test/v1/cards/visa/10.00');
   });
 });

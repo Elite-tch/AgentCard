@@ -1,15 +1,15 @@
 """
-cards402 LangChain tool — lets any LangChain agent purchase virtual Visa cards.
+agentcard LangChain tool — lets any LangChain agent purchase virtual Visa cards.
 
 Prerequisites:
   pip install langchain httpx
-  export CARDS402_API_KEY=<your key>
+  export AGENTCARD_API_KEY=<your key>
 
 Usage in a LangChain agent:
 
-    from cards402_tool import Cards402OrderTool, Cards402CheckOrderTool, Cards402BudgetTool
+    from agentcard_tool import AgentcardOrderTool, AgentcardCheckOrderTool, AgentcardBudgetTool
 
-    tools = [Cards402OrderTool(), Cards402CheckOrderTool(), Cards402BudgetTool()]
+    tools = [AgentcardOrderTool(), AgentcardCheckOrderTool(), AgentcardBudgetTool()]
     agent = initialize_agent(tools, llm, agent=AgentType.OPENAI_FUNCTIONS)
     agent.run("Buy me a $5 virtual Visa card")
 
@@ -23,8 +23,8 @@ import httpx
 from langchain.tools import BaseTool
 from pydantic import BaseModel, Field
 
-BASE_URL = os.environ.get("CARDS402_BASE_URL", "https://api.cards402.com/v1")
-API_KEY = os.environ.get("CARDS402_API_KEY", "")
+BASE_URL = os.environ.get("AGENTCARD_BASE_URL", "https://api.agentcard.com/v1")
+API_KEY = os.environ.get("AGENTCARD_API_KEY", "")
 
 
 def _headers():
@@ -35,10 +35,10 @@ class OrderInput(BaseModel):
     amount_usdc: str = Field(description="Card value in USD, e.g. '10.00'")
 
 
-class Cards402OrderTool(BaseTool):
-    name: str = "cards402_create_order"
+class AgentcardOrderTool(BaseTool):
+    name: str = "agentcard_create_order"
     description: str = (
-        "Create a new virtual Visa card order on cards402. "
+        "Create a new virtual Visa card order on agentcard. "
         "Returns payment instructions (Soroban contract call). "
         "The card is delivered after the agent pays the contract on Stellar."
     )
@@ -71,13 +71,13 @@ class Cards402OrderTool(BaseTool):
 
 
 class CheckOrderInput(BaseModel):
-    order_id: str = Field(description="The cards402 order UUID")
+    order_id: str = Field(description="The agentcard order UUID")
 
 
-class Cards402CheckOrderTool(BaseTool):
-    name: str = "cards402_check_order"
+class AgentcardCheckOrderTool(BaseTool):
+    name: str = "agentcard_check_order"
     description: str = (
-        "Check the status of a cards402 order. "
+        "Check the status of a agentcard order. "
         "Returns card details (number, CVV, expiry) when phase is 'ready'."
     )
     args_schema: type = CheckOrderInput
@@ -104,8 +104,8 @@ class Cards402CheckOrderTool(BaseTool):
         return "\n".join(lines)
 
 
-class Cards402BudgetTool(BaseTool):
-    name: str = "cards402_budget"
+class AgentcardBudgetTool(BaseTool):
+    name: str = "agentcard_budget"
     description: str = (
         "Check how much this agent has spent and how much budget remains. "
         "Use before ordering to verify you can afford the card."

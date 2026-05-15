@@ -1,4 +1,4 @@
-# Cards402 Receiver Contract
+# Agentcard Receiver Contract
 
 Soroban smart contract that receives USDC payments from AI agents and emits `payment` events containing the order ID. The backend polls these events to route and fulfil orders — no memo or destination matching required.
 
@@ -27,16 +27,16 @@ cargo build --target wasm32-unknown-unknown --release
 ### 3. Optimise
 
 ```bash
-stellar contract optimize --wasm target/wasm32-unknown-unknown/release/cards402_receiver.wasm
+stellar contract optimize --wasm target/wasm32-unknown-unknown/release/agentcard_receiver.wasm
 ```
 
-This produces `cards402_receiver.optimized.wasm`.
+This produces `agentcard_receiver.optimized.wasm`.
 
 ### 4. Deploy to testnet
 
 ```bash
 stellar contract deploy \
-  --wasm target/wasm32-unknown-unknown/release/cards402_receiver.optimized.wasm \
+  --wasm target/wasm32-unknown-unknown/release/agentcard_receiver.optimized.wasm \
   --source <YOUR_SECRET_KEY> \
   --network testnet
 ```
@@ -49,7 +49,7 @@ The command prints the deployed contract ID (C...). Save it as `RECEIVER_CONTRAC
 
 ```bash
 stellar contract deploy \
-  --wasm target/wasm32-unknown-unknown/release/cards402_receiver.optimized.wasm \
+  --wasm target/wasm32-unknown-unknown/release/agentcard_receiver.optimized.wasm \
   --source <YOUR_SECRET_KEY> \
   --network mainnet
 ```

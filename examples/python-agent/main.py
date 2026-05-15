@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
-cards402 Python agent example — order a virtual Visa card via the REST API.
+agentcard Python agent example — order a virtual Visa card via the REST API.
 
 Prerequisites:
   pip install httpx
-  export CARDS402_API_KEY=<your key>
+  export AGENTCARD_API_KEY=<your key>
 
 This example uses the REST API directly (no SDK). For the full payment flow
 you'd also need to invoke the Soroban contract from Python (e.g. via
 stellar-sdk). This example assumes you're using the webhook delivery path
-where cards402 POSTs the card to your webhook_url once it's ready.
+where agentcard POSTs the card to your webhook_url once it's ready.
 
 Run:
   python main.py
@@ -20,11 +20,11 @@ import sys
 import time
 import httpx
 
-API_KEY = os.environ.get("CARDS402_API_KEY")
-BASE_URL = os.environ.get("CARDS402_BASE_URL", "https://api.cards402.com/v1")
+API_KEY = os.environ.get("AGENTCARD_API_KEY")
+BASE_URL = os.environ.get("AGENTCARD_BASE_URL", "https://api.agentcard.com/v1")
 
 if not API_KEY:
-    print("Set CARDS402_API_KEY in your environment", file=sys.stderr)
+    print("Set AGENTCARD_API_KEY in your environment", file=sys.stderr)
     sys.exit(1)
 
 HEADERS = {"X-Api-Key": API_KEY, "Content-Type": "application/json"}

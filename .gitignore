@@ -55,5 +55,17 @@ codex-audit.md
 sdk/open-wallet-standard-core-*.tgz
 web/.env.production
 
-#depreciated assets
+# Agent config directory (written by `agentcard onboard`)
+.agentcard/
+**/.agentcard/
+
+# OWS wallet vault files — never commit encrypted keys
+*.vault
+**/*.vault
+
+# OMX internal state files
+.omx/
+**/.omx/
+
+# Depreciated assets
 depreciated

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-  Cards402Error,
+  AgentcardError,
   SpendLimitError,
   RateLimitError,
   ServiceUnavailableError,
@@ -12,32 +12,32 @@ import {
   parseApiError,
 } from '../errors';
 
-describe('Cards402Error', () => {
+describe('AgentcardError', () => {
   it('is an instance of Error', () => {
-    const err = new Cards402Error('msg', 'code', 400);
+    const err = new AgentcardError('msg', 'code', 400);
     expect(err).toBeInstanceOf(Error);
-    expect(err).toBeInstanceOf(Cards402Error);
+    expect(err).toBeInstanceOf(AgentcardError);
   });
 
   it('sets message, code, status', () => {
-    const err = new Cards402Error('something broke', 'test_code', 422);
+    const err = new AgentcardError('something broke', 'test_code', 422);
     expect(err.message).toBe('something broke');
     expect(err.code).toBe('test_code');
     expect(err.status).toBe(422);
-    expect(err.name).toBe('Cards402Error');
+    expect(err.name).toBe('AgentcardError');
   });
 
   it('stores raw payload', () => {
     const raw = { detail: 'extra' };
-    const err = new Cards402Error('msg', 'code', 400, raw);
+    const err = new AgentcardError('msg', 'code', 400, raw);
     expect(err.raw).toBe(raw);
   });
 });
 
 describe('SpendLimitError', () => {
-  it('is instanceof Cards402Error and SpendLimitError', () => {
+  it('is instanceof AgentcardError and SpendLimitError', () => {
     const err = new SpendLimitError('100.00', '85.00');
-    expect(err).toBeInstanceOf(Cards402Error);
+    expect(err).toBeInstanceOf(AgentcardError);
     expect(err).toBeInstanceOf(SpendLimitError);
   });
 
@@ -60,7 +60,7 @@ describe('SpendLimitError', () => {
 describe('RateLimitError', () => {
   it('has correct code and status', () => {
     const err = new RateLimitError();
-    expect(err).toBeInstanceOf(Cards402Error);
+    expect(err).toBeInstanceOf(AgentcardError);
     expect(err.code).toBe('rate_limit_exceeded');
     expect(err.status).toBe(429);
     expect(err.name).toBe('RateLimitError');
@@ -132,8 +132,8 @@ describe('OrderFailedError', () => {
     expect(err.message).toContain('refund');
   });
 
-  it('is instanceof Cards402Error', () => {
-    expect(new OrderFailedError('x', 'y')).toBeInstanceOf(Cards402Error);
+  it('is instanceof AgentcardError', () => {
+    expect(new OrderFailedError('x', 'y')).toBeInstanceOf(AgentcardError);
   });
 });
 
@@ -147,8 +147,8 @@ describe('WaitTimeoutError', () => {
     expect(err.status).toBe(408);
   });
 
-  it('is instanceof Cards402Error', () => {
-    expect(new WaitTimeoutError('x', 1000)).toBeInstanceOf(Cards402Error);
+  it('is instanceof AgentcardError', () => {
+    expect(new WaitTimeoutError('x', 1000)).toBeInstanceOf(AgentcardError);
   });
 });
 
@@ -196,9 +196,9 @@ describe('parseApiError', () => {
     expect(err).toBeInstanceOf(AuthError);
   });
 
-  it('returns generic Cards402Error for unknown codes', () => {
+  it('returns generic AgentcardError for unknown codes', () => {
     const err = parseApiError(500, { error: 'internal_error', message: 'oops' });
-    expect(err).toBeInstanceOf(Cards402Error);
+    expect(err).toBeInstanceOf(AgentcardError);
     expect(err).not.toBeInstanceOf(SpendLimitError);
     expect(err.code).toBe('internal_error');
     expect(err.message).toBe('oops');
@@ -212,7 +212,7 @@ describe('parseApiError', () => {
 
   it('handles missing body fields gracefully', () => {
     const err = parseApiError(500, {});
-    expect(err).toBeInstanceOf(Cards402Error);
+    expect(err).toBeInstanceOf(AgentcardError);
     expect(err.code).toBe('unknown');
   });
 });

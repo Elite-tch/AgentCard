@@ -6,17 +6,17 @@ import { ogForPage, twitterForPage } from '@/app/lib/seo';
 export const metadata: Metadata = {
   title: 'Blog',
   description:
-    'Engineering-honest writing from the AgentCard team. Architecture, incidents, and what we learned building payment rails for AI agents.',
+    'Engineering-honest writing from the agentcard team. Architecture, incidents, and what we learned building payment rails for AI agents.',
   alternates: { canonical: 'https://agentcard.com/blog' },
   openGraph: ogForPage({
-    title: 'Blog — AgentCard',
+    title: 'Blog — agentcard',
     description:
-      'Engineering-honest writing from the AgentCard team. Architecture, incidents, and what we learned building payment rails for AI agents.',
+      'Engineering-honest writing from the agentcard team. Architecture, incidents, and what we learned building payment rails for AI agents.',
     path: '/blog',
   }),
   twitter: twitterForPage({
-    title: 'Blog — AgentCard',
-    description: 'Engineering-honest writing from the AgentCard team.',
+    title: 'Blog — agentcard',
+    description: 'Engineering-honest writing from the agentcard team.',
   }),
 };
 
@@ -46,7 +46,7 @@ const PUBLISHED: Post[] = [
     slug: 'claim-codes-credentials-that-never-touch-the-transcript',
     title: 'Claim codes: credentials that never touch the transcript',
     excerpt:
-      "Raw API keys aren't insecure — they're insecure when the operator is going to paste them into an LLM chat. Why AgentCard onboards agents with single-use claim codes, the threat model, and the exchange flow that avoids every credential-in-prompt failure we could think of.",
+      "Raw API keys aren't insecure — they're insecure when the operator is going to paste them into an LLM chat. Why agentcard onboards agents with single-use claim codes, the threat model, and the exchange flow that avoids every credential-in-prompt failure we could think of.",
     tags: ['security', 'onboarding'],
   },
   {
@@ -54,13 +54,13 @@ const PUBLISHED: Post[] = [
     slug: 'non-custodial-card-issuance-on-soroban',
     title: 'How we built non-custodial card issuance on Soroban',
     excerpt:
-      'Why AgentCard agents pay the receiver contract directly on Stellar, and how the backend watches on-chain events instead of touching customer funds. The trade-offs we accepted and the ones we refused.',
+      'Why agentcard agents pay the receiver contract directly on Stellar, and how the backend watches on-chain events instead of touching customer funds. The trade-offs we accepted and the ones we refused.',
     tags: ['architecture', 'stellar'],
   },
   {
     date: '2026-04-14',
     slug: 'anatomy-of-a-agentcard-order',
-    title: 'Anatomy of a AgentCard order',
+    title: 'Anatomy of a agentcard order',
     excerpt:
       'Every millisecond of the 33-second path from agent.purchaseCard() to PAN-in-hand. Payment confirmation, Stage 1 scrape, Stage 2 fulfilment, the SSE stream, and the failure modes we found along the way.',
     tags: ['engineering', 'fulfilment'],
@@ -319,7 +319,7 @@ export default function BlogIndexPage() {
             className="type-body"
             style={{ fontSize: '0.92rem', marginBottom: '1.2rem', maxWidth: 620 }}
           >
-            If you&apos;ve built something interesting on top of AgentCard and want to write about
+            If you&apos;ve built something interesting on top of agentcard and want to write about
             it, we&apos;ll happily host it on the blog with full byline and a link to your work.
             Email{' '}
             <a

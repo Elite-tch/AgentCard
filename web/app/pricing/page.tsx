@@ -4,26 +4,26 @@ import { PageHero, PageSection } from '@/app/components/MarketingPage';
 import { ogForPage, twitterForPage } from '@/app/lib/seo';
 
 const DESCRIPTION =
-  'AgentCard sells Visa reward cards at face value — no signup fee, no markup. Only the standard issuer fees apply, listed in full on the page.';
+  'agentcard sells Visa reward cards at face value — no signup fee, no markup. Only the standard issuer fees apply, listed in full on the page.';
 
 export const metadata: Metadata = {
   title: 'Pricing',
   description: DESCRIPTION,
   alternates: { canonical: 'https://agentcard.com/pricing' },
   openGraph: ogForPage({
-    title: 'Pricing — AgentCard',
+    title: 'Pricing — agentcard',
     description: 'Cards at face value. Honest fees. Pay in USDC or XLM on Stellar.',
     path: '/pricing',
   }),
   twitter: twitterForPage({
-    title: 'Pricing — AgentCard',
+    title: 'Pricing — agentcard',
     description: 'Cards at face value. Honest fees.',
   }),
 };
 
 const FEE_ROWS = [
   {
-    label: 'AgentCard service fee',
+    label: 'agentcard service fee',
     value: '$0.00',
     note: 'We take zero markup on the card face value. You pay exactly what the card loads with.',
     highlight: true,
@@ -67,11 +67,11 @@ const LIMITS = [
 const FAQ = [
   {
     q: 'How can cards be free?',
-    a: 'AgentCard makes money on volume discounts we negotiate with our card suppliers. When an agent buys a $25 card, we settle with the supplier at a rate slightly below $25 and pass the full face value through to the agent. We break even on every individual card and profit on aggregate flow. No surprise markup.',
+    a: 'agentcard makes money on volume discounts we negotiate with our card suppliers. When an agent buys a $25 card, we settle with the supplier at a rate slightly below $25 and pass the full face value through to the agent. We break even on every individual card and profit on aggregate flow. No surprise markup.',
   },
   {
     q: 'Do I pay Stellar network fees?',
-    a: 'Yes. Each card purchase triggers a Soroban contract call from your agent wallet, which costs roughly 0.005–0.02 XLM (a fraction of a cent) in network fees depending on execution cost. Your wallet pays it directly — AgentCard never touches it.',
+    a: 'Yes. Each card purchase triggers a Soroban contract call from your agent wallet, which costs roughly 0.005–0.02 XLM (a fraction of a cent) in network fees depending on execution cost. Your wallet pays it directly — agentcard never touches it.',
   },
   {
     q: 'What does "$2.00 + 2%" actually look like?',
@@ -87,11 +87,11 @@ const FAQ = [
   },
   {
     q: 'What are the order size limits?',
-    a: "AgentCard accepts orders between $0.01 and $10,000 per card. The floor exists because the issuer can't represent sub-cent balances; the ceiling is Pathward's per-card balance cap. Inside that range, any amount works — there's no step function or reload fee. If you need an aggregate spend above $10,000 for one agent task, issue multiple cards and split the purchase: it keeps blast radius contained and is usually what an auditor wants to see anyway.",
+    a: "agentcard accepts orders between $0.01 and $10,000 per card. The floor exists because the issuer can't represent sub-cent balances; the ceiling is Pathward's per-card balance cap. Inside that range, any amount works — there's no step function or reload fee. If you need an aggregate spend above $10,000 for one agent task, issue multiple cards and split the purchase: it keeps blast radius contained and is usually what an auditor wants to see anyway.",
   },
   {
-    q: 'How does AgentCard stay non-custodial if you can refund me?',
-    a: "Refunds go from the AgentCard treasury wallet, not from a hold on your funds. Your payment already settled to the receiver contract at the time of the order — the refund is a separate outbound Stellar payment that we send you after verifying the order failed. We never take custody of your inbound USDC/XLM and we never promise your funds will be returned if our treasury is drained; the architecture is non-custodial because you can always verify where your funds went on-chain, not because we're holding them for you in escrow.",
+    q: 'How does agentcard stay non-custodial if you can refund me?',
+    a: "Refunds go from the agentcard treasury wallet, not from a hold on your funds. Your payment already settled to the receiver contract at the time of the order — the refund is a separate outbound Stellar payment that we send you after verifying the order failed. We never take custody of your inbound USDC/XLM and we never promise your funds will be returned if our treasury is drained; the architecture is non-custodial because you can always verify where your funds went on-chain, not because we're holding them for you in escrow.",
   },
 ];
 
@@ -111,15 +111,15 @@ const faqJsonLd = {
   })),
 };
 
-// Product schema for the pricing page itself. Positions AgentCard as
+// Product schema for the pricing page itself. Positions agentcard as
 // a free service in Google's SERP UI when price filters are active.
 const productJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Product',
-  name: 'AgentCard — Virtual Visa cards for AI agents',
+  name: 'agentcard — Virtual Visa cards for AI agents',
   description:
     'Non-custodial virtual Visa card issuance for autonomous agents. Cards sold at face value, settled in USDC or XLM on Stellar.',
-  brand: { '@type': 'Brand', name: 'AgentCard' },
+  brand: { '@type': 'Brand', name: 'agentcard' },
   offers: {
     '@type': 'Offer',
     url: 'https://agentcard.com/pricing',
@@ -144,7 +144,7 @@ export default function PricingPage() {
         eyebrow="Pricing"
         title="Cards at face value. No"
         accent="markup"
-        intro="Every AgentCard order settles exactly 1:1 against the card's USD face value. There is no subscription, no signup fee, and no per-transaction surcharge from us. The only fees you'll ever see are the ones the card issuer charges directly — listed in full below."
+        intro="Every agentcard order settles exactly 1:1 against the card's USD face value. There is no subscription, no signup fee, and no per-transaction surcharge from us. The only fees you'll ever see are the ones the card issuer charges directly — listed in full below."
       />
 
       {/* Fee table */}
@@ -288,7 +288,7 @@ export default function PricingPage() {
                 margin: '0 0 1rem',
               }}
             >
-              Every AgentCard card is a Visa Reward Card issued by Pathward, N.A. pursuant to a
+              Every agentcard card is a Visa Reward Card issued by Pathward, N.A. pursuant to a
               license from Visa U.S.A. Inc. Cards are subject to the standard Pathward cardholder
               agreement.
             </p>

@@ -22,12 +22,12 @@ concurrency:
 
 jobs:
   cross-repo-e2e:
-    name: cards402 + vcc integration
+    name: agentcard + vcc integration
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
       NODE_ENV: test
-      # cards402 backend
+      # agentcard backend
       DB_PATH: ':memory:'
       PORT: '4000'
       STELLAR_NETWORK: testnet
@@ -36,7 +36,7 @@ jobs:
       RECEIVER_CONTRACT_ID: ${{ secrets.TESTNET_RECEIVER_CONTRACT_ID }}
       SOROBAN_RPC_URL: https://soroban-testnet.stellar.org
       VCC_API_BASE: http://localhost:5000
-      CARDS402_BASE_URL: http://localhost:4000
+      AGENTCARD_BASE_URL: http://localhost:4000
       VCC_CALLBACK_SECRET: ${{ secrets.VCC_CALLBACK_SECRET_TEST || 'test-callback-secret-at-least-32-chars-long-ok' }}
       # vcc api
       VCC_PORT: '5000'
@@ -49,10 +49,10 @@ jobs:
       CTX_STREAM: '1'
 
     steps:
-      - name: Checkout cards402
+      - name: Checkout agentcard
         uses: actions/checkout@v4
         with:
-          path: cards402
+          path: agentcard
 
       - name: Checkout vcc
         uses: actions/checkout@v4
@@ -67,16 +67,16 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: |
-            cards402/package-lock.json
+            agentcard/package-lock.json
             vcc/api/package-lock.json
 
       - name: Install dependencies
         run: |
-          cd cards402 && npm ci
+          cd agentcard && npm ci
           cd ../vcc/api && npm ci
 
-      - name: Run cards402 backend tests
-        working-directory: cards402/backend
+      - name: Run agentcard backend tests
+        working-directory: agentcard/backend
         run: npm test
 
       - name: Run vcc tests
@@ -84,7 +84,7 @@ jobs:
         run: npm test
 
       - name: Validate OpenAPI contracts
-        working-directory: cards402
+        working-directory: agentcard
         run: npm run api:validate
 
       - name: Boot vcc in background
@@ -95,23 +95,23 @@ jobs:
           sleep 3
           curl -sf http://localhost:$VCC_PORT/health || { cat /tmp/vcc.log; exit 1; }
 
-      - name: Boot cards402 in background
-        working-directory: cards402/backend
+      - name: Boot agentcard in background
+        working-directory: agentcard/backend
         run: |
-          nohup node src/index.js > /tmp/cards402.log 2>&1 &
-          echo "CARDS402_PID=$!" >> $GITHUB_ENV
+          nohup node src/index.js > /tmp/agentcard.log 2>&1 &
+          echo "AGENTCARD_PID=$!" >> $GITHUB_ENV
           sleep 3
-          curl -sf http://localhost:$PORT/status || { cat /tmp/cards402.log; exit 1; }
+          curl -sf http://localhost:$PORT/status || { cat /tmp/agentcard.log; exit 1; }
 
       - name: Run cross-repo integration test
-        working-directory: cards402/backend
-        run: node test/integration/e2e-cards402-vcc.test.js
+        working-directory: agentcard/backend
+        run: node test/integration/e2e-agentcard-vcc.test.js
         timeout-minutes: 5
 
       # Optional: run the real batch test against testnet (slow, uses real money)
       # Uncomment if you have testnet secrets configured.
       # - name: Batch e2e (testnet, 2 orders)
-      #   working-directory: cards402/backend
+      #   working-directory: agentcard/backend
       #   run: node test-batch-e2e.js 2 0.02
       #   timeout-minutes: 10
 
@@ -120,5 +120,5 @@ jobs:
         run: |
           echo "=== vcc logs ==="
           cat /tmp/vcc.log || true
-          echo "=== cards402 logs ==="
-          cat /tmp/cards402.log || true
+          echo "=== agentcard logs ==="
+          cat /tmp/agentcard.log || true

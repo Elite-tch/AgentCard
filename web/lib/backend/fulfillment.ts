@@ -95,9 +95,9 @@ export async function fireWebhook(url: string, payload: any, webhookSecret: stri
   if (webhookSecret) {
     const ts = String(Date.now());
     const sig = crypto.createHmac('sha256', webhookSecret).update(`${ts}.${body}`).digest('hex');
-    headers['X-AgentCard-Signature'] = `sha256=${sig}`;
-    headers['X-AgentCard-Timestamp'] = ts;
-    signatureHeader = headers['X-AgentCard-Signature'];
+    headers['X-agentcard-Signature'] = `sha256=${sig}`;
+    headers['X-agentcard-Timestamp'] = ts;
+    signatureHeader = headers['X-agentcard-Signature'];
   }
 
   const startedAt = Date.now();

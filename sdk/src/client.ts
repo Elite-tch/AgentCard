@@ -1,5 +1,5 @@
 export {
-  Cards402Error,
+  AgentcardError,
   SpendLimitError,
   RateLimitError,
   ServiceUnavailableError,
@@ -12,7 +12,7 @@ export {
 } from './errors';
 import {
   parseApiError,
-  Cards402Error as Cards402ErrorCtor,
+  AgentcardError as AgentcardErrorCtor,
   OrderFailedError,
   WaitTimeoutError,
   AuthError as AuthErrorCtor,
@@ -50,7 +50,7 @@ export interface OrderOptions {
 export interface PaymentInstructions {
   // Tag identifying the payment model — currently always "soroban_contract".
   type: 'soroban_contract';
-  // Cards402 receiver contract ID (C...) on Soroban.
+  // Agentcard receiver contract ID (C...) on Soroban.
   contract_id: string;
   // Order ID — pass this verbatim as the order_id argument to pay_usdc/pay_xlm.
   order_id: string;
@@ -136,7 +136,7 @@ export interface RetryOptions {
 const ORDER_ID_PATTERN = /^[a-zA-Z0-9_-]{1,64}$/;
 function validateOrderId(orderId: string): void {
   if (typeof orderId !== 'string' || !ORDER_ID_PATTERN.test(orderId)) {
-    throw new Cards402ErrorCtor(
+    throw new AgentcardErrorCtor(
       `Invalid order id: ${String(orderId).slice(0, 32)}`,
       'invalid_order_id',
       400,
@@ -144,7 +144,7 @@ function validateOrderId(orderId: string): void {
   }
 }
 
-export class Cards402Client {
+export class AgentcardClient {
   private baseUrl: string;
   private apiKey: string;
   private retry: Required<RetryOptions>;
@@ -160,10 +160,10 @@ export class Cards402Client {
   } = {}) {
     // Resolve api key + base URL in priority order:
     //   1. Explicit constructor args
-    //   2. CARDS402_API_KEY / CARDS402_BASE_URL env vars
-    //   3. ~/.cards402/config.json (written by `cards402 onboard`)
+    //   2. AGENTCARD_API_KEY / AGENTCARD_BASE_URL env vars
+    //   3. ~/.agentcard/config.json (written by `agentcard onboard`)
     // This lets agents that went through the claim-code onboarding
-    // flow just do `new Cards402Client()` without passing anything.
+    // flow just do `new AgentcardClient()` without passing anything.
     //
     // Use a synchronous require of ./config so the auto-load path
     // doesn't force callers into an async constructor.
@@ -195,7 +195,7 @@ export class Cards402Client {
     // explicitly (the common case for MCP, CLI purchase, and OWS callers).
     // An http:// or ftp:// URL would be used as-is, sending the agent's
     // API key over plaintext. Now every code path is covered.
-    const finalBase = resolvedBase || 'https://api.cards402.com/v1';
+    const finalBase = resolvedBase || 'https://api.agentcard.com/v1';
     try {
       // Lazy-require to avoid circular deps in the browser-bundle path
       // where config.ts isn't available. If assertSafeBaseUrl isn't
@@ -206,7 +206,7 @@ export class Cards402Client {
       const { assertSafeBaseUrl } = require('./config') as {
         assertSafeBaseUrl: (url: string, opts?: { context?: string }) => string;
       };
-      assertSafeBaseUrl(finalBase, { context: 'Cards402Client constructor' });
+      assertSafeBaseUrl(finalBase, { context: 'AgentcardClient constructor' });
     } catch (err) {
       // Re-throw URL-safety rejections (non-HTTPS, userinfo, etc.)
       // but swallow "module not found" errors from environments where
@@ -320,7 +320,7 @@ export class Cards402Client {
       if (
         err instanceof OrderFailedError ||
         err instanceof WaitTimeoutError ||
-        err instanceof Cards402ErrorCtor
+        err instanceof AgentcardErrorCtor
       ) {
         throw err;
       }

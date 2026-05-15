@@ -1,5 +1,5 @@
-// Agent-local config file. Persisted at ~/.cards402/config.json after
-// a successful `cards402 onboard --claim` so the SDK can load the api
+// Agent-local config file. Persisted at ~/.agentcard/config.json after
+// a successful `agentcard onboard --claim` so the SDK can load the api
 // key on subsequent runs without the agent having to re-paste secrets.
 //
 // The file lives on the agent's machine and is readable only by the
@@ -18,7 +18,7 @@ import * as crypto from 'crypto';
 // parsed in full and flowed into request headers downstream.
 const MAX_CONFIG_BYTES = 16 * 1024;
 
-export interface Cards402Config {
+export interface AgentcardConfig {
   api_key: string;
   api_url: string;
   webhook_secret?: string | null;
@@ -38,7 +38,7 @@ export interface Cards402Config {
 }
 
 function defaultConfigDir(): string {
-  return process.env.CARDS402_CONFIG_DIR || path.join(os.homedir(), '.cards402');
+  return process.env.AGENTCARD_CONFIG_DIR || path.join(os.homedir(), '.agentcard');
 }
 
 function defaultConfigPath(): string {
@@ -62,10 +62,10 @@ function defaultConfigPath(): string {
 // chars would flow into the X-Api-Key HTTP header and trigger Node's
 // ERR_INVALID_CHAR on every fetch call — same bug class as the backend's
 // X-Request-ID audit (F1-app). Accept printable ASCII only (the backend
-// mints keys as `cards402_<48 hex>`, which is pure ASCII alnum + underscore).
+// mints keys as `agentcard_<48 hex>`, which is pure ASCII alnum + underscore).
 const API_KEY_SHAPE = /^[\x20-\x7e]+$/;
 
-export function loadCards402Config(configPath?: string): Cards402Config | null {
+export function loadAgentcardConfig(configPath?: string): AgentcardConfig | null {
   const p = configPath || defaultConfigPath();
   try {
     // F1-config (2026-04-16): platform-independent checks (symlink,
@@ -87,14 +87,14 @@ export function loadCards402Config(configPath?: string): Cards402Config | null {
     }
     if (stat.isSymbolicLink()) {
       throw new Error(
-        `cards402 config at ${p} is a symbolic link. Refusing to load. ` +
-          `Remove the link and re-run 'cards402 onboard --claim <code>' to create a real file.`,
+        `agentcard config at ${p} is a symbolic link. Refusing to load. ` +
+          `Remove the link and re-run 'agentcard onboard --claim <code>' to create a real file.`,
       );
     }
     if (!stat.isFile()) {
       throw new Error(
-        `cards402 config at ${p} is not a regular file. ` +
-          `Remove it and re-run 'cards402 onboard --claim <code>'.`,
+        `agentcard config at ${p} is not a regular file. ` +
+          `Remove it and re-run 'agentcard onboard --claim <code>'.`,
       );
     }
     // F5-config: enforce a size cap BEFORE reading the file into
@@ -103,9 +103,9 @@ export function loadCards402Config(configPath?: string): Cards402Config | null {
     // corruption or an attempt to flood request headers.
     if (stat.size > MAX_CONFIG_BYTES) {
       throw new Error(
-        `cards402 config at ${p} is ${stat.size} bytes (max ${MAX_CONFIG_BYTES}). ` +
+        `agentcard config at ${p} is ${stat.size} bytes (max ${MAX_CONFIG_BYTES}). ` +
           `Refusing to load — the file is either corrupted or has been tampered with. ` +
-          `Rotate your api key via the dashboard and re-run 'cards402 onboard'.`,
+          `Rotate your api key via the dashboard and re-run 'agentcard onboard'.`,
       );
     }
     // Unix-only: tighten loose permission bits. chmod on a regular
@@ -116,7 +116,7 @@ export function loadCards402Config(configPath?: string): Cards402Config | null {
       try {
         fs.chmodSync(p, 0o600);
         process.stderr.write(
-          `⚠ cards402 config at ${p} had loose permissions (${(stat.mode & 0o777).toString(8)}) — tightened to 600.\n` +
+          `⚠ agentcard config at ${p} had loose permissions (${(stat.mode & 0o777).toString(8)}) — tightened to 600.\n` +
             '   If this is unexpected, rotate your api key via the dashboard.\n',
         );
       } catch {
@@ -125,7 +125,7 @@ export function loadCards402Config(configPath?: string): Cards402Config | null {
     }
 
     const raw = fs.readFileSync(p, 'utf8');
-    const config = JSON.parse(raw) as Cards402Config;
+    const config = JSON.parse(raw) as AgentcardConfig;
 
     // F3-config (2026-04-16): validate api_key shape before accepting.
     // A corrupt or tampered key with CRLF / NUL / non-printable bytes
@@ -133,8 +133,8 @@ export function loadCards402Config(configPath?: string): Cards402Config | null {
     // ERR_INVALID_CHAR header validation.
     if (typeof config.api_key === 'string' && !API_KEY_SHAPE.test(config.api_key)) {
       throw new Error(
-        `cards402 config at ${p} contains an api_key with non-printable characters. ` +
-          `The file may be corrupted or tampered with. Rotate your key and re-run 'cards402 onboard'.`,
+        `agentcard config at ${p} contains an api_key with non-printable characters. ` +
+          `The file may be corrupted or tampered with. Rotate your key and re-run 'agentcard onboard'.`,
       );
     }
 
@@ -148,7 +148,7 @@ export function loadCards402Config(configPath?: string): Cards402Config | null {
 /**
  * Validate a base URL for safety before storing it in the config or
  * using it for API calls. Rejects everything that isn't HTTPS unless
- * the explicit CARDS402_ALLOW_INSECURE_BASE_URL escape hatch is set,
+ * the explicit AGENTCARD_ALLOW_INSECURE_BASE_URL escape hatch is set,
  * which only exists so local dev against http://localhost:4000 still
  * works. Returns the parsed URL.string() on success, throws on reject.
  *
@@ -158,7 +158,7 @@ export function loadCards402Config(configPath?: string): Cards402Config | null {
  *     injects http:// or a foreign origin into the response)
  *   - resolveCredentials, when an env-var override is used for
  *     baseUrl (defends against a user being tricked into setting
- *     CARDS402_BASE_URL to an attacker target)
+ *     AGENTCARD_BASE_URL to an attacker target)
  */
 export function assertSafeBaseUrl(url: string, opts: { context?: string } = {}): string {
   let parsed: URL;
@@ -167,11 +167,11 @@ export function assertSafeBaseUrl(url: string, opts: { context?: string } = {}):
   } catch {
     throw new Error(`Invalid base URL: ${url}`);
   }
-  // F4-config: reject embedded userinfo. `https://api.cards402.com/v1@evil.com/`
-  // parses as username='api.cards402.com/v1', password='', hostname='evil.com'
-  // — the whole string looks plausibly cards402-ish in log output, but every
+  // F4-config: reject embedded userinfo. `https://api.agentcard.com/v1@evil.com/`
+  // parses as username='api.agentcard.com/v1', password='', hostname='evil.com'
+  // — the whole string looks plausibly agentcard-ish in log output, but every
   // request would go to evil.com carrying the user's api_key in the
-  // Authorization header. There's no legitimate reason for a cards402 base
+  // Authorization header. There's no legitimate reason for a agentcard base
   // URL to include credentials, so refuse any URL with a non-empty username
   // or password.
   if (parsed.username !== '' || parsed.password !== '') {
@@ -182,12 +182,12 @@ export function assertSafeBaseUrl(url: string, opts: { context?: string } = {}):
     );
   }
   if (parsed.protocol !== 'https:') {
-    if (process.env.CARDS402_ALLOW_INSECURE_BASE_URL === '1') {
+    if (process.env.AGENTCARD_ALLOW_INSECURE_BASE_URL === '1') {
       return parsed.toString();
     }
     throw new Error(
       `Refusing to use non-HTTPS base URL (${url})${opts.context ? ` for ${opts.context}` : ''}. ` +
-        `Set CARDS402_ALLOW_INSECURE_BASE_URL=1 to override for local development.`,
+        `Set AGENTCARD_ALLOW_INSECURE_BASE_URL=1 to override for local development.`,
     );
   }
   return parsed.toString();
@@ -200,7 +200,7 @@ export function assertSafeBaseUrl(url: string, opts: { context?: string } = {}):
  * Atomicity: write to `<path>.tmp-<pid>-<rand>` first, fsync, then
  * rename over the target. A mid-write crash (power loss, OOM, Ctrl-C
  * between write and flush) leaves the old file intact instead of a
- * truncated new one that loadCards402Config would explode on.
+ * truncated new one that loadAgentcardConfig would explode on.
  *
  * Permission hardening: the `mode` option on writeFileSync only
  * applies when the file is being CREATED, so a stale 0644 file from
@@ -208,12 +208,12 @@ export function assertSafeBaseUrl(url: string, opts: { context?: string } = {}):
  * We fsync+rename so the temp path is always freshly created with
  * 0600, then the rename replaces the target atomically.
  */
-export function saveCards402Config(config: Cards402Config, configPath?: string): { path: string } {
+export function saveAgentcardConfig(config: AgentcardConfig, configPath?: string): { path: string } {
   const p = configPath || defaultConfigPath();
   const dir = path.dirname(p);
   fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
   // F2-config: mkdirSync's mode option only applies to directories
-  // it actually CREATES. An existing ~/.cards402 directory at 0755
+  // it actually CREATES. An existing ~/.agentcard directory at 0755
   // (from an older buggy SDK version, a package install, or a
   // manual mkdir) silently stays loose, and the config file sits
   // inside a world-traversable parent. Explicit chmod after mkdir
@@ -252,7 +252,7 @@ export function saveCards402Config(config: Cards402Config, configPath?: string):
     committed = true;
   } finally {
     // F3-config: clean up the temp file on any failure before the
-    // rename commits. A leaked ~/.cards402/config.json.tmp-* file
+    // rename commits. A leaked ~/.agentcard/config.json.tmp-* file
     // holding a fresh api_key would otherwise linger on disk with
     // the same 0600 permissions as the target but under a path no
     // one checks — easy to miss during credential rotation.
@@ -277,8 +277,8 @@ export function saveCards402Config(config: Cards402Config, configPath?: string):
 /**
  * Resolve an api key + base URL at SDK call time, in priority order:
  *   1. Explicit `apiKey` / `baseUrl` passed to the call
- *   2. CARDS402_API_KEY / CARDS402_BASE_URL env vars
- *   3. ~/.cards402/config.json
+ *   2. AGENTCARD_API_KEY / AGENTCARD_BASE_URL env vars
+ *   3. ~/.agentcard/config.json
  *
  * The two fields resolve independently — passing `apiKey` to a call
  * that needs its `baseUrl` to come from config.json used to silently
@@ -295,13 +295,13 @@ export function resolveCredentials(
   let apiKey: string | undefined = opts.apiKey;
   let baseUrl: string | undefined = opts.baseUrl;
 
-  if (!apiKey && process.env.CARDS402_API_KEY) apiKey = process.env.CARDS402_API_KEY;
-  if (!baseUrl && process.env.CARDS402_BASE_URL) baseUrl = process.env.CARDS402_BASE_URL;
+  if (!apiKey && process.env.AGENTCARD_API_KEY) apiKey = process.env.AGENTCARD_API_KEY;
+  if (!baseUrl && process.env.AGENTCARD_BASE_URL) baseUrl = process.env.AGENTCARD_BASE_URL;
 
   if (!apiKey || !baseUrl) {
     // Only load config if at least one field is still missing — saves
     // a filesystem read on the common case where env + opts fully cover it.
-    const cfg = loadCards402Config();
+    const cfg = loadAgentcardConfig();
     if (cfg) {
       if (!apiKey) apiKey = cfg.api_key;
       if (!baseUrl) baseUrl = cfg.api_url;
@@ -310,7 +310,7 @@ export function resolveCredentials(
 
   // Refuse any non-HTTPS baseUrl (env, opts, or config) unless the
   // explicit local-dev escape hatch is set. Without this, an attacker
-  // who tricks the user into setting CARDS402_BASE_URL=http://evil/
+  // who tricks the user into setting AGENTCARD_BASE_URL=http://evil/
   // sees the api key in every request's Authorization header. The
   // assertSafeBaseUrl helper throws on reject — we let it propagate
   // rather than silently continue with an insecure URL.

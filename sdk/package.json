@@ -1,5 +1,5 @@
 {
-  "name": "cards402",
+  "name": "agentcard",
   "version": "0.4.7",
   "description": "Virtual Visa cards for AI agents — pay USDC or XLM on Stellar, get a card in ~60s",
   "main": "dist/index.js",
@@ -17,7 +17,7 @@
     }
   },
   "bin": {
-    "cards402": "./dist/cli.js"
+    "agentcard": "./dist/cli.js"
   },
   "files": [
     "dist",
@@ -44,14 +44,14 @@
     "model-context-protocol",
     "402-payment",
     "soroban",
-    "cards402"
+    "agentcard"
   ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/CTX-com/Cards402"
+    "url": "https://github.com/CTX-com/agentcard"
   },
-  "homepage": "https://cards402.com",
+  "homepage": "https://agentcard.com",
   "publishConfig": {
     "access": "public"
   },

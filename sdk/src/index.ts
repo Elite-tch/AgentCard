@@ -1,4 +1,4 @@
-export { Cards402Client } from './client';
+export { AgentcardClient } from './client';
 export type {
   OrderOptions,
   OrderResponse,
@@ -45,7 +45,7 @@ export type {
 } from './ows';
 
 export {
-  Cards402Error,
+  AgentcardError,
   SpendLimitError,
   RateLimitError,
   ServiceUnavailableError,
@@ -62,5 +62,5 @@ export { InsufficientFeeError } from './soroban';
 export { mppCharge } from './mpp';
 export type { MppChargeOpts, MppChargeResult } from './mpp';
 
-export { loadCards402Config, saveCards402Config, resolveCredentials } from './config';
-export type { Cards402Config } from './config';
+export { loadAgentcardConfig, saveAgentcardConfig, resolveCredentials } from './config';
+export type { AgentcardConfig } from './config';

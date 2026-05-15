@@ -6,17 +6,17 @@ const POST_URL = 'https://agentcard.com/blog/anatomy-of-a-agentcard-order';
 const POST_DATE = '2026-04-14';
 
 export const metadata: Metadata = {
-  title: 'Anatomy of a AgentCard order',
+  title: 'Anatomy of a agentcard order',
   description:
     'Every millisecond of the 33-second path from purchaseCardOWS() to PAN in hand: payment, watcher, Stage 1 + 2 fulfilment, SSE event.',
   alternates: { canonical: POST_URL },
   openGraph: ogForPage({
-    title: 'Anatomy of a AgentCard order — AgentCard',
+    title: 'Anatomy of a agentcard order — agentcard',
     description: 'Every millisecond of the 33-second path from purchaseCard() to PAN-in-hand.',
     path: '/blog/anatomy-of-a-agentcard-order',
   }),
   twitter: twitterForPage({
-    title: 'Anatomy of a AgentCard order',
+    title: 'Anatomy of a agentcard order',
     description: 'Every millisecond of the 33-second path from purchaseCard() to PAN-in-hand.',
   }),
 };
@@ -30,18 +30,18 @@ const blogJsonLd = {
   '@type': 'BlogPosting',
   '@id': POST_URL,
   mainEntityOfPage: POST_URL,
-  headline: 'Anatomy of a AgentCard order',
+  headline: 'Anatomy of a agentcard order',
   description: 'Every millisecond of the 33-second path from agent.purchaseCard() to PAN-in-hand.',
   datePublished: POST_DATE,
   dateModified: POST_DATE,
   author: {
     '@type': 'Organization',
-    name: 'AgentCard',
+    name: 'agentcard',
     url: 'https://agentcard.com',
   },
   publisher: {
     '@type': 'Organization',
-    name: 'AgentCard',
+    name: 'agentcard',
     logo: {
       '@type': 'ImageObject',
       url: 'https://agentcard.com/icon.png',
@@ -65,7 +65,7 @@ const breadcrumbJsonLd = {
     {
       '@type': 'ListItem',
       position: 2,
-      name: 'Anatomy of a AgentCard order',
+      name: 'Anatomy of a agentcard order',
       item: POST_URL,
     },
   ],
@@ -195,7 +195,7 @@ export default function BlogPost() {
               lineHeight: 0.98,
             }}
           >
-            Anatomy of a AgentCard order.
+            Anatomy of a agentcard order.
           </h1>
           <div
             style={{
@@ -217,7 +217,7 @@ export default function BlogPost() {
             <span>·</span>
             <span>8 min read</span>
             <span>·</span>
-            <span>by AgentCard engineering</span>
+            <span>by agentcard engineering</span>
           </div>
         </header>
 
@@ -235,7 +235,7 @@ export default function BlogPost() {
             We&apos;re writing this because &ldquo;how does this actually work&rdquo; is the single
             most common question we get on integration calls — and because the chain is genuinely
             interesting. Payment rails don&apos;t usually have a 30-second end-to-end budget, and
-            the fact that AgentCard can hit that reliably is a function of every component in the
+            the fact that agentcard can hit that reliably is a function of every component in the
             chain being cooperative about latency.
           </p>
 
@@ -291,7 +291,7 @@ export default function BlogPost() {
 
           <h2>Why SSE and not polling</h2>
           <p>
-            When AgentCard launched, <code>GET /v1/orders/:id</code> was the only way to watch order
+            When agentcard launched, <code>GET /v1/orders/:id</code> was the only way to watch order
             state. It worked — poll every 3 seconds, eventually see{' '}
             <code>phase: &quot;ready&quot;</code> — but it was a bad fit for agent-facing clients.
             Every poll is a full HTTP round-trip; every round-trip is either too slow (if you back
@@ -331,7 +331,7 @@ export default function BlogPost() {
           </ul>
 
           <p>
-            If you&apos;re building on AgentCard and want to dig deeper, the full HTTP API reference
+            If you&apos;re building on agentcard and want to dig deeper, the full HTTP API reference
             is at <Link href="/docs">/docs</Link>, the 5-minute quickstart is at{' '}
             <Link href="/docs/quickstart">/docs/quickstart</Link>, and questions go to{' '}
             <a href="mailto:api@agentcard.com">api@agentcard.com</a>.

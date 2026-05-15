@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 
-/* AgentCard design system
+/* agentcard design system
    ----------------------------------------------------------------------
    Dark theme — default. Light theme is an opt-in override via
    <html data-theme="light">. System theme is resolved in JS at mount

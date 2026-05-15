@@ -5,15 +5,15 @@ import { ogForPage, twitterForPage } from '@/app/lib/seo';
 export const metadata: Metadata = {
   title: 'Careers',
   description:
-    'Join AgentCard. Remote-first, flexible hours, published salaries. Building payment infrastructure for the autonomous agent economy.',
+    'Join agentcard. Remote-first, flexible hours, published salaries. Building payment infrastructure for the autonomous agent economy.',
   alternates: { canonical: 'https://agentcard.com/careers' },
   openGraph: ogForPage({
-    title: 'Careers — AgentCard',
+    title: 'Careers — agentcard',
     description: 'Remote-first. Published salaries. Building payment rails for AI agents.',
     path: '/careers',
   }),
   twitter: twitterForPage({
-    title: 'Careers — AgentCard',
+    title: 'Careers — agentcard',
     description: 'Remote-first. Published salaries. Building payment rails for AI agents.',
   }),
 };
@@ -101,7 +101,7 @@ const JOBS = [
     title: 'Integration engineer · agents',
     location: 'Remote · Americas or Europe',
     band: '£70,000 – £100,000 + equity',
-    body: "Build reference agents on top of AgentCard. Ship example MCPs. Run office hours. Write the docs we haven't written yet. You are our feedback loop with the autonomous agent ecosystem.",
+    body: "Build reference agents on top of agentcard. Ship example MCPs. Run office hours. Write the docs we haven't written yet. You are our feedback loop with the autonomous agent ecosystem.",
   },
   {
     team: 'Security',
@@ -115,7 +115,7 @@ const JOBS = [
 const REASONS = [
   {
     title: 'Get in at the ground level.',
-    body: 'AgentCard is small, fast, and agile. You will directly impact the direction of the product and grow with the company from day one.',
+    body: 'agentcard is small, fast, and agile. You will directly impact the direction of the product and grow with the company from day one.',
   },
   {
     title: 'Make something real.',
@@ -154,7 +154,7 @@ function buildJobJsonLd(job: (typeof JOBS)[number]) {
     employmentType: 'FULL_TIME',
     hiringOrganization: {
       '@type': 'Organization',
-      name: 'AgentCard',
+      name: 'agentcard',
       sameAs: 'https://agentcard.com',
       logo: 'https://agentcard.com/icon.png',
     },
@@ -184,7 +184,7 @@ export default function CareersPage() {
         eyebrow="Careers"
         title="Come build payment rails for AI"
         accent="agents"
-        intro="AgentCard is small, remote-first, and focused. We publish every salary, we hire from everywhere, and we don’t believe anyone should choose between doing great work and taking care of themselves. Below is what we offer and what we’re currently hiring for."
+        intro="agentcard is small, remote-first, and focused. We publish every salary, we hire from everywhere, and we don’t believe anyone should choose between doing great work and taking care of themselves. Below is what we offer and what we’re currently hiring for."
       />
 
       {/* Benefits grid */}
@@ -251,7 +251,7 @@ export default function CareersPage() {
       {/* Why */}
       <PageSection
         background="surface"
-        eyebrow="Why AgentCard"
+        eyebrow="Why agentcard"
         title="Six reasons to take the call."
       >
         <div

@@ -1,4 +1,4 @@
-// Helpers for agents using a raw Stellar keypair (S...) to pay the cards402
+// Helpers for agents using a raw Stellar keypair (S...) to pay the agentcard
 // receiver contract on Soroban. For OWS-wallet custody, see ./ows.ts.
 
 import {
@@ -99,7 +99,7 @@ export interface PayOpts {
 }
 
 /**
- * Pay the cards402 receiver contract using a raw Stellar secret key.
+ * Pay the agentcard receiver contract using a raw Stellar secret key.
  * Invokes pay_usdc or pay_xlm with the agent's G-address, the quoted amount
  * converted to 7-decimal stroops, and the order_id from the create-order
  * response. Returns the Soroban transaction hash.
@@ -166,8 +166,8 @@ export async function purchaseCard(opts: {
   resume?: { orderId: string; payment: PaymentInstructions };
   waitForCardOpts?: { timeoutMs?: number; intervalMs?: number };
 }): Promise<CardDetails & { order_id: string }> {
-  const { Cards402Client } = await import('./client');
-  const client = new Cards402Client({ apiKey: opts.apiKey, baseUrl: opts.baseUrl });
+  const { AgentcardClient } = await import('./client');
+  const client = new AgentcardClient({ apiKey: opts.apiKey, baseUrl: opts.baseUrl });
   const paymentAsset = opts.paymentAsset ?? 'usdc';
 
   let orderId: string;

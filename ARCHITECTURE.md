@@ -1,9 +1,9 @@
-# cards402 Architecture
+# agentcard Architecture
 
 ## Overview
 
-cards402 is an agentic virtual-card service. AI agents pay USDC or XLM to a
-Soroban receiver contract on Stellar; cards402 detects the on-chain payment,
+agentcard is an agentic virtual-card service. AI agents pay USDC or XLM to a
+Soroban receiver contract on Stellar; agentcard detects the on-chain payment,
 orchestrates card procurement through a separate fulfillment service
 (**vcc**), and returns the Visa prepaid card details (PAN, CVV, expiry) to
 the agent. Agents pay face value (1:1 USDC → card value, zero markup).
@@ -15,18 +15,18 @@ everything in this repo is open source:
 
 | Component             | Directory     | Role                                                                                        |
 | --------------------- | ------------- | ------------------------------------------------------------------------------------------- |
-| **cards402 backend**  | `backend/`    | Agent-facing HTTP API, Soroban event watcher, order state machine, dashboard, policy engine |
-| **cards402 web**      | `web/`        | Next.js marketing site, docs, operator dashboard                                            |
-| **cards402 SDK**      | `sdk/`        | TypeScript client, CLI, OWS-wallet helpers, MCP server                                      |
-| **cards402 contract** | `contract/`   | Soroban receiver contract (Rust) — agents pay this                                          |
-| **vcc** (private)     | separate repo | Fulfillment engine: CTX gift-card ordering + claim scraping + HMAC callback to cards402     |
+| **agentcard backend**  | `backend/`    | Agent-facing HTTP API, Soroban event watcher, order state machine, dashboard, policy engine |
+| **agentcard web**      | `web/`        | Next.js marketing site, docs, operator dashboard                                            |
+| **agentcard SDK**      | `sdk/`        | TypeScript client, CLI, OWS-wallet helpers, MCP server                                      |
+| **agentcard contract** | `contract/`   | Soroban receiver contract (Rust) — agents pay this                                          |
+| **vcc** (private)     | separate repo | Fulfillment engine: CTX gift-card ordering + claim scraping + HMAC callback to agentcard     |
 
 ---
 
 ## Repository layout (this repo)
 
 ```
-cards402/
+agentcard/
 ├── ARCHITECTURE.md          ← this file
 ├── AGENTS.md                ← agent-facing API guide (published)
 ├── README.md                ← developer quick start
@@ -35,7 +35,7 @@ cards402/
 │   └── Cargo.toml
 ├── sdk/                     ← TypeScript client + MCP server (open source)
 │   ├── src/
-│   │   ├── client.ts          Cards402Client HTTP wrapper
+│   │   ├── client.ts          AgentcardClient HTTP wrapper
 │   │   ├── soroban.ts         shared contract-call helpers (simulate, assemble, submit)
 │   │   ├── stellar.ts         raw-keypair payViaContract / purchaseCard
 │   │   ├── ows.ts             OWS-wallet payViaContractOWS / purchaseCardOWS
@@ -78,7 +78,7 @@ cards402/
 
 ```
 ┌───────┐      ┌───────────┐   ┌────────────────┐   ┌──────────┐   ┌─────────┐
-│ Agent │─(1)─▶│ cards402  │─(2)─▶│ Soroban        │─(3)─▶│ cards402│─(4)─▶│   vcc   │
+│ Agent │─(1)─▶│ agentcard  │─(2)─▶│ Soroban        │─(3)─▶│ agentcard│─(4)─▶│   vcc   │
 │  SDK  │      │ backend   │   │ receiver       │   │ watcher  │   │  api    │
 └───────┘      │  /v1      │   │ contract       │   │          │   │         │
     ▲          └───────────┘   └────────────────┘   └────┬─────┘   └────┬────┘
@@ -104,19 +104,19 @@ cards402/
 
 ### Steps
 
-1. **Agent creates an order.** `POST /v1/orders` with `{ amount_usdc, webhook_url?, metadata? }` and an `Idempotency-Key` header. Note: asset choice happens at _payment_ time, not creation time — the response includes both a USDC quote and an XLM quote, and the agent picks which one to pay by calling `pay_usdc` or `pay_xlm` on the receiver contract. cards402 validates the request, evaluates the policy engine, and either:
+1. **Agent creates an order.** `POST /v1/orders` with `{ amount_usdc, webhook_url?, metadata? }` and an `Idempotency-Key` header. Note: asset choice happens at _payment_ time, not creation time — the response includes both a USDC quote and an XLM quote, and the agent picks which one to pay by calling `pay_usdc` or `pay_xlm` on the receiver contract. agentcard validates the request, evaluates the policy engine, and either:
    - returns a Soroban `contractPayment` response `{ type: 'soroban_contract', contract_id, order_id, usdc, xlm }` and an order in `pending_payment`; or
    - returns 202 with `phase: 'awaiting_approval'` and creates an approval request for the dashboard owner to decide within 2 hours.
 2. **Agent pays the contract.** Using the SDK's `payViaContract` / `payViaContractOWS`, the agent builds a Soroban transaction invoking `pay_usdc(from, amount_i128, order_id_bytes)` (or `pay_xlm`) on the receiver contract, signs, simulates, assembles, and submits via RPC. `order_id` is UTF-8 bytes of the order UUID.
 3. **Contract transfers USDC/XLM to treasury** and emits a `payment` event: `topics = [Symbol("pay_usdc"|"pay_xlm"), order_id_bytes, from_address], value = amount_i128`.
 4. **Soroban watcher picks up the event** (`backend/src/payments/stellar.js`). It polls `rpc.Server.getEvents()` every 5 seconds filtered to the receiver contract, persists the `stellar_start_ledger` cursor in `system_state` across restarts, and calls `handlePayment({ txid, paymentAsset, amountUsdc, amountXlm, senderAddress, orderId })` for each matching event.
-5. **cards402 hands the order to vcc.** `handlePayment` atomically CASes the order from `pending_payment` → `ordering` and then invokes `vcc-client.js getInvoice(orderId, amount_usdc)`, which POSTs `/api/jobs/invoice` on the vcc api. vcc contacts CTX.com, gets a gift-card order with an XLM `payment_url` (a `web+stellar:pay` URI), and returns `{ job_id, payment_url }`.
-6. **cards402 pays CTX.** `payments/xlm-sender.js payCtxOrder(payment_url)` parses the SEP-0007 URI and branches on `payment_asset`:
+5. **agentcard hands the order to vcc.** `handlePayment` atomically CASes the order from `pending_payment` → `ordering` and then invokes `vcc-client.js getInvoice(orderId, amount_usdc)`, which POSTs `/api/jobs/invoice` on the vcc api. vcc contacts CTX.com, gets a gift-card order with an XLM `payment_url` (a `web+stellar:pay` URI), and returns `{ job_id, payment_url }`.
+6. **agentcard pays CTX.** `payments/xlm-sender.js payCtxOrder(payment_url)` parses the SEP-0007 URI and branches on `payment_asset`:
    - **XLM-paid orders** → one-op Stellar `payment` of the invoice amount from treasury to CTX's destination.
    - **USDC-paid orders** → one Stellar tx with **two** ops: (1) `pathPaymentStrictSend` with `sendAmount = face_usdc`, `destination = treasury (self)`, `destMin = invoice_xlm`, `path = probe.path`, pinning the route Horizon's `/paths/strict-receive` priced; (2) a plain `payment` op delivering exactly `invoice_xlm` to CTX's destination. **The second op is critical** — CTX's payment watcher only registers direct `payment` operations and silently ignores `path_payment_*`, so a one-op path payment lands on-chain but CTX never marks the invoice paid (diagnosed 2026-04-14). Any XLM surplus from the swap stays in treasury as margin from CTX's merchant discount. If the DEX can't yield at least `invoice_xlm` for the face-value USDC at submission time, op 1 fails with `op_under_dest_min`, the whole tx rolls back atomically, and the order is refunded.
-     Then cards402 calls `POST /api/jobs/:job_id/paid` on vcc (`notifyPaid`).
-7. **vcc fulfills.** vcc polls CTX for the claim URL, runs stage1/stage2 scrapers (Playwright + CAPTCHA solver) to extract PAN/CVV/expiry, then HMAC-signs a callback to `POST /vcc-callback` on cards402 with the card details (header `X-VCC-Signature: sha256=<hmac("<timestamp>.<body>", callback_secret)>`).
-8. **cards402 delivers to the agent.** `api/vcc-callback.js` verifies the HMAC + 5-minute timestamp window, transitions the order to `delivered`, fires an optional agent webhook, and increments per-key spend. The next poll of `GET /v1/orders/:id` returns `phase: 'ready'` with the card.
+     Then agentcard calls `POST /api/jobs/:job_id/paid` on vcc (`notifyPaid`).
+7. **vcc fulfills.** vcc polls CTX for the claim URL, runs stage1/stage2 scrapers (Playwright + CAPTCHA solver) to extract PAN/CVV/expiry, then HMAC-signs a callback to `POST /vcc-callback` on agentcard with the card details (header `X-agentcard-Signature: sha256=<hmac("<timestamp>.<body>", callback_secret)>`).
+8. **agentcard delivers to the agent.** `api/vcc-callback.js` verifies the HMAC + 5-minute timestamp window, transitions the order to `delivered`, fires an optional agent webhook, and increments per-key spend. The next poll of `GET /v1/orders/:id` returns `phase: 'ready'` with the card.
 
 ### Crash-recovery semantics
 
@@ -169,7 +169,7 @@ Contract tests in `contract/src/lib.rs` cover: init idempotence, auth requiremen
 
 ## Agent API (`/v1`)
 
-Base URL: `https://api.cards402.com`. Auth: `X-Api-Key: cards402_<key>` on every request.
+Base URL: `https://api.agentcard.com`. Auth: `X-Api-Key: agentcard_<key>` on every request.
 
 | Endpoint             | Purpose                                                                 |
 | -------------------- | ----------------------------------------------------------------------- |
@@ -205,19 +205,19 @@ Approval flow (`backend/src/api/dashboard.js` and `api/admin.js`): when policy r
 
 ## Interface with vcc
 
-cards402 talks to vcc exclusively over HTTP. The contract is defined in `backend/src/vcc-client.js` and implemented on the vcc side under `~/code/vcc/api/src/api/`.
+agentcard talks to vcc exclusively over HTTP. The contract is defined in `backend/src/vcc-client.js` and implemented on the vcc side under `~/code/vcc/api/src/api/`.
 
 | Method      | Endpoint             | Purpose                                                                                                                    |
 | ----------- | -------------------- | -------------------------------------------------------------------------------------------------------------------------- |
 | `POST`      | `/api/register`      | First boot — self-register, get a bearer token encrypted at rest (`VCC_TOKEN_KEY`)                                         |
 | `POST`      | `/api/jobs/invoice`  | `{order_id, amount_usdc, callback_url, callback_secret}` → `{job_id, payment_url}`. Idempotent on `(tenant_id, order_id)`. |
-| `POST`      | `/api/jobs/:id/paid` | Notify that cards402 has sent XLM to CTX — vcc starts scraping                                                             |
+| `POST`      | `/api/jobs/:id/paid` | Notify that agentcard has sent XLM to CTX — vcc starts scraping                                                             |
 | `GET`       | `/api/jobs/:id`      | Poll job status (fallback when the callback is lost)                                                                       |
-| — (inbound) | `POST /vcc-callback` | vcc's HMAC-signed result callback to cards402                                                                              |
+| — (inbound) | `POST /vcc-callback` | vcc's HMAC-signed result callback to agentcard                                                                              |
 
 ### Callback signature
 
-vcc signs `"<timestamp>.<order_id>.<rawBody>"` with HMAC-SHA256 using `callback_secret` (the one cards402 supplied at invoice creation). Headers: `X-VCC-Signature: sha256=<hex>`, `X-VCC-Timestamp: <unix-ms>`, `X-VCC-Order-Id: <uuid>`. cards402 rejects any callback whose timestamp is more than 10 minutes old, validates the HMAC with a timing-safe hex compare, and refuses any request where the header `X-VCC-Order-Id` does not match the body's `order_id` field (defence against cross-order replay). The shared signer/verifier lives in `backend/src/lib/hmac.js` (mirrored at `vcc/api/src/lib/hmac.js`); callers are `vcc/api/src/fulfillment.js notifyCards402` and `backend/src/api/vcc-callback.js`. Legacy v1 signatures (format `"<timestamp>.<rawBody>"`, no `order_id`) are still accepted during the rollout and will be removed once both services are known to be on v2.
+vcc signs `"<timestamp>.<order_id>.<rawBody>"` with HMAC-SHA256 using `callback_secret` (the one agentcard supplied at invoice creation). Headers: `X-agentcard-Signature: sha256=<hex>`, `X-agentcard-Timestamp: <unix-ms>`, `X-agentcard-Order-Id: <uuid>`. agentcard rejects any callback whose timestamp is more than 10 minutes old, validates the HMAC with a timing-safe hex compare, and refuses any request where the header `X-agentcard-Order-Id` does not match the body's `order_id` field (defence against cross-order replay). The shared signer/verifier lives in `backend/src/lib/hmac.js` (mirrored at `vcc/api/src/lib/hmac.js`); callers are `vcc/api/src/fulfillment.js notifyAgentcard` and `backend/src/api/vcc-callback.js`. Legacy v1 signatures (format `"<timestamp>.<rawBody>"`, no `order_id`) are still accepted during the rollout and will be removed once both services are known to be on v2.
 
 ### At-rest encryption
 
@@ -251,7 +251,7 @@ See `backend/.env.example` for the full list with comments. Critical ones:
 | `RECEIVER_CONTRACT_ID` | ✓        | Deployed Soroban receiver contract                        |
 | `SOROBAN_RPC_URL`      | —        | Defaults to public mainnet/testnet                        |
 | `VCC_API_BASE`         | ✓        | vcc api URL (e.g. `https://vcc.ctx.com`)                  |
-| `CARDS402_BASE_URL`    | ✓        | Public base URL — vcc uses this to build the callback URL |
+| `AGENTCARD_BASE_URL`    | ✓        | Public base URL — vcc uses this to build the callback URL |
 | `VCC_CALLBACK_SECRET`  | ✓        | HMAC secret for `/vcc-callback` — ≥16 chars               |
 | `VCC_TOKEN_KEY`        | —        | 32-byte hex key encrypting vcc bearer token at rest       |
 | `STELLAR_USDC_ISSUER`  | —        | USDC classic asset issuer (mainnet default)               |

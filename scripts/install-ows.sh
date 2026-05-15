@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# cards402 OWS installer — installs the Stellar-supporting fork of OWS.
+# agentcard OWS installer — installs the Stellar-supporting fork of OWS.
 #
 # Usage:
-#   curl -fsSL https://cards402.com/install-ows.sh | bash
+#   curl -fsSL https://agentcard.com/install-ows.sh | bash
 #
 # This downloads a prebuilt binary for your platform from:
 #   https://github.com/CTX-com/Stellar-OWS-Core/releases

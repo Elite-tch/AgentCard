@@ -7,7 +7,7 @@
 import type { Metadata } from 'next';
 
 export const SITE_URL = 'https://agentcard.com';
-export const SITE_NAME = 'AgentCard';
+export const SITE_NAME = 'agentcard';
 
 // Canonical OG image URL. The image itself is generated dynamically
 // by app/opengraph-image.tsx (Next.js file convention) and served at
@@ -25,7 +25,7 @@ export const SHARED_OG: Metadata['openGraph'] = {
       url: OG_IMAGE_URL,
       width: 1200,
       height: 630,
-      alt: 'AgentCard — Virtual Visa cards for AI agents',
+      alt: 'agentcard — Virtual Visa cards for AI agents',
     },
   ],
 };

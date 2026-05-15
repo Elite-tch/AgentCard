@@ -7,15 +7,15 @@ import { ogForPage, twitterForPage } from '@/app/lib/seo';
 export const metadata: Metadata = {
   title: 'Security',
   description:
-    'How AgentCard secures API keys, payments, and infrastructure. Non-custodial by design, hashed keys, signed webhooks, and a responsible-disclosure policy.',
+    'How agentcard secures API keys, payments, and infrastructure. Non-custodial by design, hashed keys, signed webhooks, and a responsible-disclosure policy.',
   alternates: { canonical: `${APP_URL}/security` },
   openGraph: ogForPage({
-    title: 'Security — AgentCard',
+    title: 'Security — agentcard',
     description: 'Non-custodial by design. Hashed keys. Signed webhooks. Responsible disclosure.',
     path: '/security',
   }),
   twitter: twitterForPage({
-    title: 'Security — AgentCard',
+    title: 'Security — agentcard',
     description: 'Non-custodial by design. Responsible disclosure.',
   }),
 };
@@ -24,7 +24,7 @@ const PILLARS = [
   {
     eyebrow: 'Custody',
     title: 'Non-custodial by architecture.',
-    body: 'Agents pay the Soroban receiver contract directly. AgentCard never holds funds — we observe on-chain events and broker fulfilment. If AgentCard disappeared tomorrow, nothing is trapped in our custody, because nothing is in our custody.',
+    body: 'Agents pay the Soroban receiver contract directly. agentcard never holds funds — we observe on-chain events and broker fulfilment. If agentcard disappeared tomorrow, nothing is trapped in our custody, because nothing is in our custody.',
   },
   {
     eyebrow: 'Keys',
@@ -39,7 +39,7 @@ const PILLARS = [
   {
     eyebrow: 'Webhooks',
     title: 'HMAC signed, replay protected.',
-    body: 'Outgoing webhooks carry X-AgentCard-Signature (HMAC-SHA256 over timestamp + body) and X-AgentCard-Timestamp. The documented client reference rejects anything older than five minutes. Webhook secrets rotate automatically on key revocation.',
+    body: 'Outgoing webhooks carry X-agentcard-Signature (HMAC-SHA256 over timestamp + body) and X-agentcard-Timestamp. The documented client reference rejects anything older than five minutes. Webhook secrets rotate automatically on key revocation.',
   },
   {
     eyebrow: 'Circuit breaker',
@@ -72,7 +72,7 @@ export default function SecurityPage() {
         eyebrow="Security"
         title="Secure by architecture, not by"
         accent="trust"
-        intro="AgentCard is a small team running financial infrastructure. Everything below is a design choice, not a marketing bullet — we picked these specifically so a single compromise of any one component never exposes customer funds or credentials."
+        intro="agentcard is a small team running financial infrastructure. Everything below is a design choice, not a marketing bullet — we picked these specifically so a single compromise of any one component never exposes customer funds or credentials."
       />
 
       {/* Pillars */}
@@ -177,7 +177,7 @@ export default function SecurityPage() {
       <PageSection eyebrow="Disclosure" title="Found something? Tell us. We'll pay.">
         <div style={{ maxWidth: 720 }}>
           <p className="type-body" style={{ fontSize: '0.98rem', marginBottom: '1.5rem' }}>
-            AgentCard operates a responsible-disclosure programme. If you find a vulnerability, email{' '}
+            agentcard operates a responsible-disclosure programme. If you find a vulnerability, email{' '}
             <a
               href={`mailto:security@${APP_URL.replace('https://', '').replace('http://', '')}`}
               style={{

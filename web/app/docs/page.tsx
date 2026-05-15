@@ -6,7 +6,7 @@ import { APP_URL } from '@/lib/config';
 export const metadata: Metadata = {
   title: 'API reference',
   description:
-    'Full API reference for AgentCard: create orders, stream status, verify webhooks, and handle errors.',
+    'Full API reference for agentcard: create orders, stream status, verify webhooks, and handle errors.',
   alternates: { canonical: `${APP_URL}/docs` },
 };
 
@@ -20,16 +20,16 @@ const techArticleJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'TechArticle',
   '@id': `${APP_URL}/docs#article`,
-  headline: 'AgentCard HTTP API reference',
+  headline: 'agentcard HTTP API reference',
   description:
-    'Full HTTP API for AgentCard: create orders, stream order state over SSE, poll as a fallback, verify webhook signatures, and handle every error code.',
+    'Full HTTP API for agentcard: create orders, stream order state over SSE, poll as a fallback, verify webhook signatures, and handle every error code.',
   datePublished: '2026-04-13',
   dateModified: '2026-04-14',
   proficiencyLevel: 'Expert',
   dependencies: 'Node.js 18+, Stellar wallet, USDC or XLM',
   author: {
     '@type': 'Organization',
-    name: 'AgentCard',
+    name: 'agentcard',
     url: APP_URL,
   },
   publisher: { '@id': `${APP_URL}#organization` },
@@ -399,7 +399,7 @@ export default function DocsPage() {
               marginBottom: '1.2rem',
             }}
           >
-            AgentCard · HTTP API
+            agentcard · HTTP API
           </div>
           <h1
             className="type-display"
@@ -823,7 +823,7 @@ def wait_for_card(api_url: str, order_id: str, key: str):
           </CodeBlock>
 
           <Para>
-            The AgentCard SDK&apos;s <Code>waitForCard()</Code> already uses this path with polling
+            The agentcard SDK&apos;s <Code>waitForCard()</Code> already uses this path with polling
             as an automatic fallback, so SDK users get SSE for free. The server emits an SSE comment
             (<Code>: keepalive</Code>) every 15s to prevent intermediate proxies from idle-killing
             the connection.
@@ -901,7 +901,7 @@ def wait_for_card(api_url: str, order_id: str, key: str):
           <Para style={{ color: 'var(--fg-dim)', fontSize: '0.85rem' }}>
             Any <Code>metadata</Code> object you passed at <Code>POST /orders</Code> creation time
             is echoed back in every subsequent <Code>GET /orders/:id</Code> response (and SSE
-            event). Use it as the join key between AgentCard orders and your own internal records.
+            event). Use it as the join key between agentcard orders and your own internal records.
           </Para>
 
           <SubTitle>List orders (recovery / reconciliation)</SubTitle>
@@ -1072,7 +1072,7 @@ def wait_for_card(api_url: str, order_id: str, key: str):
         {/* ── Webhooks ── */}
         <Section id="webhooks" eyebrow="06 · Webhooks" title="Signed, retried, optional.">
           <Para>
-            If you provide a <Code>webhook_url</Code> when creating an order, AgentCard will POST to
+            If you provide a <Code>webhook_url</Code> when creating an order, agentcard will POST to
             it when the order reaches <Code>delivered</Code> or <Code>failed</Code> status.
           </Para>
           <Para>Each webhook request includes two headers for verification:</Para>
@@ -1088,11 +1088,11 @@ def wait_for_card(api_url: str, order_id: str, key: str):
             }}
           >
             <li style={{ marginBottom: '0.35rem' }}>
-              <Code>X-AgentCard-Signature: sha256=&lt;hmac&gt;</Code> — HMAC-SHA256 over{' '}
+              <Code>X-agentcard-Signature: sha256=&lt;hmac&gt;</Code> — HMAC-SHA256 over{' '}
               <Code>&lt;timestamp&gt;.&lt;body&gt;</Code>
             </li>
             <li>
-              <Code>X-AgentCard-Timestamp: &lt;unix-ms&gt;</Code> — send time in milliseconds
+              <Code>X-agentcard-Timestamp: &lt;unix-ms&gt;</Code> — send time in milliseconds
             </li>
           </ul>
           <Para>
@@ -1246,14 +1246,14 @@ def verify_webhook(raw_body: bytes, signature: str, timestamp: str, secret: str)
 
           <SubTitle>Handling errors by type (SDK)</SubTitle>
           <Para>
-            The AgentCard SDK converts the <Code>error</Code> string from each response into a typed
-            subclass of <Code>AgentCardError</Code>, so agents can handle each case without
+            The agentcard SDK converts the <Code>error</Code> string from each response into a typed
+            subclass of <Code>agentcardError</Code>, so agents can handle each case without
             string-parsing:
           </Para>
 
           <CodeBlock label="TypeScript">
             {`import {
-  AgentCardClient,
+  agentcardClient,
   SpendLimitError,
   RateLimitError,
   ServiceUnavailableError,
@@ -1264,7 +1264,7 @@ def verify_webhook(raw_body: bytes, signature: str, timestamp: str, secret: str)
   ResumableError,
 } from 'agentcard';
 
-const client = new AgentCardClient({ apiKey });
+const client = new agentcardClient({ apiKey });
 
 try {
   const card = await client.waitForCard(orderId);
@@ -1284,14 +1284,14 @@ try {
   } else if (err instanceof AuthError) {
     // key is missing or revoked
   } else {
-    // AgentCardError base, or a non-agentcard error — rethrow
+    // agentcardError base, or a non-agentcard error — rethrow
     throw err;
   }
 }`}
           </CodeBlock>
 
           <Para style={{ color: 'var(--fg-dim)', fontSize: '0.85rem' }}>
-            All typed errors extend <Code>AgentCardError</Code>, which carries <Code>code</Code>,{' '}
+            All typed errors extend <Code>agentcardError</Code>, which carries <Code>code</Code>,{' '}
             <Code>status</Code>, and <Code>raw</Code> (the original JSON body) for cases the SDK
             doesn&apos;t have a dedicated subclass for. <Code>ResumableError</Code> is the one you
             actually need for production — it wraps every non-terminal failure of{' '}

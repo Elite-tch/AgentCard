@@ -1,5 +1,5 @@
 // Background version check — warns the operator on stderr if their
-// locally-installed cards402 is older than the current `latest` tag on
+// locally-installed agentcard is older than the current `latest` tag on
 // the npm registry.
 //
 // Design constraints (all of these matter for a CLI that agents run
@@ -12,7 +12,7 @@
 //   - Short timeout. 2s on the registry fetch so a slow network never
 //     measurably affects agent throughput.
 //   - Cached. We write the last-check timestamp + seen-latest-version
-//     to `~/.cards402/version-check.json` and skip the registry entirely
+//     to `~/.agentcard/version-check.json` and skip the registry entirely
 //     if we checked within the last 24h. That's fine because once an
 //     operator has seen the warning they know to upgrade, and repeating
 //     the same warning every second is noise.
@@ -27,17 +27,17 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 
-const REGISTRY_URL = 'https://registry.npmjs.org/cards402/latest';
+const REGISTRY_URL = 'https://registry.npmjs.org/agentcard/latest';
 const CHECK_INTERVAL_MS = 24 * 60 * 60 * 1000; // once per day
 const FETCH_TIMEOUT_MS = 2_000;
-const STATE_FILE = path.join(os.homedir(), '.cards402', 'version-check.json');
+const STATE_FILE = path.join(os.homedir(), '.agentcard', 'version-check.json');
 // F1-version-check (2026-04-16): cap on local state file. Matches the
 // 16 KB pattern from config.ts and purchase.ts. The state file is
 // normally <200 bytes; anything larger is corruption or tampering.
 const MAX_STATE_BYTES = 16 * 1024;
 // F2-version-check (2026-04-16): cap on the npm registry response body.
 // The /latest endpoint returns a package manifest — normally ~2 KB for
-// cards402. A hostile server (DNS hijack, MITM, compromised CDN) could
+// agentcard. A hostile server (DNS hijack, MITM, compromised CDN) could
 // push megabytes within the 2s abort window. 64 KB is generous for any
 // legitimate manifest and bounds memory consumption.
 const MAX_REGISTRY_BODY_BYTES = 64 * 1024;
@@ -105,9 +105,9 @@ function printWarning(local: string, latest: string): void {
   // an LLM operator can act on it without extra prompting.
   const msg = [
     '',
-    `⚠  cards402 ${local} is out of date — ${latest} is available on npm.`,
-    `   Upgrade: npx -y cards402@latest <command>  |  npm i -g cards402@latest`,
-    `   Release notes: https://cards402.com/changelog`,
+    `⚠  agentcard ${local} is out of date — ${latest} is available on npm.`,
+    `   Upgrade: npx -y agentcard@latest <command>  |  npm i -g agentcard@latest`,
+    `   Release notes: https://agentcard.com/changelog`,
     '',
   ].join('\n');
   try {

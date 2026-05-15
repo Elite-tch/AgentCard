@@ -361,7 +361,7 @@ function PlatformTreasuryCard() {
           lineHeight: 1.5,
         }}
       >
-        The AgentCard treasury wallet on Stellar. Top this up with XLM or USDC when fulfillment runs
+        The agentcard treasury wallet on Stellar. Top this up with XLM or USDC when fulfillment runs
         low — it's what funds CTX payments and refunds. Only visible to the platform owner.
       </div>
       {error && (

@@ -1,6 +1,6 @@
 # Check VCC Order
 
-Check the status of a cards402 virtual card order, or get a full spend summary.
+Check the status of a agentcard virtual card order, or get a full spend summary.
 
 ## Usage
 
@@ -10,14 +10,14 @@ Check the status of a cards402 virtual card order, or get a full spend summary.
 
 When invoked with an order ID:
 
-1. Check if `CARDS402_API_KEY` is set. If not, prompt the user to set it.
+1. Check if `AGENTCARD_API_KEY` is set. If not, prompt the user to set it.
 
 2. Fetch the order:
 
    ```typescript
-   import { Cards402Client } from 'cards402';
+   import { AgentcardClient } from 'agentcard';
 
-   const client = new Cards402Client({ apiKey: process.env.CARDS402_API_KEY! });
+   const client = new AgentcardClient({ apiKey: process.env.AGENTCARD_API_KEY! });
    const order = await client.getOrder('<order_id>');
    ```
 
@@ -60,4 +60,4 @@ Orders: <total> total
 
 ## Environment variables needed
 
-- `CARDS402_API_KEY` — your cards402 API key
+- `AGENTCARD_API_KEY` — your agentcard API key

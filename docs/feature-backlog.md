@@ -1,4 +1,4 @@
-# Cards402 feature backlog
+# Agentcard feature backlog
 
 Unprioritised brain-dump of ideas that would be worth considering. Written after
 the phase 1–3 site build on 2026-04-14. Tagged by surface area so we can slice
@@ -10,7 +10,7 @@ Items that have since shipped during the audit loops:
 
 - ✅ `/blog` pipeline — 4 real posts published, drafts pipeline emptied:
   - How we built non-custodial card issuance on Soroban (10 min)
-  - Anatomy of a Cards402 order (8 min)
+  - Anatomy of a Agentcard order (8 min)
   - Why SSE beats polling for agent-facing APIs (6 min)
   - Claim codes: credentials that never touch the transcript (7 min)
 - ✅ `/changelog` with tagged entries + RSS + auto-discovery
@@ -49,9 +49,9 @@ exactly what happened.
 **Loop 18 status:** 3 more drift bugs caught and fixed, all in
 upstream inputs rather than generated content:
 
-- `examples/README.md` had `npx -y cards402/mcp` which is not a
+- `examples/README.md` had `npx -y agentcard/mcp` which is not a
   valid package spec. The CLI default subcommand is `mcp`
-  (`sdk/src/cli.ts:17`) so `npx -y cards402` is correct. Added a
+  (`sdk/src/cli.ts:17`) so `npx -y agentcard` is correct. Added a
   paragraph explaining the default-subcommand convention.
 - `web/README.md` still referenced `admin/page.tsx` and the Geist
   font. Admin was renamed to `dashboard/` months ago; the brand
@@ -65,7 +65,7 @@ upstream inputs rather than generated content:
 Also deleted the stale `project_architecture_v2.md` memory —
 it described an "agent pays VCC direct" design that never
 shipped; the real flow in `payment-handler.js:7` is
-agent→cards402 Soroban receiver→cards402 treasury pays VCC.
+agent→agentcard Soroban receiver→agentcard treasury pays VCC.
 The `_status.md` memory that describes the correct flow is
 now the single source in MEMORY.md.
 
@@ -130,10 +130,10 @@ interface + §security model`.
   LangGraph, autogen) run on Python. High-leverage.
 - **Go SDK.** For infrastructure agents and backend integrators.
 - **Rust SDK.** Same, plus natively aligns with Soroban contract tooling.
-- **`cards402 dev` local emulator.** A local server that mimics the API so
+- **`agentcard dev` local emulator.** A local server that mimics the API so
   agent developers can test without burning real USDC. Fake cards, fake
   Stellar, fast iteration.
-- **Time-travel debugging in the CLI.** `cards402 orders inspect <id>` shows a
+- **Time-travel debugging in the CLI.** `agentcard orders inspect <id>` shows a
   full timeline of the order with every internal state transition, webhook,
   on-chain event, and scrape attempt. Very useful for "why did this fail".
 
@@ -213,13 +213,13 @@ interface + §security model`.
   adoption. 4–6 months of engagement with a firm like Vanta.
 - **Penetration test** by an independent firm. Published summary on the
   Security page.
-- **Status page.** `status.cards402.com` is referenced in the Terms already —
+- **Status page.** `status.agentcard.com` is referenced in the Terms already —
   actually build it. Self-hosted Status.io clone or Instatus.
 - **Public postmortems.** When something goes wrong, publish a short writeup
   on `/changelog` within 72 hours. Builds trust more than any marketing copy.
 - **Proof-of-reserves / on-chain transparency.** Publish a public Stellar
   account address holding the operational float, so anyone can verify
-  Cards402 is solvent in real time. Strongest possible signal for a
+  Agentcard is solvent in real time. Strongest possible signal for a
   non-custodial platform.
 - **Bug bounty on HackerOne or Intigriti.** Current security page says we
   pay bounties — make it a real, public program.
@@ -227,7 +227,7 @@ interface + §security model`.
 ## Growth & distribution
 
 - **MCP marketplace / directory presence.** As the MCP ecosystem consolidates
-  into directories, make sure Cards402 is listed in every major one with
+  into directories, make sure Agentcard is listed in every major one with
   working tool definitions.
 - **Agent framework integrations.** Write first-party adapters for LangChain,
   LlamaIndex, CrewAI, autogen, and Claude Agent SDK. One file each. Open PRs
@@ -238,7 +238,7 @@ interface + §security model`.
   record. Huge for the Company / press pages.
 - **Developer-focused content series.** Weekly technical post:
   "How we built non-custodial card issuance on Soroban",
-  "Anatomy of a Cards402 order",
+  "Anatomy of a Agentcard order",
   "Why SSE is better than polling for agent-facing APIs",
   etc.
 - **Changelog RSS.** So registered developers can follow changes in their
@@ -249,7 +249,7 @@ interface + §security model`.
 
 - **Interactive pricing calculator.** "Enter your expected monthly volume,
   see your total cost including foreign txn and inactivity fees."
-- **Comparison page.** "Cards402 vs Ramp vs Lithic for agent workloads."
+- **Comparison page.** "Agentcard vs Ramp vs Lithic for agent workloads."
   Honest table — where we win, where we lose.
 - **Public live counter.** "12,843 cards issued · $417k moved through".
   Real-time ticker on the homepage pulled from the backend.
@@ -363,8 +363,8 @@ doing:
 
 - **Auto-generated SDK reference docs.** Loops 1–4 have caught four
   separate drift bugs where the hand-written docs referenced
-  made-up or renamed SDK symbols (`npx cards402 revoke`,
-  `cards402-mcp`, `asset:` vs `paymentAsset`, `createWallet` vs
+  made-up or renamed SDK symbols (`npx agentcard revoke`,
+  `agentcard-mcp`, `asset:` vs `paymentAsset`, `createWallet` vs
   `createOWSWallet`). Wire a TypeDoc (or api-extractor) pass that
   generates `/docs/sdk` from the SDK's TSDoc at build time. Once
   `/docs/sdk` is the canonical reference, the hand-written pages
@@ -412,7 +412,7 @@ doing:
 - **Table of contents** inside long blog posts using the same
   sticky-toc pattern as the legal pages. Only needed > ~1200
   words, the anatomy post borderline.
-- **Author / team page.** The anatomy post is bylined "Cards402
+- **Author / team page.** The anatomy post is bylined "Agentcard
   engineering". When real contributors land, wire them to
   `/team/<handle>` with individual author pages.
 
@@ -468,7 +468,7 @@ doing:
   `/compare/privacy-com`. Honest tables of where we win / lose
   per use case.
 - **Integration gallery.** `/built-with` showcasing agents built on
-  Cards402 with real screenshots and code snippets.
+  Agentcard with real screenshots and code snippets.
 - **A real blog post.** Ship one under /blog to validate the pipeline
   end-to-end before accumulating drafts.
 
@@ -476,7 +476,7 @@ doing:
 
 - **Announcement banner.** Component with dismissible state (saved
   to localStorage) for launches and incidents. Uses a top-of-nav slot.
-- **"Powered by Cards402" badge** that third-party integrators can
+- **"Powered by Agentcard" badge** that third-party integrators can
   drop into their own UIs, with a UTM-tagged backlink.
 - **Changelog email digest.** Weekly summary to a mailing list of
   subscribed operators — opt-in via the dashboard.
@@ -500,7 +500,7 @@ doing:
   moved" pulled from the backend in real time. Strong credibility
   signal.
 - **Proof-of-reserves dashboard.** Surface the on-chain treasury
-  balance publicly so anyone can verify Cards402 is solvent. Pairs
+  balance publicly so anyone can verify Agentcard is solvent. Pairs
   with the non-custodial architecture story.
 - **Per-page OG images** using `opengraph-image.tsx` at each segment,
   with the page title rendered in a base64-embedded Fraunces so the
@@ -518,7 +518,7 @@ doing:
   pre-funded credit line that they can draw down without needing to settle
   the Stellar payment first. High-trust, limited blast radius.
 - **Zero-knowledge privacy for agent identity.** Issue a card where the
-  agent's identity is provable to Cards402 but not disclosed to the
+  agent's identity is provable to Agentcard but not disclosed to the
   merchant, beyond the Pathward BIN. Privacy-preserving agent commerce.
 - **Merchant-side acceptance SDK.** The mirror of our current SDK — a drop-in
   that merchants embed to gate content/services behind an agent card
@@ -561,7 +561,7 @@ doing:
 ### Content
 
 - **Case study format.** One-page interview with an operator who
-  shipped a real agent on Cards402 — problem, solution, metrics. Lives
+  shipped a real agent on Agentcard — problem, solution, metrics. Lives
   under `/case-studies/<slug>` and gets an Article JSON-LD with the
   operator's logo as the `publisher.logo`.
 - **Calculator: "how much does this card cost me?"** Interactive

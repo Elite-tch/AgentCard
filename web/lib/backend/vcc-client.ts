@@ -121,7 +121,7 @@ async function getVccToken(): Promise<string> {
   }
 
   vccCircuitGuard();
-  const label = process.env.VCC_INSTANCE_LABEL || `AgentCard-${process.env.NODE_ENV || 'prod'}`;
+  const label = process.env.VCC_INSTANCE_LABEL || `agentcard-${process.env.NODE_ENV || 'prod'}`;
   let res;
   try {
     res = await fetch(`${VCC_API_BASE}/api/register`, {

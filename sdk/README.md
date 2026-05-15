@@ -1,20 +1,20 @@
-# cards402
+# agentcard
 
 Virtual Visa cards for AI agents — pay with USDC or XLM on Stellar, get a card number, CVV, and expiry in ~60 seconds.
 
-[cards402.com](https://cards402.com) issues prepaid Visa virtual cards on demand. This SDK lets AI agents create an order, pay the cards402 Soroban receiver contract on Stellar, and receive card details programmatically — all in one call.
+[agentcard.com](https://agentcard.com) issues prepaid Visa virtual cards on demand. This SDK lets AI agents create an order, pay the agentcard Soroban receiver contract on Stellar, and receive card details programmatically — all in one call.
 
 ## Install
 
 ```bash
-npm install cards402
+npm install agentcard
 ```
 
 Requires Node.js 18 or newer (the SDK uses native `fetch`, `ReadableStream`, and `WebCrypto`). Supported platforms via the bundled `@ctx.com/stellar-ows-core` native wallet bindings: macOS (arm64 + x64), Linux (arm64 + x64). Windows is not currently supported.
 
 ### A note on `npm audit`
 
-You'll see 3 critical advisories on `axios <= 1.14.0` after installing. They come from `@stellar/stellar-sdk`, which hard-pins an older axios version that we can't override from inside this package. The SDK's own HTTP calls only talk to hardcoded Stellar RPC / Horizon endpoints, so neither advisory (NO_PROXY SSRF, header-injection metadata exfil) is reachable through cards402 code — it's noise for our use, but noise you should still silence at your own project root.
+You'll see 3 critical advisories on `axios <= 1.14.0` after installing. They come from `@stellar/stellar-sdk`, which hard-pins an older axios version that we can't override from inside this package. The SDK's own HTTP calls only talk to hardcoded Stellar RPC / Horizon endpoints, so neither advisory (NO_PROXY SSRF, header-injection metadata exfil) is reachable through agentcard code — it's noise for our use, but noise you should still silence at your own project root.
 
 Fix in your own `package.json`:
 
@@ -31,7 +31,7 @@ then `rm -rf node_modules package-lock.json && npm install`. `npm audit` returns
 ## Quick start
 
 ```typescript
-import { createOWSWallet, getOWSBalance, purchaseCardOWS } from 'cards402';
+import { createOWSWallet, getOWSBalance, purchaseCardOWS } from 'agentcard';
 
 // 1. Create (or fetch existing) encrypted wallet. Idempotent.
 const { publicKey } = createOWSWallet('my-agent');
@@ -43,7 +43,7 @@ console.log(`XLM: ${bal.xlm}  USDC: ${bal.usdc}`);
 
 // 3. Purchase a card — only do this when the user explicitly asks.
 const card = await purchaseCardOWS({
-  apiKey: process.env.CARDS402_API_KEY!,
+  apiKey: process.env.AGENTCARD_API_KEY!,
   walletName: 'my-agent',
   amountUsdc: '10.00',
   paymentAsset: 'xlm', // or 'usdc' (trustline added automatically)
@@ -71,11 +71,11 @@ Stellar accounts need a minimum balance to be activated on-chain:
 ## Step-by-step API (for more control)
 
 ```typescript
-import { Cards402Client } from 'cards402';
+import { AgentcardClient } from 'agentcard';
 
-const client = new Cards402Client({
-  apiKey: process.env.CARDS402_API_KEY!,
-  // baseUrl defaults to https://api.cards402.com/v1
+const client = new AgentcardClient({
+  apiKey: process.env.AGENTCARD_API_KEY!,
+  // baseUrl defaults to https://api.agentcard.com/v1
 });
 
 // Create the order
@@ -96,10 +96,10 @@ Add to your client's `mcpServers` config:
 ```json
 {
   "mcpServers": {
-    "cards402": {
+    "agentcard": {
       "command": "npx",
-      "args": ["-y", "cards402"],
-      "env": { "CARDS402_API_KEY": "cards402_<your key>" }
+      "args": ["-y", "agentcard"],
+      "env": { "AGENTCARD_API_KEY": "agentcard_<your key>" }
     }
   }
 }
@@ -109,11 +109,11 @@ The MCP server exposes four tools: `setup_wallet`, `check_budget`, `check_order`
 
 ## Error handling
 
-All SDK errors inherit from `Cards402Error`. Typed subclasses let you react to specific failure modes:
+All SDK errors inherit from `AgentcardError`. Typed subclasses let you react to specific failure modes:
 
 ```typescript
 import {
-  Cards402Error,
+  AgentcardError,
   AuthError,
   SpendLimitError,
   RateLimitError,
@@ -121,7 +121,7 @@ import {
   InvalidAmountError,
   OrderFailedError,
   WaitTimeoutError,
-} from 'cards402';
+} from 'agentcard';
 
 try {
   const card = await purchaseCardOWS({ ... });
@@ -139,11 +139,11 @@ try {
 
 ## Links
 
-- [cards402.com](https://cards402.com) — dashboard and docs
-- [cards402.com/docs](https://cards402.com/docs) — full API reference
-- [cards402.com/skill.md](https://cards402.com/skill.md) — drop-in agent onboarding brief
-- [cards402.com/llms.txt](https://cards402.com/llms.txt) — LLM-index of every docs surface
-- [github.com/CTX-com/Cards402](https://github.com/CTX-com/Cards402) — source
+- [agentcard.com](https://agentcard.com) — dashboard and docs
+- [agentcard.com/docs](https://agentcard.com/docs) — full API reference
+- [agentcard.com/skill.md](https://agentcard.com/skill.md) — drop-in agent onboarding brief
+- [agentcard.com/llms.txt](https://agentcard.com/llms.txt) — LLM-index of every docs surface
+- [github.com/CTX-com/Agentcard](https://github.com/CTX-com/Agentcard) — source
 
 ## License
 

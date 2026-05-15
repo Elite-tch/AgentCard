@@ -1,26 +1,26 @@
 openapi: 3.1.0
 info:
-  title: cards402 Agent API
+  title: agentcard Agent API
   version: 0.1.0
   description: |
     Virtual Visa cards for AI agents. Pay with USDC or XLM on Stellar,
     receive a card number, CVV, and expiry within ~60 seconds
-    (median ~33s on mainnet — see the "Anatomy of a Cards402 order"
-    blog post at https://cards402.com/blog/anatomy-of-a-cards402-order).
+    (median ~33s on mainnet — see the "Anatomy of a Agentcard order"
+    blog post at https://agentcard.com/blog/anatomy-of-a-agentcard-order).
 
     **Authentication:** Every request requires an `X-Api-Key` header with
-    a valid API key obtained from the cards402 dashboard.
+    a valid API key obtained from the agentcard dashboard.
 
     **Idempotency:** `POST /orders` accepts an `Idempotency-Key` header.
     Duplicate requests within 24h return the cached response.
   contact:
-    name: cards402
-    url: https://cards402.com
+    name: agentcard
+    url: https://agentcard.com
   license:
     name: Proprietary
 
 servers:
-  - url: https://api.cards402.com/v1
+  - url: https://api.agentcard.com/v1
     description: Production
   - url: http://localhost:4000/v1
     description: Local development
@@ -257,7 +257,7 @@ components:
       type: apiKey
       in: header
       name: X-Api-Key
-      description: API key from the cards402 dashboard
+      description: API key from the agentcard dashboard
 
   schemas:
     CreateOrderRequest:
@@ -551,8 +551,8 @@ components:
         Delivered to `webhook_url` on every meaningful order-state
         transition. Signed with HMAC-SHA256 if a `webhook_secret` was
         issued with the API key. Headers:
-        `X-Cards402-Signature: sha256=<hex>`,
-        `X-Cards402-Timestamp: <epoch_ms>`.
+        `X-Agentcard-Signature: sha256=<hex>`,
+        `X-Agentcard-Timestamp: <epoch_ms>`.
 
         Every payload carries `order_id` and `status`. The rest of the
         shape varies by event — `delivered` carries `card` + pricing,

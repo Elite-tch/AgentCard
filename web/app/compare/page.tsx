@@ -6,25 +6,25 @@ import { ogForPage, twitterForPage } from '@/app/lib/seo';
 export const metadata: Metadata = {
   title: 'Compare',
   description:
-    'How AgentCard compares to traditional corporate cards, shared team cards, and other agent-payment rails. Honest trade-offs, not a sales table.',
+    'How agentcard compares to traditional corporate cards, shared team cards, and other agent-payment rails. Honest trade-offs, not a sales table.',
   alternates: { canonical: 'https://agentcard.com/compare' },
   openGraph: ogForPage({
-    title: 'Compare — AgentCard',
+    title: 'Compare — agentcard',
     description:
-      'AgentCard versus corporate cards, shared team cards, and other agent-payment rails.',
+      'agentcard versus corporate cards, shared team cards, and other agent-payment rails.',
     path: '/compare',
   }),
   twitter: twitterForPage({
-    title: 'Compare — AgentCard',
+    title: 'Compare — agentcard',
     description:
-      'AgentCard versus corporate cards, shared team cards, and other agent-payment rails.',
+      'agentcard versus corporate cards, shared team cards, and other agent-payment rails.',
   }),
 };
 
 // Feature rows for the head-to-head matrix. `agentcard` is the canonical
 // value we want to highlight; `corporate` and `shared` describe the two
 // most common alternatives operators actually consider. Kept honest —
-// every "worse" value for AgentCard is explicitly noted, not hidden.
+// every "worse" value for agentcard is explicitly noted, not hidden.
 type Cell = { value: string; note?: string; win?: boolean };
 type Row = {
   label: string;
@@ -142,36 +142,36 @@ const SCENARIOS = [
   {
     title: 'You have one agent that makes occasional low-value purchases',
     verdict:
-      'Either a shared team card or AgentCard works. Shared is faster to set up; AgentCard is safer if the agent is LLM-driven.',
+      'Either a shared team card or agentcard works. Shared is faster to set up; agentcard is safer if the agent is LLM-driven.',
   },
   {
     title: 'You have ten agents and want per-agent blast radius',
     verdict:
-      'AgentCard. Shared team cards collapse into one compromised credential; corporate-card provisioning takes days per agent.',
+      'agentcard. Shared team cards collapse into one compromised credential; corporate-card provisioning takes days per agent.',
   },
   {
     title: 'You need a single recurring subscription paid from one card',
-    verdict: 'Not AgentCard — Pathward reward cards block recurring charges. Use a corporate card.',
+    verdict: 'Not agentcard — Pathward reward cards block recurring charges. Use a corporate card.',
   },
   {
     title: 'You want predictable cost per transaction without platform markup',
-    verdict: 'AgentCard. Face value + issuer fees only, no per-order platform cut.',
+    verdict: 'agentcard. Face value + issuer fees only, no per-order platform cut.',
   },
   {
     title: 'Your agents run on stablecoin-native infrastructure',
     verdict:
-      'AgentCard. Skip fiat on/off ramps entirely — pay the receiver contract directly in USDC or XLM.',
+      'agentcard. Skip fiat on/off ramps entirely — pay the receiver contract directly in USDC or XLM.',
   },
   {
     title: 'You need a physical card or ATM access',
     verdict:
-      'Not AgentCard. Reward cards are virtual-only with no cash access. Use a corporate card.',
+      'Not agentcard. Reward cards are virtual-only with no cash access. Use a corporate card.',
   },
 ];
 
 // Renders one cell. Highlights the row's winning cell with a subtle
 // border accent on the left side so the honest comparisons stay
-// honest — we don't paint every AgentCard cell green.
+// honest — we don't paint every agentcard cell green.
 function MatrixCell({ cell }: { cell: Cell }) {
   return (
     <td
@@ -214,9 +214,9 @@ export default function ComparePage() {
     <>
       <PageHero
         eyebrow="Compare"
-        title="AgentCard vs the"
+        title="agentcard vs the"
         accent="alternatives"
-        intro="AgentCard isn't the right answer for every agent-payment use case. This page is the honest matrix we'd show in a sales call — every row where a corporate card or a shared team card wins is explicitly marked. Use it to pick the right tool for the job you actually have."
+        intro="agentcard isn't the right answer for every agent-payment use case. This page is the honest matrix we'd show in a sales call — every row where a corporate card or a shared team card wins is explicitly marked. Use it to pick the right tool for the job you actually have."
       />
 
       {/* Head-to-head matrix */}
@@ -257,7 +257,7 @@ export default function ComparePage() {
                     letterSpacing: '-0.015em',
                   }}
                 >
-                  AgentCard
+                  agentcard
                 </th>
                 <th
                   style={{
@@ -322,7 +322,7 @@ export default function ComparePage() {
           }}
         >
           Rows with the <span style={{ color: 'var(--green)' }}>green accent</span> are ones we
-          think AgentCard genuinely wins. The others are either tied or lost — we&apos;re not
+          think agentcard genuinely wins. The others are either tied or lost — we&apos;re not
           painting the whole column green.
         </p>
       </PageSection>
@@ -407,7 +407,7 @@ export default function ComparePage() {
                 maxWidth: 620,
               }}
             >
-              Email us — we&apos;ll tell you if AgentCard is wrong for your use case.
+              Email us — we&apos;ll tell you if agentcard is wrong for your use case.
             </h2>
             <p
               className="type-body"

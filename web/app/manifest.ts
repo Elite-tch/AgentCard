@@ -2,8 +2,8 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'AgentCard',
-    short_name: 'AgentCard',
+    name: 'agentcard',
+    short_name: 'agentcard',
     description: 'Virtual Visa cards, issued to AI agents. Pay in USDC or XLM on Stellar.',
     start_url: '/',
     display: 'standalone',

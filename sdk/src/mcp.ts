@@ -1,4 +1,4 @@
-// MCP server entry. Exposed via `cards402` or `cards402 mcp` and
+// MCP server entry. Exposed via `agentcard` or `agentcard mcp` and
 // dispatched through ./cli. Not intended to be imported as a module
 // from anywhere else — the top-level Server setup registers handlers
 // eagerly so any import runs the full initialisation path.
@@ -12,21 +12,21 @@ import {
   addUsdcTrustlineOWS,
   purchaseCardOWS,
 } from './ows';
-import { Cards402Client } from './client';
+import { AgentcardClient } from './client';
 // Audit A-38: version string imported from package.json instead of hardcoded.
 // The `with { type: 'json' }` import lets tsc emit a real assertion and
 // bun/node24 load it as JSON.
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const PKG_VERSION = require('../package.json').version as string;
 
-const API_KEY = process.env.CARDS402_API_KEY ?? '';
-const BASE_URL = process.env.CARDS402_BASE_URL ?? 'https://api.cards402.com/v1';
+const API_KEY = process.env.AGENTCARD_API_KEY ?? '';
+const BASE_URL = process.env.AGENTCARD_BASE_URL ?? 'https://api.agentcard.com/v1';
 const OWS_WALLET_NAME = process.env.OWS_WALLET_NAME ?? '';
 const OWS_WALLET_PASSPHRASE = process.env.OWS_WALLET_PASSPHRASE ?? undefined;
 const OWS_VAULT_PATH = process.env.OWS_VAULT_PATH ?? undefined;
 
 if (!API_KEY) {
-  process.stderr.write('Warning: CARDS402_API_KEY is not set. Get one at https://cards402.com\n');
+  process.stderr.write('Warning: AGENTCARD_API_KEY is not set. Get one at https://agentcard.com\n');
 }
 
 if (!OWS_WALLET_NAME) {
@@ -34,7 +34,7 @@ if (!OWS_WALLET_NAME) {
 }
 
 const server = new Server(
-  { name: 'cards402', version: PKG_VERSION },
+  { name: 'agentcard', version: PKG_VERSION },
   { capabilities: { tools: {} } },
 );
 
@@ -68,7 +68,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
     {
       name: 'setup_wallet',
       description:
-        'Set up or inspect the OWS encrypted wallet used to pay cards402. Creates the wallet on first run. Shows public key and balances.',
+        'Set up or inspect the OWS encrypted wallet used to pay agentcard. Creates the wallet on first run. Shows public key and balances.',
       inputSchema: {
         type: 'object',
         properties: {},
@@ -77,13 +77,13 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
     },
     {
       name: 'check_order',
-      description: 'Check the status of a cards402 order',
+      description: 'Check the status of a agentcard order',
       inputSchema: {
         type: 'object',
         properties: {
           order_id: {
             type: 'string',
-            description: 'The cards402 order ID',
+            description: 'The agentcard order ID',
           },
         },
         required: ['order_id'],
@@ -120,7 +120,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
               '  3. Optionally set OWS_VAULT_PATH=<path> to store the vault file at a custom location',
               '  4. Run setup_wallet to create the wallet and get your public key',
               '',
-              'Also set CARDS402_API_KEY=<your key> (get one at cards402.com)',
+              'Also set AGENTCARD_API_KEY=<your key> (get one at agentcard.com)',
             ].join('\n'),
           },
         ],
@@ -240,7 +240,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       lines.push(
         `  OWS_VAULT_PATH        — vault file path (${OWS_VAULT_PATH ?? 'default: ~/.ows/wallets/'})`,
       );
-      lines.push('  CARDS402_API_KEY      — your cards402 API key');
+      lines.push('  AGENTCARD_API_KEY      — your agentcard API key');
 
       if (accountStatus === 'not_activated' || accountStatus === 'unfunded') {
         lines.push('');
@@ -334,7 +334,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       content: [
         {
           type: 'text',
-          text: 'Error: CARDS402_API_KEY environment variable is not set. Get your API key at https://cards402.com',
+          text: 'Error: AGENTCARD_API_KEY environment variable is not set. Get your API key at https://agentcard.com',
         },
       ],
       isError: true,
@@ -561,7 +561,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     const order_id = rawOrderId;
 
     try {
-      const client = new Cards402Client({ apiKey: API_KEY, baseUrl: BASE_URL });
+      const client = new AgentcardClient({ apiKey: API_KEY, baseUrl: BASE_URL });
       const order = await client.getOrder(order_id);
 
       const lines = [
@@ -612,7 +612,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
   if (name === 'check_budget') {
     try {
-      const client = new Cards402Client({ apiKey: API_KEY, baseUrl: BASE_URL });
+      const client = new AgentcardClient({ apiKey: API_KEY, baseUrl: BASE_URL });
       const usage = await client.getUsage();
       const { budget, orders, label } = usage;
       const lines = [

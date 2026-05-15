@@ -6,16 +6,16 @@ import { ogForPage, twitterForPage } from '@/app/lib/seo';
 export const metadata: Metadata = {
   title: 'Status',
   description:
-    'Live operational status for the AgentCard HTTP API, fulfilment pipeline, and Stellar watcher. Fetched from api.agentcard.com/status on every page load.',
+    'Live operational status for the agentcard HTTP API, fulfilment pipeline, and Stellar watcher. Fetched from api.agentcard.com/status on every page load.',
   alternates: { canonical: 'https://agentcard.com/status' },
   openGraph: ogForPage({
-    title: 'Status — AgentCard',
-    description: 'Live operational status for the AgentCard API and pipeline.',
+    title: 'Status — agentcard',
+    description: 'Live operational status for the agentcard API and pipeline.',
     path: '/status',
   }),
   twitter: twitterForPage({
-    title: 'Status — AgentCard',
-    description: 'Live operational status for the AgentCard API and pipeline.',
+    title: 'Status — agentcard',
+    description: 'Live operational status for the agentcard API and pipeline.',
   }),
 };
 
@@ -345,7 +345,7 @@ export default async function StatusPage() {
         accent={heroAccent}
         intro={
           <>
-            Real-time health of every AgentCard component. This page fetches{' '}
+            Real-time health of every agentcard component. This page fetches{' '}
             <code
               style={{
                 fontFamily: 'var(--font-mono)',

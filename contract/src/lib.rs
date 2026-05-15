@@ -10,17 +10,17 @@ pub enum DataKey {
 }
 
 #[contract]
-pub struct Cards402Receiver;
+pub struct AgentcardReceiver;
 
 #[contractimpl]
-impl Cards402Receiver {
+impl AgentcardReceiver {
     /// One-time initialisation. Panics if already initialised.
     /// The admin must authorize this call to prevent front-running on deployment (C-1).
     ///
     /// Expected mainnet values (C-3, C-7):
     ///   usdc_contract : CCW67TSZV3SSS2HXMBQ5JFGCKJNXKZM7UQUWUZPUTHXSTZLEO7SJMI75  (USDC SAC)
     ///   xlm_contract  : native XLM SAC address (varies by network)
-    ///   treasury      : cards402 treasury G-address — verify before deployment
+    ///   treasury      : agentcard treasury G-address — verify before deployment
     pub fn init(
         env: Env,
         admin: Address,
@@ -147,13 +147,13 @@ mod test {
             let usdc = env.register_stellar_asset_contract_v2(admin.clone()).address();
             let xlm_sac = env.register_stellar_asset_contract_v2(admin.clone()).address();
 
-            let contract_id = env.register(Cards402Receiver, ());
+            let contract_id = env.register(AgentcardReceiver, ());
 
             Fixture { env, contract_id, admin, treasury, payer, usdc, xlm_sac }
         }
 
-        fn client(&self) -> Cards402ReceiverClient<'_> {
-            Cards402ReceiverClient::new(&self.env, &self.contract_id)
+        fn client(&self) -> AgentcardReceiverClient<'_> {
+            AgentcardReceiverClient::new(&self.env, &self.contract_id)
         }
 
         fn init(&self) {
@@ -266,8 +266,8 @@ mod test {
         let payer = Address::generate(&env);
         let usdc = env.register_stellar_asset_contract_v2(admin.clone()).address();
         let xlm_sac = env.register_stellar_asset_contract_v2(admin.clone()).address();
-        let contract_id = env.register(Cards402Receiver, ());
-        let client = Cards402ReceiverClient::new(&env, &contract_id);
+        let contract_id = env.register(AgentcardReceiver, ());
+        let client = AgentcardReceiverClient::new(&env, &contract_id);
 
         // init has no require_auth so it runs fine without mocking
         client.init(&admin, &treasury, &usdc, &xlm_sac);
@@ -338,8 +338,8 @@ mod test {
         let payer = Address::generate(&env);
         let usdc = env.register_stellar_asset_contract_v2(admin.clone()).address();
         let xlm_sac = env.register_stellar_asset_contract_v2(admin.clone()).address();
-        let contract_id = env.register(Cards402Receiver, ());
-        let client = Cards402ReceiverClient::new(&env, &contract_id);
+        let contract_id = env.register(AgentcardReceiver, ());
+        let client = AgentcardReceiverClient::new(&env, &contract_id);
 
         client.init(&admin, &treasury, &usdc, &xlm_sac);
 
@@ -353,8 +353,8 @@ mod test {
     fn test_try_getters_before_init_return_err() {
         let env = Env::default();
         env.mock_all_auths();
-        let contract_id = env.register(Cards402Receiver, ());
-        let client = Cards402ReceiverClient::new(&env, &contract_id);
+        let contract_id = env.register(AgentcardReceiver, ());
+        let client = AgentcardReceiverClient::new(&env, &contract_id);
 
         // Uninitialised — try_treasury() returns Err (unwrap() would panic)
         assert!(client.try_treasury().is_err());
@@ -419,8 +419,8 @@ mod test {
         let treasury = Address::generate(&env);
         let usdc = env.register_stellar_asset_contract_v2(admin.clone()).address();
         let xlm_sac = env.register_stellar_asset_contract_v2(admin.clone()).address();
-        let contract_id = env.register(Cards402Receiver, ());
-        let client = Cards402ReceiverClient::new(&env, &contract_id);
+        let contract_id = env.register(AgentcardReceiver, ());
+        let client = AgentcardReceiverClient::new(&env, &contract_id);
 
         // init with mocked auth temporarily just for setup
         env.mock_all_auths();
@@ -444,8 +444,8 @@ mod test {
         let treasury = Address::generate(&env);
         let usdc = env.register_stellar_asset_contract_v2(admin.clone()).address();
         let xlm_sac = env.register_stellar_asset_contract_v2(admin.clone()).address();
-        let contract_id = env.register(Cards402Receiver, ());
-        let client = Cards402ReceiverClient::new(&env, &contract_id);
+        let contract_id = env.register(AgentcardReceiver, ());
+        let client = AgentcardReceiverClient::new(&env, &contract_id);
 
         // Should panic because admin.require_auth() fires and no auth is mocked
         let result = client.try_init(&admin, &treasury, &usdc, &xlm_sac);

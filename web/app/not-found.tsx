@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Not found',
-  description: 'The page you are looking for does not exist on AgentCard.',
+  description: 'The page you are looking for does not exist on agentcard.',
   robots: { index: false, follow: false },
 };
 
@@ -86,7 +86,7 @@ export default function NotFound() {
             margin: '0 auto 3rem',
           }}
         >
-          The URL you hit doesn&apos;t resolve to a AgentCard page. If you landed here from a link on
+          The URL you hit doesn&apos;t resolve to a agentcard page. If you landed here from a link on
           our site, please email{' '}
           <a
             href="mailto:support@agentcard.com"

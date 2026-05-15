@@ -1,6 +1,6 @@
-// `cards402 purchase --amount 10 [--asset xlm|usdc]` — one-command
+// `agentcard purchase --amount 10 [--asset xlm|usdc]` — one-command
 // card purchase. Loads creds from the on-disk config written by
-// `cards402 onboard`, opens the order, pays the Soroban contract
+// `agentcard onboard`, opens the order, pays the Soroban contract
 // from the local OWS wallet, waits for the SSE stream to report
 // the card ready, and prints the card details.
 //
@@ -9,15 +9,15 @@
 // SDK surface area.
 //
 // Resume: if a purchase fails mid-flight (Soroban RPC timeout, network
-// blip, etc.), the order id is saved to ~/.cards402/last-order and the
-// user can retry with `cards402 purchase --resume <order-id>`.
+// blip, etc.), the order id is saved to ~/.agentcard/last-order and the
+// user can retry with `agentcard purchase --resume <order-id>`.
 
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 import * as crypto from 'crypto';
 
-import { loadCards402Config } from '../config';
+import { loadAgentcardConfig } from '../config';
 import { purchaseCardOWS, getOWSBalance } from '../ows';
 import { ResumableError, OrderFailedError } from '../errors';
 
@@ -72,11 +72,11 @@ function parseArgs(argv: string[]): PurchaseArgsParsed {
 }
 
 function usage(): void {
-  process.stderr.write(`Usage: cards402 purchase --amount <USDC> [--asset xlm|usdc]
-       cards402 purchase --resume <order-id>
+  process.stderr.write(`Usage: agentcard purchase --amount <USDC> [--asset xlm|usdc]
+       agentcard purchase --resume <order-id>
 
 Buys a virtual Visa card for the given USD value using the credentials
-and wallet set up by 'cards402 onboard'. Reads ~/.cards402/config.json
+and wallet set up by 'agentcard onboard'. Reads ~/.agentcard/config.json
 for the api key, wallet name, vault path, and passphrase env var.
 
 Options:
@@ -94,14 +94,14 @@ Options:
   -h, --help                 Show this message
 
 Examples:
-  cards402 purchase --amount 10                 # $10 card paid in XLM
-  cards402 purchase --amount 5 --asset usdc
-  cards402 purchase --resume a94d18cc-...       # pick up an interrupted purchase
+  agentcard purchase --amount 10                 # $10 card paid in XLM
+  agentcard purchase --amount 5 --asset usdc
+  agentcard purchase --resume a94d18cc-...       # pick up an interrupted purchase
 `);
 }
 
 function lastOrderFile(): string {
-  const dir = process.env.CARDS402_CONFIG_DIR || path.join(os.homedir(), '.cards402');
+  const dir = process.env.AGENTCARD_CONFIG_DIR || path.join(os.homedir(), '.agentcard');
   return path.join(dir, 'last-order');
 }
 
@@ -111,7 +111,7 @@ function lastOrderFile(): string {
  * decision instead of defaulting to "wait 5 minutes for the SSE stream
  * to say anything".
  *
- * - `orderId`: the cards402 order id (always present)
+ * - `orderId`: the agentcard order id (always present)
  * - `txHash`:  Soroban tx hash if the client-side submit got far enough
  *              to capture one. Absent if the error fired before submit
  *              (e.g. trustline add failed).
@@ -167,11 +167,11 @@ function saveLastOrder(state: LastOrderState): void {
     // F2-purchase (2026-04-16): warn on save failure instead of
     // swallowing silently. Pre-fix, a disk-full or permission-denied
     // error produced zero signal — the purchase output said "saved to
-    // ~/.cards402/last-order" and told the user to --resume, but the
+    // ~/.agentcard/last-order" and told the user to --resume, but the
     // file didn't exist. Now we print a warning so the user knows to
     // copy the order ID from the error message manually.
     process.stderr.write(
-      '⚠ Could not save resume state to ~/.cards402/last-order.\n' +
+      '⚠ Could not save resume state to ~/.agentcard/last-order.\n' +
         '  Copy the order ID from the error above if you need to --resume later.\n',
     );
   }
@@ -296,13 +296,13 @@ export async function purchaseCommand(argv: string[]): Promise<number> {
     }
   }
 
-  const config = loadCards402Config();
+  const config = loadAgentcardConfig();
   if (!config) {
     process.stderr.write(
-      `error: no cards402 config found at ~/.cards402/config.json
+      `error: no agentcard config found at ~/.agentcard/config.json
 
-Run 'cards402 onboard --claim <code>' first to set up credentials.
-Your operator can mint a claim code from https://cards402.com/dashboard.
+Run 'agentcard onboard --claim <code>' first to set up credentials.
+Your operator can mint a claim code from https://agentcard.com/dashboard.
 `,
     );
     return 1;
@@ -317,8 +317,8 @@ Your operator can mint a claim code from https://cards402.com/dashboard.
   const walletName = args.walletName || config.wallet_name;
   if (!walletName) {
     process.stderr.write(
-      'error: no wallet_name in ~/.cards402/config.json and no --wallet-name passed.\n' +
-        "Either pass --wallet-name <name>, or re-run 'cards402 onboard --claim <code>'\n" +
+      'error: no wallet_name in ~/.agentcard/config.json and no --wallet-name passed.\n' +
+        "Either pass --wallet-name <name>, or re-run 'agentcard onboard --claim <code>'\n" +
         'to write a fresh config with a unique wallet name.\n',
     );
     return 1;
@@ -449,10 +449,10 @@ Your operator can mint a claim code from https://cards402.com/dashboard.
       });
       process.stderr.write(`\nerror: ${err.message}\n`);
       process.stderr.write(
-        `\nYour payment may still be processing on-chain. The cards402 backend will\n` +
+        `\nYour payment may still be processing on-chain. The agentcard backend will\n` +
           `credit the order if the transaction finalizes. Resume with:\n\n` +
-          `  cards402 purchase --resume ${err.orderId}\n\n` +
-          `(saved to ~/.cards402/last-order)\n`,
+          `  agentcard purchase --resume ${err.orderId}\n\n` +
+          `(saved to ~/.agentcard/last-order)\n`,
       );
       return 1;
     }

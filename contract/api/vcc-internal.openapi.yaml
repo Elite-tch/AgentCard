@@ -3,15 +3,15 @@ info:
   title: VCC Internal API
   version: 0.1.0
   description: |
-    Internal contract between cards402 and the VCC fulfillment engine.
-    Not agent-facing — agents interact with cards402's /v1/* API only.
+    Internal contract between agentcard and the VCC fulfillment engine.
+    Not agent-facing — agents interact with agentcard's /v1/* API only.
 
     **Authentication:** Self-registered bearer token via `X-VCC-Token` header.
     Tokens are SHA-256 hashed at rest; registration is via POST /api/register.
 
     **Callback authentication:** HMAC-SHA256 v2 protocol. vcc signs
     `<timestamp>.<order_id>.<raw_body>` with the per-job `callback_secret`.
-    See cards402/ARCHITECTURE.md §"Callback signature" for the wire format.
+    See agentcard/ARCHITECTURE.md §"Callback signature" for the wire format.
 
 servers:
   - url: http://localhost:5000
@@ -21,7 +21,7 @@ paths:
   /api/register:
     post:
       operationId: registerTenant
-      summary: Self-register a new tenant (cards402 instance)
+      summary: Self-register a new tenant (agentcard instance)
       security: []
       requestBody:
         content:
@@ -47,8 +47,8 @@ paths:
       operationId: createInvoice
       summary: Create a CTX gift card order and get payment URL
       description: |
-        cards402 calls this after an agent creates an order. VCC creates
-        the CTX order and returns a `web+stellar:pay` URI that cards402
+        agentcard calls this after an agent creates an order. VCC creates
+        the CTX order and returns a `web+stellar:pay` URI that agentcard
         pays directly from its treasury wallet.
 
         **Idempotent** per `(tenant_id, order_id)` — a duplicate call
@@ -66,7 +66,7 @@ paths:
           in: header
           schema:
             type: string
-          description: Correlation ID from cards402 for end-to-end tracing
+          description: Correlation ID from agentcard for end-to-end tracing
       responses:
         '201':
           description: Invoice created
@@ -92,7 +92,7 @@ paths:
   /api/jobs/{jobId}/paid:
     post:
       operationId: notifyPaid
-      summary: Notify VCC that cards402 has paid the CTX invoice
+      summary: Notify VCC that agentcard has paid the CTX invoice
       description: |
         Transitions the job from `invoice_issued` to `queued` and kicks
         off the fulfillment pipeline (SSE monitoring → stage1 scrape →
@@ -204,7 +204,7 @@ components:
       properties:
         order_id:
           type: string
-          description: cards402 order UUID
+          description: agentcard order UUID
         amount_usdc:
           type: string
           pattern: '^\d+(\.\d{1,2})?$'
@@ -229,7 +229,7 @@ components:
           description: CTX.com gift card order UUID
         payment_url:
           type: string
-          description: 'web+stellar:pay URI — cards402 pays this directly'
+          description: 'web+stellar:pay URI — agentcard pays this directly'
         note:
           type: string
           description: "'already_exists' if this is a duplicate"
@@ -277,7 +277,7 @@ components:
       description: |
         POST to callback_url when a job reaches terminal state. Signed
         with HMAC-SHA256 v2 (order_id in signing payload). Headers:
-        X-VCC-Signature, X-VCC-Timestamp, X-VCC-Order-Id, X-Request-ID.
+        X-agentcard-Signature, X-agentcard-Timestamp, X-agentcard-Order-Id, X-Request-ID.
       required: [order_id, status]
       properties:
         order_id:

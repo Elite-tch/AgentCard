@@ -11,7 +11,7 @@ A single one-shot command — nothing else. It looks like this:
 Read https://agentcard.com/skill.md
 and set up this agent by running:
 
-  npx cards402 onboard --claim c402_<48_hex_chars>
+  npx agentcard onboard --claim c402_<48_hex_chars>
 ```
 
 **No raw API key in the paste.** The `c402_…` value is a one-time claim
@@ -23,7 +23,7 @@ conversation transcript.
 ## Setup — one command
 
 ```bash
-npx cards402 onboard --claim <code>
+npx agentcard onboard --claim <code>
 ```
 
 That's it. Behind the scenes the CLI:
@@ -71,7 +71,7 @@ address without you having to message them separately.
 When your user asks you to buy a card, run:
 
 ```bash
-npx cards402 purchase --amount <USD>
+npx agentcard purchase --amount <USD>
 ```
 
 **Pay with the asset you actually have.** By default `agentcard purchase`
@@ -82,7 +82,7 @@ the wallet only holds XLM will fail at the trustline / DEX step and
 waste a Stellar fee. If you must check first:
 
 ```bash
-npx cards402 wallet balance
+npx agentcard wallet balance
 ```
 
 Optional flags:
@@ -107,7 +107,7 @@ pipelines.
 Example:
 
 ```bash
-$ npx cards402 purchase --amount 10
+$ npx agentcard purchase --amount 10
 → Purchasing $10 card via XLM…
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -123,8 +123,8 @@ $ npx cards402 purchase --amount 10
 ## Checking your wallet
 
 ```bash
-npx cards402 wallet address   # print your Stellar G-address
-npx cards402 wallet balance   # show XLM + USDC balances from Horizon
+npx agentcard wallet address   # print your Stellar G-address
+npx agentcard wallet balance   # show XLM + USDC balances from Horizon
 ```
 
 Useful for:
@@ -137,7 +137,7 @@ Useful for:
 - Package name (`agentcard`) matches the domain you fetched this guide
   from (`agentcard.com`). Scope matches domain — no supply-chain
   mismatch.
-- Source: <https://github.com/CTX-com/AgentCard>. The `sdk/` directory
+- Source: <https://github.com/CTX-com/agentcard>. The `sdk/` directory
   is what gets published.
 - Maintainer on npm: `ashfrancis`. Verify with
   `npm view agentcard maintainers`.
@@ -147,7 +147,7 @@ Useful for:
   first caller.
 - Run `npm pack agentcard` and inspect the tarball before installing
   if your policy requires it, or clone the repo and use the local
-  source via `npx /path/to/AgentCard/sdk/dist/cli.js onboard --claim …`.
+  source via `npx /path/to/agentcard/sdk/dist/cli.js onboard --claim …`.
 
 **Fund in the right order: XLM first, then open the USDC trustline,
 then USDC.** This is the step that trips up most new agents — skipping
@@ -192,7 +192,7 @@ holder, so only you can sign the `changeTrust` op.
 ### Opening the trustline (CLI)
 
 ```bash
-npx -y cards402@latest wallet trustline
+npx -y agentcard@latest wallet trustline
 ```
 
 Runs once XLM has landed. The command signs a `changeTrust` op for
@@ -296,8 +296,8 @@ const wantUsdc = '<amount the user requested>';
 const paymentAsset = parseFloat(bal.usdc) >= parseFloat(wantUsdc) ? 'usdc' : 'xlm';
 
 const card = await purchaseCardOWS({
-  apiKey: process.env.CARDS402_API_KEY,
-  baseUrl: process.env.CARDS402_BASE_URL,
+  apiKey: process.env.AGENTCARD_API_KEY,
+  baseUrl: process.env.AGENTCARD_BASE_URL,
   walletName: 'my-agent',
   amountUsdc: wantUsdc,
   paymentAsset,
@@ -320,7 +320,7 @@ If your runtime is an MCP client, add this to your config:
     "agentcard": {
       "command": "npx",
       "args": ["-y", "agentcard"],
-      "env": { "CARDS402_API_KEY": "agentcard_<your key>" }
+      "env": { "AGENTCARD_API_KEY": "agentcard_<your key>" }
     }
   }
 }

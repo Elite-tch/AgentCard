@@ -1,4 +1,4 @@
-# Cards402 SEO audit — 2026-04-14
+# Agentcard SEO audit — 2026-04-14
 
 Audit performed after the phase 1–3 site build. Scope is technical SEO and
 on-page SEO for marketing routes; product analytics and content strategy are
@@ -61,10 +61,10 @@ but a lot of its gap items have since shipped too.
 
 ### Title template
 
-Root layout defines `title: { default, template: '%s — Cards402' }`. Pages
+Root layout defines `title: { default, template: '%s — Agentcard' }`. Pages
 export `metadata.title: 'Pricing'` and Next.js renders
-`<title>Pricing — Cards402</title>`. No page repeats the brand in its own
-title string — avoids the `Pricing — Cards402 — Cards402` bug.
+`<title>Pricing — Agentcard</title>`. No page repeats the brand in its own
+title string — avoids the `Pricing — Agentcard — Agentcard` bug.
 
 ### Open Graph image behaviour
 
@@ -78,7 +78,7 @@ fields into a new object with the page-specific title/desc/url on top. Every
 page that wants its own OG now calls `ogForPage()` instead of writing the
 openGraph literal.
 
-The image itself is referenced as `https://cards402.com/opengraph-image` —
+The image itself is referenced as `https://agentcard.com/opengraph-image` —
 the route that the `opengraph-image.tsx` file convention exposes. Edge-
 rendered, cached by Next.js between requests.
 
@@ -119,11 +119,11 @@ true` to both Fraunces and Plex if they aren't already. Verify.
     mask over an SVG; on some Chromes it shows faint aliasing at small
     sizes. Add `image-rendering: crisp-edges` on the mask span or bake a
     second PNG variant for hi-DPI display.
-11. **Status page** at `status.cards402.com`. Referenced from Terms but
+11. **Status page** at `status.agentcard.com`. Referenced from Terms but
     doesn't exist yet. Important for enterprise trust and for Google's
     "service status" SERP chips.
 12. **Security.txt.** Add `/.well-known/security.txt` pointing at
-    `security@cards402.com` so researchers find us without clicking through
+    `security@agentcard.com` so researchers find us without clicking through
     to /security.
 13. **`humans.txt`** — optional, vanity, but cheap.
 14. **Blog.** `/blog` with real technical posts would become our strongest
@@ -153,7 +153,7 @@ context; this section is the running log of what's now ✅.
 
 - 🟢 **BreadcrumbList structured data** — live on `/docs/quickstart` and
   `/legal/cardholder-agreement`. Pairs with the page titles so Google
-  shows `Cards402 › Docs › Quickstart` in the SERP.
+  shows `Agentcard › Docs › Quickstart` in the SERP.
 - 🟢 **`hreflang="en-GB"` + `hreflang="x-default"`** — added via
   `alternates.languages` in `app/layout.tsx`. Ready to accept real
   locale URLs once we translate.
@@ -179,7 +179,7 @@ context; this section is the running log of what's now ✅.
   wired via `alternates.types` on the changelog head, so pasting
   `/changelog` into NetNewsWire picks it up.
 - 🟢 **Status page (`/status`)** — closed the dangling reference from
-  the Terms page to `status.cards402.com`. Component-by-component
+  the Terms page to `status.agentcard.com`. Component-by-component
   health + worst-of banner + subscribe block.
 - 🟢 **`/skill.md`** — was a 404 referenced from the landing hero CTA.
   Now a real agent-onboarding brief.
@@ -189,8 +189,8 @@ context; this section is the running log of what's now ✅.
 - ⚠️ Per-page OG images (nested `opengraph-image.tsx` at `/pricing`,
   `/careers`, `/changelog`).
 - ⚠️ Font preloading + `adjustFontFallback: true` on Fraunces / Plex.
-- ⚠️ Status page at `status.cards402.com` (the real dashboard, not the
-  Cards402-hosted summary on `/status`).
+- ⚠️ Status page at `status.agentcard.com` (the real dashboard, not the
+  Agentcard-hosted summary on `/status`).
 - ⚠️ Lighthouse/CWV pass on prod.
 - ⚠️ Internationalisation (next-intl).
 - ⚠️ Blog.

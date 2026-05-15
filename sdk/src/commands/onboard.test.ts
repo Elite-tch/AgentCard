@@ -10,8 +10,8 @@ describe('deriveDefaultWalletName', () => {
   const claimA = 'c402_a1b2c3d4e5f607080910111213141516171819202122232425262728293031';
   const claimB = 'c402_ff00112233445566778899aabbccddeeff00112233445566778899aabbccdd';
 
-  it('produces a name prefixed with cards402-', () => {
-    expect(_deriveDefaultWalletName(claimA, 'research-bot')).toMatch(/^cards402-/);
+  it('produces a name prefixed with agentcard-', () => {
+    expect(_deriveDefaultWalletName(claimA, 'research-bot')).toMatch(/^agentcard-/);
   });
 
   it('includes a slugified version of the label', () => {
@@ -47,12 +47,12 @@ describe('deriveDefaultWalletName', () => {
   it('caps the label slug so a long label does not blow out the path', () => {
     const long = 'a'.repeat(200);
     const name = _deriveDefaultWalletName(claimA, long);
-    // cards402- + slug (<=24) + - + 8-hex = ~42 chars max
+    // agentcard- + slug (<=24) + - + 8-hex = ~42 chars max
     expect(name.length).toBeLessThanOrEqual(48);
   });
 
   it('never contains characters unsafe for a filesystem vault path', () => {
     const name = _deriveDefaultWalletName(claimA, '../../evil/$(whoami)');
-    expect(name).toMatch(/^cards402-[a-z0-9-]+$/);
+    expect(name).toMatch(/^agentcard-[a-z0-9-]+$/);
   });
 });

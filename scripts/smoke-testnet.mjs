@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Testnet smoke test for the cards402 SDK + backend + Soroban contract.
+ * Testnet smoke test for the agentcard SDK + backend + Soroban contract.
  *
  * Does one real round-trip against a running backend and a deployed testnet
  * receiver contract:
@@ -19,8 +19,8 @@
  *   node scripts/smoke-testnet.mjs
  *
  * Required env vars (see scripts/smoke-testnet.env.example):
- *   CARDS402_API_BASE       — e.g. https://staging.cards402.com/v1
- *   CARDS402_API_KEY        — a test API key issued against the target backend
+ *   AGENTCARD_API_BASE       — e.g. https://staging.agentcard.com/v1
+ *   AGENTCARD_API_KEY        — a test API key issued against the target backend
  *   STELLAR_WALLET_SECRET   — a testnet Stellar secret (S...) pre-funded with
  *                             testnet USDC + some XLM for fees
  *   STELLAR_NETWORK         — 'testnet' (default) or 'mainnet'
@@ -38,7 +38,7 @@
  *   3 = unrecoverable error (network, config, SDK, contract call)
  */
 
-import { Cards402Client, payViaContract } from '../sdk/dist/index.js';
+import { AgentcardClient, payViaContract } from '../sdk/dist/index.js';
 
 function required(name) {
   const v = process.env[name];
@@ -54,8 +54,8 @@ function optional(name, fallback) {
   return v && v.trim() ? v : fallback;
 }
 
-const CARDS402_API_BASE = required('CARDS402_API_BASE');
-const CARDS402_API_KEY = required('CARDS402_API_KEY');
+const AGENTCARD_API_BASE = required('AGENTCARD_API_BASE');
+const AGENTCARD_API_KEY = required('AGENTCARD_API_KEY');
 const STELLAR_WALLET_SECRET = required('STELLAR_WALLET_SECRET');
 const STELLAR_NETWORK = optional('STELLAR_NETWORK', 'testnet');
 const SOROBAN_RPC_URL = optional('SOROBAN_RPC_URL', null);
@@ -80,14 +80,14 @@ function shortTxid(h) {
 
 async function main() {
   log(`smoke test starting`);
-  log(`  api   = ${CARDS402_API_BASE}`);
+  log(`  api   = ${AGENTCARD_API_BASE}`);
   log(`  net   = ${STELLAR_NETWORK} (${NETWORK_PASSPHRASE})`);
   log(`  asset = ${PAYMENT_ASSET}`);
   log(`  amt   = ${AMOUNT_USDC} USDC`);
 
-  const client = new Cards402Client({
-    baseUrl: CARDS402_API_BASE,
-    apiKey: CARDS402_API_KEY,
+  const client = new AgentcardClient({
+    baseUrl: AGENTCARD_API_BASE,
+    apiKey: AGENTCARD_API_KEY,
   });
 
   // ── Step 1: create order ────────────────────────────────────────────────

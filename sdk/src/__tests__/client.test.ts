@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 // Allow http:// base URLs in tests (assertSafeBaseUrl rejects them otherwise)
-process.env.CARDS402_ALLOW_INSECURE_BASE_URL = '1';
+process.env.AGENTCARD_ALLOW_INSECURE_BASE_URL = '1';
 
-import { Cards402Client } from '../client';
+import { AgentcardClient } from '../client';
 import {
   AuthError,
   SpendLimitError,
@@ -25,7 +25,7 @@ function mockFetch(status: number, body: unknown) {
 }
 
 function client() {
-  return new Cards402Client({ baseUrl: 'http://localhost:3000/v1', apiKey: 'cards402_test_key' });
+  return new AgentcardClient({ baseUrl: 'http://localhost:3000/v1', apiKey: 'agentcard_test_key' });
 }
 
 const ORDER_RESPONSE = {
@@ -33,7 +33,7 @@ const ORDER_RESPONSE = {
   status: 'pending_payment',
   payment: {
     type: 'soroban_contract' as const,
-    contract_id: 'CARDS402CONTRACTIDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+    contract_id: 'AGENTCARDCONTRACTIDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
     order_id: 'ord_abc',
     usdc: {
       amount: '10.00',
@@ -64,7 +64,7 @@ const ORDER_STATUS_READY = {
 
 // ── createOrder ───────────────────────────────────────────────────────────────
 
-describe('Cards402Client.createOrder', () => {
+describe('AgentcardClient.createOrder', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
   });
@@ -75,7 +75,7 @@ describe('Cards402Client.createOrder', () => {
     expect(res.order_id).toBe('ord_abc');
     expect(res.payment.type).toBe('soroban_contract');
     expect(res.payment.contract_id).toBe(
-      'CARDS402CONTRACTIDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+      'AGENTCARDCONTRACTIDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
     );
     expect(res.payment.order_id).toBe('ord_abc');
     expect(res.budget.spent_usdc).toBe('0.00');
@@ -92,7 +92,7 @@ describe('Cards402Client.createOrder', () => {
     expect(fetchMock).toHaveBeenCalledOnce();
     const [url, opts] = fetchMock.mock.calls[0] as [string, RequestInit];
     expect(url).toBe('http://localhost:3000/v1/orders');
-    expect((opts.headers as Record<string, string>)['X-Api-Key']).toBe('cards402_test_key');
+    expect((opts.headers as Record<string, string>)['X-Api-Key']).toBe('agentcard_test_key');
     expect((opts.headers as Record<string, string>)['Content-Type']).toBe('application/json');
     const parsed = JSON.parse(opts.body as string);
     expect(parsed.amount_usdc).toBe('10.00');
@@ -134,7 +134,7 @@ describe('Cards402Client.createOrder', () => {
       .fn()
       .mockResolvedValue({ ok: true, status: 201, json: async () => ORDER_RESPONSE });
     global.fetch = fetchMock;
-    const c = new Cards402Client({ baseUrl: 'http://localhost:3000/v1/', apiKey: 'k' });
+    const c = new AgentcardClient({ baseUrl: 'http://localhost:3000/v1/', apiKey: 'k' });
     await c.createOrder({ amount_usdc: '10.00' });
     const [url] = fetchMock.mock.calls[0] as [string];
     expect(url).toBe('http://localhost:3000/v1/orders');
@@ -143,7 +143,7 @@ describe('Cards402Client.createOrder', () => {
 
 // ── getOrder ──────────────────────────────────────────────────────────────────
 
-describe('Cards402Client.getOrder', () => {
+describe('AgentcardClient.getOrder', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
   });
@@ -171,7 +171,7 @@ describe('Cards402Client.getOrder', () => {
 
 // ── waitForCard ───────────────────────────────────────────────────────────────
 
-describe('Cards402Client.waitForCard', () => {
+describe('AgentcardClient.waitForCard', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
     vi.useFakeTimers();
@@ -256,7 +256,7 @@ describe('Cards402Client.waitForCard', () => {
 
 // ── listOrders ────────────────────────────────────────────────────────────────
 
-describe('Cards402Client.listOrders', () => {
+describe('AgentcardClient.listOrders', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
   });
@@ -317,7 +317,7 @@ describe('Cards402Client.listOrders', () => {
 
 // ── getUsage ──────────────────────────────────────────────────────────────────
 
-describe('Cards402Client.getUsage', () => {
+describe('AgentcardClient.getUsage', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
   });

@@ -23,7 +23,7 @@ export async function createAgentAction(data: { label: string; spendLimitUsdc?: 
   const session = await getSession();
   await connectToDatabase();
 
-  const rawKey = `AgentCard_${crypto.randomBytes(24).toString('hex')}`;
+  const rawKey = `agentcard_${crypto.randomBytes(24).toString('hex')}`;
   const keyPrefix = rawKey.slice(10, 22);
   const keyHash = await bcrypt.hash(rawKey, 10);
   const webhookSecret = `whsec_${crypto.randomBytes(32).toString('hex')}`;

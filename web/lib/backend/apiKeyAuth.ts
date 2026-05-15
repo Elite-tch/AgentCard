@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server';
 import connectToDatabase from './db';
 import { ApiKey } from './models/ApiKey';
 
-const KEY_PREFIX_LENGTH = 10; // 'AgentCard_'
+const KEY_PREFIX_LENGTH = 10; // 'agentcard_'
 const KEY_MIN_LENGTH = KEY_PREFIX_LENGTH + 12; 
 const KEY_MAX_LENGTH = 128;
 const MAX_AUTH_CANDIDATES = 20;
@@ -14,7 +14,7 @@ export async function authenticateApiKey(req: NextRequest) {
   
   const key = rawKey.trim();
 
-  if (!key.startsWith('AgentCard_')) {
+  if (!key.startsWith('agentcard_')) {
     return { error: 'invalid_api_key', status: 401, message: 'Invalid API key prefix' };
   }
 

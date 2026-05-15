@@ -1,5 +1,5 @@
 {
-  "name": "agent-card",
+  "name": "agentcard",
   "private": true,
   "type": "module",
   "workspaces": [

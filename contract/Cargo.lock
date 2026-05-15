@@ -208,7 +208,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "cards402-receiver"
+name = "agentcard-receiver"
 version = "0.1.0"
 dependencies = [
  "soroban-sdk",

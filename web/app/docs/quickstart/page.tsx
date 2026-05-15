@@ -5,7 +5,7 @@ import { CopyCodeBlock } from '@/app/components/CopyCodeBlock';
 export const metadata: Metadata = {
   title: 'Quickstart',
   description:
-    'Issue your first AgentCard card in five minutes. Install the SDK, claim a key, pay a Soroban contract, stream the card.',
+    'Issue your first agentcard card in five minutes. Install the SDK, claim a key, pay a Soroban contract, stream the card.',
   alternates: { canonical: 'https://agentcard.com/docs/quickstart' },
 };
 
@@ -37,12 +37,12 @@ const breadcrumbJsonLd = {
 const howToJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'HowTo',
-  name: 'Issue your first AgentCard card in five minutes',
+  name: 'Issue your first agentcard card in five minutes',
   description:
-    'Install the AgentCard SDK, claim an API key, fund a Stellar wallet, purchase a card, and wire it into an agent runtime.',
+    'Install the agentcard SDK, claim an API key, fund a Stellar wallet, purchase a card, and wire it into an agent runtime.',
   totalTime: 'PT5M',
   supply: [
-    { '@type': 'HowToSupply', name: 'A AgentCard claim code from an operator' },
+    { '@type': 'HowToSupply', name: 'A agentcard claim code from an operator' },
     { '@type': 'HowToSupply', name: 'Stellar wallet with USDC or XLM' },
   ],
   tool: [
@@ -82,7 +82,7 @@ const howToJsonLd = {
       '@type': 'HowToStep',
       position: 5,
       name: 'Wire it into your agent',
-      text: 'Add the AgentCard MCP server to your claude_desktop_config.json or other MCP host so the purchase_vcc tool is available to the LLM.',
+      text: 'Add the agentcard MCP server to your claude_desktop_config.json or other MCP host so the purchase_vcc tool is available to the LLM.',
       url: 'https://agentcard.com/docs/quickstart#wire-it-into-your-agent',
     },
   ],
@@ -118,14 +118,14 @@ const STEPS = [
     body: (
       <>
         <p>
-          AgentCard ships as a single npm package with an included CLI. One install gets you the
+          agentcard ships as a single npm package with an included CLI. One install gets you the
           TypeScript SDK, the CLI, and the MCP server.
         </p>
         <CodeBlock label="Shell">{`npm install agentcard@latest
 # or: pnpm add agentcard@latest / bun add agentcard@latest`}</CodeBlock>
         <p>
           The package exports <Code>purchaseCardOWS</Code>, <Code>createOrder</Code>,{' '}
-          <Code>waitForCard</Code>, and a <Code>AgentCard</Code> client class for lower-level usage.
+          <Code>waitForCard</Code>, and a <Code>agentcard</Code> client class for lower-level usage.
         </p>
         <p>
           If you&apos;re running the CLI through <Code>npx</Code> (the recommended path for
@@ -204,7 +204,7 @@ console.log('trustline opened:', txHash);`}</CodeBlock>
           skip this entirely — XLM is native and needs no trustline.
         </p>
         <p>
-          AgentCard never sees or touches the secret key — it lives in an encrypted OWS vault on the
+          agentcard never sees or touches the secret key — it lives in an encrypted OWS vault on the
           machine running the SDK, protected by an optional passphrase. The same vault is what the
           MCP server uses, so Claude Desktop and your TypeScript code share one wallet identity.
         </p>
@@ -223,7 +223,7 @@ console.log('trustline opened:', txHash);`}</CodeBlock>
         <CodeBlock label="TypeScript">{`import { purchaseCardOWS } from 'agentcard';
 
 const card = await purchaseCardOWS({
-  apiKey: process.env.CARDS402_API_KEY!,
+  apiKey: process.env.AGENTCARD_API_KEY!,
   walletName: 'my-agent',
   amountUsdc: '25.00',
   paymentAsset: 'xlm',  // or 'usdc' (default)
@@ -250,7 +250,7 @@ console.log(card);
     body: (
       <>
         <p>
-          AgentCard ships an MCP server so Claude Desktop and any other MCP-aware runtime can call it
+          agentcard ships an MCP server so Claude Desktop and any other MCP-aware runtime can call it
           as a tool. Add it to your MCP config:
         </p>
         <CodeBlock label="claude_desktop_config.json">{`{
@@ -259,7 +259,7 @@ console.log(card);
       "command": "npx",
       "args": ["agentcard", "mcp"],
       "env": {
-        "CARDS402_API_KEY": "agentcard_..."
+        "AGENTCARD_API_KEY": "agentcard_..."
       }
     }
   }
@@ -322,7 +322,7 @@ export default function QuickstartPage() {
           margin: '0 0 3.25rem',
         }}
       >
-        This walk-through covers a full AgentCard integration from scratch: install the SDK, claim a
+        This walk-through covers a full agentcard integration from scratch: install the SDK, claim a
         key, fund a wallet, issue a card, and wire it into an agent runtime. Copy-pasteable at every
         step.
       </p>

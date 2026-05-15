@@ -112,7 +112,7 @@ jobs:
       - name: Build Web
         run: npm run build -w web
         env:
-          NEXT_PUBLIC_API_BASE_URL: https://api.cards402.com
+          NEXT_PUBLIC_API_BASE_URL: https://api.agentcard.com
 
   backend-smoke:
     name: Backend syntax check
@@ -232,4 +232,4 @@ jobs:
         run: |
           curl -s -X POST "$DISCORD_WEBHOOK" \
             -H "Content-Type: application/json" \
-            -d "{\"embeds\":[{\"title\":\"cards402 CI — $STATUS\",\"description\":\"Branch: \`$REF\` · Actor: $ACTOR\",\"url\":\"$RUN_URL\",\"color\":$([ \"$STATUS\" = \"✅ Passed\" ] && echo 3066993 || echo 15158332)}]}"
+            -d "{\"embeds\":[{\"title\":\"agentcard CI — $STATUS\",\"description\":\"Branch: \`$REF\` · Actor: $ACTOR\",\"url\":\"$RUN_URL\",\"color\":$([ \"$STATUS\" = \"✅ Passed\" ] && echo 3066993 || echo 15158332)}]}"

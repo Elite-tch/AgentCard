@@ -37,7 +37,7 @@ export default function MerchantsPage() {
     <PageContainer>
       <PageHeader
         title="Merchants"
-        subtitle="Gift card products AgentCard has onboarded. More are coming — contact support if you need a specific one enabled."
+        subtitle="Gift card products agentcard has onboarded. More are coming — contact support if you need a specific one enabled."
       />
 
       {error ? (

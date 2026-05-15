@@ -10,7 +10,7 @@ import './globals.css';
 // Sans by inheritance and Plex Mono for every place it currently uses
 // var(--font-mono) (tables, addresses, api keys, order ids). Avoiding
 // Geist / Inter / Space Grotesk on purpose — those are the three fonts
-// every AI-generated app ships with, and AgentCard should read as
+// every AI-generated app ships with, and agentcard should read as
 // engineering-led finance, not yet-another-startup.
 const displayFont = Fraunces({
   subsets: ['latin'],
@@ -38,7 +38,7 @@ const monoFont = IBM_Plex_Mono({
 });
 
 const SITE_URL = APP_URL;
-const SITE_NAME = 'AgentCard';
+const SITE_NAME = 'agentcard';
 const SITE_DESCRIPTION =
   'The elite digital identity for modern agents. Secure, effortless, exclusive virtual Visa cards issued on Stellar. Pay with USDC or XLM and get a premium card in ~60 seconds.';
 
@@ -58,9 +58,9 @@ export const metadata: Metadata = {
       'x-default': SITE_URL,
     },
   },
-  authors: [{ name: 'AgentCard', url: SITE_URL }],
-  creator: 'AgentCard',
-  publisher: 'AgentCard',
+  authors: [{ name: 'agentcard', url: SITE_URL }],
+  creator: 'agentcard',
+  publisher: 'agentcard',
   formatDetection: {
     email: false,
     address: false,
@@ -94,7 +94,7 @@ const jsonLdOrg = {
   url: SITE_URL,
   logo: `${SITE_URL}/icon.png`,
   description: SITE_DESCRIPTION,
-  sameAs: ['https://x.com/agentcard', 'https://github.com/CTX-com/AgentCard'],
+  sameAs: ['https://x.com/agentcard', 'https://github.com/CTX-com/agentcard'],
   contactPoint: [
     {
       '@type': 'ContactPoint',

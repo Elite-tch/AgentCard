@@ -1,4 +1,4 @@
-// OWS (Open Wallet Standard) wallet integration for cards402.
+// OWS (Open Wallet Standard) wallet integration for agentcard.
 //
 // Agents use an OWS wallet instead of a raw STELLAR_WALLET_SECRET:
 //   - Keys are encrypted at rest in the OWS vault file
@@ -31,7 +31,7 @@ import {
 } from '@stellar/stellar-sdk';
 
 import type { CardDetails, PaymentInstructions } from './client';
-import { ResumableError, OrderFailedError, Cards402Error } from './errors';
+import { ResumableError, OrderFailedError, AgentcardError } from './errors';
 import {
   buildContractPaymentTx,
   submitSorobanTx,
@@ -70,7 +70,7 @@ function getStellarAddress(wallet: WalletInfo): string {
  *
  * Wallets are stored encrypted at `~/.ows/wallets/<name>.vault` by
  * default. If the vault file is lost, the funds it controls become
- * unreachable — cards402 never sees private keys and can't recover
+ * unreachable — agentcard never sees private keys and can't recover
  * them. Agents running on ephemeral filesystems (Lambda, Cloud Run,
  * scratch containers) should pass a `vaultPath` pointing at a
  * persistent volume, or set the `OWS_VAULT_PATH` environment variable.
@@ -148,11 +148,11 @@ export async function getOWSBalance(
 // ── Onboarding helper ─────────────────────────────────────────────────────────
 
 export interface OnboardAgentOpts {
-  /** cards402 API key (cards402_…) */
+  /** agentcard API key (agentcard_…) */
   apiKey: string;
   /** Local name for the wallet in the OWS vault, e.g. 'my-agent' */
   walletName: string;
-  /** Override the default https://api.cards402.com/v1 */
+  /** Override the default https://api.agentcard.com/v1 */
   baseUrl?: string;
   /** Optional passphrase for extra at-rest encryption */
   passphrase?: string;
@@ -168,7 +168,7 @@ export interface OnboardAgentResult {
 }
 
 /**
- * One-shot agent setup: reports `initializing` to cards402, creates or
+ * One-shot agent setup: reports `initializing` to agentcard, creates or
  * fetches the OWS wallet, reports `awaiting_funding` with the wallet
  * address, and returns the public key + current balance. Idempotent —
  * safe to call on every agent startup.
@@ -177,8 +177,8 @@ export interface OnboardAgentResult {
  * feed, so operators see the agent moving through states in real time.
  */
 export async function onboardAgent(opts: OnboardAgentOpts): Promise<OnboardAgentResult> {
-  const { Cards402Client } = await import('./client');
-  const client = new Cards402Client({ apiKey: opts.apiKey, baseUrl: opts.baseUrl });
+  const { AgentcardClient } = await import('./client');
+  const client = new AgentcardClient({ apiKey: opts.apiKey, baseUrl: opts.baseUrl });
 
   // 1. Signal "spinning up" before we touch the filesystem. Best-effort:
   //    reportStatus swallows errors so a backend hiccup can't block setup.
@@ -331,7 +331,7 @@ export async function addUsdcTrustlineOWS(opts: TrustlineOpts): Promise<string |
 
   const server = new Horizon.Server(horizonUrl);
   const account = await withTimeout(server.loadAccount(publicKey));
-  // Pre-check: already have a USDC trustline to the cards402-recognised
+  // Pre-check: already have a USDC trustline to the agentcard-recognised
   // issuer? Return null without spending a fee.
   const balances = (account as unknown as { balances: Array<Record<string, unknown>> }).balances;
   const hasTrustline = balances.some(
@@ -365,7 +365,7 @@ export interface PayViaContractOwsOpts {
 }
 
 /**
- * Pay the cards402 receiver contract using an OWS-custody wallet. Builds a
+ * Pay the agentcard receiver contract using an OWS-custody wallet. Builds a
  * Soroban `pay_usdc` or `pay_xlm` invocation, signs the transaction hash via
  * OWS, and submits it to the Soroban RPC. Returns the transaction hash.
  */
@@ -550,7 +550,7 @@ export interface PurchaseCardOwsOpts {
    *                                the order's payment instructions
    *                                from the backend and resubmits.
    *                                This is the shape saved to
-   *                                ~/.cards402/last-order so the CLI
+   *                                ~/.agentcard/last-order so the CLI
    *                                --resume flow recovers cleanly
    *                                from a dropped Soroban submit.
    */
@@ -574,14 +574,14 @@ export interface PurchaseCardOwsOpts {
  *
  * Soroban RPC backpressure is tolerated: if submitSorobanTx throws with a
  * txHash attached (deadline reached but tx may still land), we proceed to
- * waitForCard — the cards402 backend watcher is the source of truth and
+ * waitForCard — the agentcard backend watcher is the source of truth and
  * will credit the order when the tx finalizes.
  */
 export async function purchaseCardOWS(
   opts: PurchaseCardOwsOpts,
 ): Promise<CardDetails & { order_id: string }> {
-  const { Cards402Client } = await import('./client');
-  const client = new Cards402Client({ apiKey: opts.apiKey, baseUrl: opts.baseUrl });
+  const { AgentcardClient } = await import('./client');
+  const client = new AgentcardClient({ apiKey: opts.apiKey, baseUrl: opts.baseUrl });
   const paymentAsset = opts.paymentAsset ?? 'usdc';
 
   let orderId: string;
@@ -760,7 +760,7 @@ export async function purchaseCardOWS(
     // surfaces the real reason instead of a misleading resume hint.
     if (err instanceof OrderFailedError) throw err;
     // Auth / budget / validation errors from the client are also terminal.
-    if (err instanceof Cards402Error && err.code !== 'wait_timeout') throw err;
+    if (err instanceof AgentcardError && err.code !== 'wait_timeout') throw err;
     // Everything else (network blip, SSE disconnect, wait_timeout) — wrap
     // as resumable. The order is paid at this point; resuming will just
     // re-attach to the stream.

@@ -50,7 +50,7 @@ backend; older drafts of this doc said otherwise (see audit F14).
   "status": "pending_payment",
   "payment": {
     "type": "soroban_contract",
-    "contract_id": "C...",                      ← AgentCard receiver contract ID
+    "contract_id": "C...",                      ← agentcard receiver contract ID
     "order_id": "uuid",                         ← pass this to the contract call
     "usdc": {
       "amount": "25.00",                        ← USDC amount (decimal string)
@@ -79,7 +79,7 @@ Use the SDK's `purchaseCardOWS()` which does everything in one call:
 import { purchaseCardOWS } from 'agentcard';
 
 const card = await purchaseCardOWS({
-  apiKey: process.env.CARDS402_API_KEY!,
+  apiKey: process.env.AGENTCARD_API_KEY!,
   walletName: process.env.OWS_WALLET_NAME!,
   amountUsdc: '25.00',
   paymentAsset: 'usdc', // or 'xlm'
@@ -91,9 +91,9 @@ Or step by step with `payViaContractOWS()` — pass the `payment` object from
 the `POST /v1/orders` response directly:
 
 ```typescript
-import { AgentCardClient, payViaContractOWS } from 'agentcard';
+import { agentcardClient, payViaContractOWS } from 'agentcard';
 
-const client = new AgentCardClient({ apiKey: process.env.CARDS402_API_KEY! });
+const client = new agentcardClient({ apiKey: process.env.AGENTCARD_API_KEY! });
 const order = await client.createOrder({ amount_usdc: '25.00' });
 
 const txHash = await payViaContractOWS({
@@ -191,7 +191,7 @@ Optionally provide `webhook_url` in `POST /v1/orders`. agentcard will POST to th
 }
 ```
 
-Webhooks include `X-AgentCard-Signature: sha256=<hmac>` and `X-AgentCard-Timestamp: <unix-ms>` headers. The signature covers `<timestamp>.<body>` — verify the HMAC and reject if the timestamp is >5 minutes old.
+Webhooks include `X-agentcard-Signature: sha256=<hmac>` and `X-agentcard-Timestamp: <unix-ms>` headers. The signature covers `<timestamp>.<body>` — verify the HMAC and reject if the timestamp is >5 minutes old.
 
 **Delivery guarantees.** Webhook delivery is best-effort but retried. Each
 event is attempted immediately; on any non-2xx response or network error,
@@ -248,13 +248,13 @@ Always send `Idempotency-Key: <uuid>` on `POST /v1/orders`. If the request fails
 
 ## Wallet setup
 
-AgentCard agents use OWS (Open Wallet Standard) — keys are stored encrypted in a local vault file, never as plaintext env vars.
+agentcard agents use OWS (Open Wallet Standard) — keys are stored encrypted in a local vault file, never as plaintext env vars.
 
 1. **Set env vars**:
    ```
    OWS_WALLET_NAME=my-agent       # wallet identifier
    OWS_WALLET_PASSPHRASE=secret   # encryption passphrase (recommended)
-   CARDS402_API_KEY=agentcard_...  # your API key from agentcard.com
+   AGENTCARD_API_KEY=agentcard_...  # your API key from agentcard.com
    ```
 2. **Create the wallet** — run `setup_wallet` via MCP, or:
    ```typescript
@@ -278,7 +278,7 @@ For Claude Desktop, Cursor, or any MCP host:
       "command": "npx",
       "args": ["agentcard"],
       "env": {
-        "CARDS402_API_KEY": "agentcard_...",
+        "AGENTCARD_API_KEY": "agentcard_...",
         "OWS_WALLET_NAME": "my-agent",
         "OWS_WALLET_PASSPHRASE": "...",
         "OWS_VAULT_PATH": "/path/to/vault"
@@ -289,7 +289,7 @@ For Claude Desktop, Cursor, or any MCP host:
 ```
 
 The `agentcard` bin defaults to the `mcp` subcommand when no other
-subcommand is passed, so `npx cards402` with no args boots the MCP
-server. `npx cards402 mcp` is equivalent and more explicit.
+subcommand is passed, so `npx agentcard` with no args boots the MCP
+server. `npx agentcard mcp` is equivalent and more explicit.
 
 Tools available: `purchase_vcc`, `setup_wallet`, `check_order`, `check_budget`.

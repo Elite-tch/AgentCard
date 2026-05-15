@@ -318,8 +318,8 @@ export interface components {
          * @description Delivered to `webhook_url` on every meaningful order-state
          *     transition. Signed with HMAC-SHA256 if a `webhook_secret` was
          *     issued with the API key. Headers:
-         *     `X-Cards402-Signature: sha256=<hex>`,
-         *     `X-Cards402-Timestamp: <epoch_ms>`.
+         *     `X-Agentcard-Signature: sha256=<hex>`,
+         *     `X-Agentcard-Timestamp: <epoch_ms>`.
          *
          *     Every payload carries `order_id` and `status`. The rest of the
          *     shape varies by event — `delivered` carries `card` + pricing,

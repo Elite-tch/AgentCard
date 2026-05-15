@@ -26,7 +26,7 @@ export const auth = betterAuth({
         await transporter.sendMail({
           to: email,
           from: process.env.EMAIL_FROM!,
-          subject: "Login to AgentCard",
+          subject: "Login to agentcard",
           text: `Click the link to login: ${url}`,
         });
       },

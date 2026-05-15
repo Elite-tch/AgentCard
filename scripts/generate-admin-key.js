@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Generates a 32-byte hex key suitable for ADMIN_SESSION_KEY / VCC_ADMIN_SESSION_KEY
-// and any other 64-hex-char secret used by cards402 or vcc admin UIs.
+// and any other 64-hex-char secret used by agentcard or vcc admin UIs.
 //
 // Audit finding A-6.
 //

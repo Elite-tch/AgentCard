@@ -104,8 +104,8 @@ export default function DeveloperPage() {
           </div>
           <div style={{ fontSize: '0.7rem', color: 'var(--fg-dim)', lineHeight: 1.5 }}>
             We'll POST a sample <code>delivered</code> payload with fake card data. If you pass a
-            secret, we'll sign it with <code>X-AgentCard-Signature: sha256=hex(HMAC(ts.body))</code>{' '}
-            and <code>X-AgentCard-Timestamp</code>.
+            secret, we'll sign it with <code>X-agentcard-Signature: sha256=hex(HMAC(ts.body))</code>{' '}
+            and <code>X-agentcard-Timestamp</code>.
           </div>
           <Button
             variant="primary"
@@ -204,14 +204,14 @@ export default function DeveloperPage() {
           <Snippet title="Install" code={`npm install agentcard@latest`} />
           <Snippet
             title="Onboard an agent"
-            code={`npx -y cards402@latest onboard --claim <claim-code>`}
+            code={`npx -y agentcard@latest onboard --claim <claim-code>`}
           />
           <Snippet
             title="Purchase a card"
             code={`import { purchaseCardOWS } from 'agentcard';
 
 const card = await purchaseCardOWS({
-  apiKey: process.env.CARDS402_API_KEY!,
+  apiKey: process.env.AGENTCARD_API_KEY!,
   walletName: 'my-agent',
   amountUsdc: '10.00',
   paymentAsset: 'xlm',

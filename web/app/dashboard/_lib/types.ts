@@ -100,7 +100,7 @@ export interface User {
   id: string;
   email: string;
   role: string;
-  // Deployment-level flag from CARDS402_PLATFORM_OWNER_EMAIL — controls
+  // Deployment-level flag from AGENTCARD_PLATFORM_OWNER_EMAIL — controls
   // visibility of system-level alerts (CTX auth, fulfillment circuit
   // breaker) and other operator-only UI. Distinct from `role`, which
   // is dashboard-scoped.

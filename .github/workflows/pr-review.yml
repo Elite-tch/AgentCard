@@ -38,9 +38,9 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          REVIEW=$(claude -p --print "Review this PR diff for the cards402 project.
+          REVIEW=$(claude -p --print "Review this PR diff for the agentcard project.
 
-          cards402 is an agentic VCC (virtual credit card) service: agents send a 402 HTTP challenge response,
+          agentcard is an agentic VCC (virtual credit card) service: agents send a 402 HTTP challenge response,
           pay via Stellar (USDC or XLM), and receive a virtual card. The stack is:
           - Node.js/Express backend (better-sqlite3, no ORM, raw parameterised queries)
           - Next.js web frontend (TypeScript, App Router)
@@ -94,4 +94,4 @@ jobs:
 
           ${{ steps.ai_review.outputs.review }}
 
-          <sub>Powered by Claude · cards402 CI</sub>"
+          <sub>Powered by Claude · agentcard CI</sub>"

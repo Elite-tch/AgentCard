@@ -1,6 +1,6 @@
 # Buy VCC
 
-Purchase a prepaid Visa virtual card via cards402.com.
+Purchase a prepaid Visa virtual card via agentcard.com.
 
 ## Usage
 
@@ -10,11 +10,11 @@ Purchase a prepaid Visa virtual card via cards402.com.
 
 When invoked:
 
-1. Check if `CARDS402_API_KEY` and `OWS_WALLET_NAME` are set. If not, explain:
-   - `CARDS402_API_KEY` — get one at cards402.com
+1. Check if `AGENTCARD_API_KEY` and `OWS_WALLET_NAME` are set. If not, explain:
+   - `AGENTCARD_API_KEY` — get one at agentcard.com
    - `OWS_WALLET_NAME` — the OWS wallet identifier; run `setup_wallet` (MCP) or:
      ```typescript
-     import { createOWSWallet } from 'cards402';
+     import { createOWSWallet } from 'agentcard';
      const { publicKey } = createOWSWallet(process.env.OWS_WALLET_NAME!);
      // Fund publicKey with XLM and USDC, then come back
      ```
@@ -24,8 +24,8 @@ When invoked:
 3. Before purchasing, check the budget:
 
    ```typescript
-   import { Cards402Client } from 'cards402';
-   const client = new Cards402Client({ apiKey: process.env.CARDS402_API_KEY! });
+   import { AgentcardClient } from 'agentcard';
+   const client = new AgentcardClient({ apiKey: process.env.AGENTCARD_API_KEY! });
    const usage = await client.getUsage();
    ```
 
@@ -34,10 +34,10 @@ When invoked:
 4. Purchase the card:
 
    ```typescript
-   import { purchaseCardOWS } from 'cards402';
+   import { purchaseCardOWS } from 'agentcard';
 
    const card = await purchaseCardOWS({
-     apiKey: process.env.CARDS402_API_KEY!,
+     apiKey: process.env.AGENTCARD_API_KEY!,
      walletName: process.env.OWS_WALLET_NAME!,
      passphrase: process.env.OWS_WALLET_PASSPHRASE,
      vaultPath: process.env.OWS_VAULT_PATH,
@@ -77,7 +77,7 @@ When invoked:
 
 ## Environment variables needed
 
-- `CARDS402_API_KEY` — your cards402 API key (get one at cards402.com)
+- `AGENTCARD_API_KEY` — your agentcard API key (get one at agentcard.com)
 - `OWS_WALLET_NAME` — OWS wallet identifier (must be funded with USDC or XLM)
 - `OWS_WALLET_PASSPHRASE` — wallet encryption passphrase (optional)
 - `OWS_VAULT_PATH` — vault file path (optional, default: `~/.ows/vault`)

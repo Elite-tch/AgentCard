@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to cards402 (backend, SDK, web, contract) are recorded
+All notable changes to agentcard (backend, SDK, web, contract) are recorded
 here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
@@ -11,7 +11,7 @@ here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - **HMAC v2 callback protocol** — `lib/hmac.js` shared signer/verifier
   (mirrored into vcc). v2 binds `order_id` into the signing payload and
-  sends `X-VCC-Order-Id` header so a valid signature for one order can't
+  sends `X-agentcard-Order-Id` header so a valid signature for one order can't
   be replayed against another. v1 legacy signatures still accepted during
   rollout. Replay window increased from 5 min to 10 min. Audit findings
   A-11, C-4, C-5.
@@ -28,9 +28,9 @@ here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **Per-origin webhook circuit breaker** — 5 failures in 60s opens the
   circuit for 5 min. One slow customer webhook can't stall delivery for
   everyone. Audit A-7.
-- **vcc-client circuit breaker** — cards402 → vcc path trips after 3
+- **vcc-client circuit breaker** — agentcard → vcc path trips after 3
   consecutive 5xx responses for 30s to avoid hammering a down vcc. Audit C-7.
-- **SDK built-in retry** — `Cards402Client` gained `fetchWithRetry` with
+- **SDK built-in retry** — `AgentcardClient` gained `fetchWithRetry` with
   configurable attempts/backoff/jitter on 429/502/503/504 and network
   errors. `createOrder` is safe to retry thanks to existing idempotency
   keys. Audit A-23.
@@ -76,7 +76,7 @@ here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 **SDK**
 
 - MCP server version now imported from `package.json` (audit A-38).
-- `Cards402Client.listOrders()` gained date and pagination filters (audit A-19).
+- `AgentcardClient.listOrders()` gained date and pagination filters (audit A-19).
 - Built-in retry layer (audit A-23).
 
 **Testing**
@@ -85,10 +85,10 @@ here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   skew, hex validation, `safeEqHex` edge cases.
 - 3 new `admin_actions` integration tests.
 - 2 new `X-Request-ID` propagation tests.
-- cards402 backend: 161 → 1,038 tests passing (across the 2026-04-12 and
+- agentcard backend: 161 → 1,038 tests passing (across the 2026-04-12 and
   2026-04-15/16 audit sweeps).
-- cards402 SDK: 114 tests passing.
-- cards402 web: 57 tests passing.
+- agentcard SDK: 114 tests passing.
+- agentcard web: 57 tests passing.
 
 **Documentation**
 
@@ -147,7 +147,7 @@ here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   product SKU — previously the fallback was completely silent despite
   an inline comment claiming ops visibility. Audit F1/F2-normalize-card.
 - **VCC client circuit breaker correctness** — two semantic bugs in the
-  cards402 → vcc circuit breaker: (1) `recordVccSuccess` unconditionally
+  agentcard → vcc circuit breaker: (1) `recordVccSuccess` unconditionally
   cleared `openedUntil`, so a call that was in flight when the breaker
   tripped could complete successfully and reopen the gate for every
   subsequent caller even though VCC was still broken; now the cooldown
@@ -160,7 +160,7 @@ here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   a typeof guard to `decryptToken` so a non-string
   `system_state.value` can't wedge the token path with an opaque
   TypeError. Audit F1/F2/F3-vcc-client.
-- **SDK wallet trustline — missing passphrase** — `cards402 wallet
+- **SDK wallet trustline — missing passphrase** — `agentcard wallet
 trustline` called `addUsdcTrustlineOWS` without passing the wallet
   passphrase from config. Any agent onboarded with `--passphrase-env`
   (encrypted OWS vault) got a cryptic decrypt error when trying to
@@ -172,7 +172,7 @@ trustline` called `addUsdcTrustlineOWS` without passing the wallet
   Also added `--passphrase-env` to the usage text. Audit F1-wallet.
 - **SDK version-check — state file + registry response body caps** —
   two fixes in `sdk/src/version-check.ts`. (1) `readState` had no
-  file-size cap — a multi-GB `~/.cards402/version-check.json` would
+  file-size cap — a multi-GB `~/.agentcard/version-check.json` would
   OOM the process on every CLI invocation since `checkForUpdates`
   fires at startup. Added 16 KB cap matching config.ts/purchase.ts.
   (2) The npm registry `fetch` had no response body cap. The 2s
@@ -184,7 +184,7 @@ trustline` called `addUsdcTrustlineOWS` without passing the wallet
   parsing. Audit F1/F2-version-check.
 - **SDK purchase command — last-order size cap + save warning +
   temp suffix** — three fixes in `sdk/src/commands/purchase.ts`.
-  (1) `loadLastOrder` had no size cap. A multi-GB `~/.cards402/last-order`
+  (1) `loadLastOrder` had no size cap. A multi-GB `~/.agentcard/last-order`
   file (disk corruption, symlink to a large file) would OOM the process.
   Added 16 KB cap matching config.ts. (2) `saveLastOrder` outer catch
   silently swallowed all errors — disk-full, permission-denied, etc. —
@@ -201,13 +201,13 @@ trustline` called `addUsdcTrustlineOWS` without passing the wallet
   `AbortSignal.timeout(30_000)`. (2) **api_key from the claim response
   was persisted without control-char validation**. A MITM or
   compromised backend returning an api_key with CRLF / NUL would have
-  the corrupt key written to `~/.cards402/config.json`. The load-time
+  the corrupt key written to `~/.agentcard/config.json`. The load-time
   check (F3-config) catches it on next run, but the current onboard
   session's `reportStatus` calls also use the key and would crash via
   `ERR_INVALID_CHAR`. Validate at persist time so the corrupt key never
   touches disk. Audit F1/F2-onboard.
 - **SDK client constructor — HTTPS enforcement on all code paths** —
-  `Cards402Client`'s constructor only validated the base URL via
+  `AgentcardClient`'s constructor only validated the base URL via
   `assertSafeBaseUrl` when it was loaded through `resolveCredentials`
   (config file / env var path). When `baseUrl` was passed **explicitly**
   — which is what `mcp.ts`, `stellar.ts`, `ows.ts`, and every example
@@ -252,7 +252,7 @@ trustline` called `addUsdcTrustlineOWS` without passing the wallet
   callers that need to pick the right Horizon instance.
   Audit F1/F3-soroban.
 - **SDK client SSE parser + retry jitter** — three fixes in
-  `sdk/src/client.ts` (the `Cards402Client` HTTP client every agent
+  `sdk/src/client.ts` (the `AgentcardClient` HTTP client every agent
   imports). (1) **SSE CRLF normalization**. The stream parser split on
   `'\n\n'` only; the SSE spec defines end-of-line as `\r\n`, `\r`,
   OR `\n`. A transparent HTTP proxy that rewrites line endings to
@@ -437,7 +437,7 @@ trustline` called `addUsdcTrustlineOWS` without passing the wallet
   signal. Each entry is now trimmed, lowercased, and validated at
   boot. (3) **`CORS_ORIGINS` per-entry validation** — same class of
   bug; each entry is now parsed as an http(s) URL at boot. (4) **URL
-  scheme constraint** — `CARDS402_BASE_URL`, `VCC_API_BASE`, and
+  scheme constraint** — `AGENTCARD_BASE_URL`, `VCC_API_BASE`, and
   `SOROBAN_RPC_URL` previously accepted any scheme (`ftp://`, `file://`,
   `javascript:`, `chrome-extension://`) because zod's `.url()` is
   protocol-agnostic. Now constrained to http/https. (5) **RFC 6761
@@ -457,7 +457,7 @@ production` + HTTPS + non-local = fail) treated `.test` and
   order had the overpayment tracked in `order.excess_usdc` by
   payment-handler.js, but the refund handler silently ignored that
   column and refunded only $10.00 — quietly keeping the $0.50 on a
-  failed order. This was a financial correctness bug: cards402 took
+  failed order. This was a financial correctness bug: agentcard took
   customer money on every failed overpaid order. Fix sums
   `amount_usdc + excess_usdc` in BigInt stroop precision and refunds
   the total. Corrupt `excess_usdc` values are treated as zero (fail-
@@ -477,7 +477,7 @@ production` + HTTPS + non-local = fail) treated `.test` and
   pending_payment → ordering transition. (1) `toStroops('')` returns
   `0n`, so if `order.amount_usdc` was ever empty (migration, manual
   UPDATE, schema drift), any positive on-chain payment compared as
-  "overpayment of 0" and the order transitioned to ordering — cards402
+  "overpayment of 0" and the order transitioned to ordering — agentcard
   would then spend treasury to fulfill a $0-quoted order. Added
   `parseStrictPositiveStroops()` which requires a non-empty digits-
   only decimal string parsing to a positive stroop value; corrupt rows

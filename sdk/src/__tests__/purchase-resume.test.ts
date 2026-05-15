@@ -1,4 +1,4 @@
-// Unit tests for the CLI `cards402 purchase --resume` state machine.
+// Unit tests for the CLI `agentcard purchase --resume` state machine.
 //
 // Covers the 2026-04-15 audit fix (F1-resume): the last-order file
 // now captures txHash + phase alongside orderId, and --resume uses
@@ -24,14 +24,14 @@ let tmpDir: string;
 let origConfigDir: string | undefined;
 
 beforeEach(() => {
-  tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'cards402-resume-test-'));
-  origConfigDir = process.env.CARDS402_CONFIG_DIR;
-  process.env.CARDS402_CONFIG_DIR = tmpDir;
+  tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'agentcard-resume-test-'));
+  origConfigDir = process.env.AGENTCARD_CONFIG_DIR;
+  process.env.AGENTCARD_CONFIG_DIR = tmpDir;
 });
 
 afterEach(() => {
-  if (origConfigDir === undefined) delete process.env.CARDS402_CONFIG_DIR;
-  else process.env.CARDS402_CONFIG_DIR = origConfigDir;
+  if (origConfigDir === undefined) delete process.env.AGENTCARD_CONFIG_DIR;
+  else process.env.AGENTCARD_CONFIG_DIR = origConfigDir;
   try {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   } catch {
@@ -139,7 +139,7 @@ describe('loadLastOrder — corruption and hostile input', () => {
 
 // ── purchaseCardOWS resume branch — F1-resume regression ────────────────────
 //
-// This suite spies on checkSorobanTxLanded + Cards402Client to drive
+// This suite spies on checkSorobanTxLanded + AgentcardClient to drive
 // purchaseCardOWS through each of the three resume decision branches:
 //
 //   1. Prior tx landed → skipPayment (wait for backend to see it)
@@ -177,7 +177,7 @@ describe('purchaseCardOWS resume state machine — F1-resume', () => {
     // Patch the modules purchaseCardOWS imports. vi.doMock must come
     // before the dynamic import of ows.ts.
     vi.doMock('../client', () => ({
-      Cards402Client: class {
+      AgentcardClient: class {
         constructor() {}
         getOrder = getOrderSpy;
         waitForCard = waitForCardSpy;

@@ -93,7 +93,7 @@ export default function Home() {
                 marginBottom: '1rem',
               }}
             >
-              AgentCard
+              agentcard
             </h1>
 
             <p

@@ -86,15 +86,15 @@ export function verifySession(cookieValue: string | undefined | null): SessionPa
 
 /**
  * Resolve the upstream agentcard backend URL from env. Prefers
- * `CARDS402_BACKEND_URL` (server-only) and falls back to
+ * `AGENTCARD_BACKEND_URL` (server-only) and falls back to
  * `NEXT_PUBLIC_API_BASE_URL` so existing deployments keep working without a
  * new env var. Throws on missing in production.
  */
 export function getBackendBaseUrl(): string {
-  const url = process.env.CARDS402_BACKEND_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL;
+  const url = process.env.AGENTCARD_BACKEND_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL;
   if (!url) {
     if (process.env.NODE_ENV === 'production') {
-      throw new Error('CARDS402_BACKEND_URL (or NEXT_PUBLIC_API_BASE_URL) is required');
+      throw new Error('AGENTCARD_BACKEND_URL (or NEXT_PUBLIC_API_BASE_URL) is required');
     }
     return 'http://localhost:4000';
   }

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     '~95 commits in two days: treasury-loss races, silent auth bypasses, circuit breaker defeats, and 550 new tests. A walkthrough of the worst bugs and the patterns they share.',
   alternates: { canonical: POST_URL },
   openGraph: ogForPage({
-    title: 'What we found auditing our own code — AgentCard',
+    title: 'What we found auditing our own code — agentcard',
     description:
       '~95 commits in two days: treasury-loss races, auth bypasses, circuit breaker defeats, and 550 new tests.',
     path: '/blog/what-we-found-auditing-our-own-code',
@@ -35,12 +35,12 @@ const blogJsonLd = {
   dateModified: POST_DATE,
   author: {
     '@type': 'Organization',
-    name: 'AgentCard',
+    name: 'agentcard',
     url: 'https://agentcard.com',
   },
   publisher: {
     '@type': 'Organization',
-    name: 'AgentCard',
+    name: 'agentcard',
     logo: { '@type': 'ImageObject', url: 'https://agentcard.com/icon.png' },
   },
   image: 'https://agentcard.com/opengraph-image',
@@ -139,13 +139,13 @@ export default function BlogPost() {
             <span>·</span>
             <span>12 min read</span>
             <span>·</span>
-            <span>by AgentCard engineering</span>
+            <span>by agentcard engineering</span>
           </div>
         </header>
 
         <div className="post-body">
           <p className="lede">
-            We ran a systematic adversarial audit of the entire AgentCard codebase over two days.
+            We ran a systematic adversarial audit of the entire agentcard codebase over two days.
             Every source file in the backend, every security-critical module in the SDK, the web
             frontend. ~95 commits. The backend test suite went from 488 to 1,038. Here is what we
             found, why it was there, and the three patterns that kept recurring.
@@ -206,7 +206,7 @@ export default function BlogPost() {
           <p>
             The funding-check poller, the Soroban <code>submitSorobanTx</code> Horizon fallback, and
             the <code>getOWSBalance</code> helper all had the Circle mainnet USDC issuer and Horizon
-            URL hardcoded instead of reading from the environment. AgentCard runs on mainnet in both
+            URL hardcoded instead of reading from the environment. agentcard runs on mainnet in both
             production and development, so this wasn&rsquo;t causing live failures &mdash; but the
             code was fragile: if anyone ever deployed against testnet for integration testing, USDC
             funding detection would silently break and the SDK&rsquo;s Horizon fallback would return

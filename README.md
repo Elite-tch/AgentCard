@@ -1,4 +1,4 @@
-# AgentCard 💳
+# agentcard 💳
 
 On-demand virtual Visa card issuance for AI agents. Pay with USDC or XLM on the Stellar network via smart contracts to receive instant, ready-to-use virtual cards for online purchases.
 
@@ -10,12 +10,12 @@ On-demand virtual Visa card issuance for AI agents. Pay with USDC or XLM on the 
 
 ## Technical Flow
 
-AgentCard bridges on-chain liquidity with real-world retail by using Soroban smart contracts as a secure escrow and trigger mechanism for card fulfillment.
+agentcard bridges on-chain liquidity with real-world retail by using Soroban smart contracts as a secure escrow and trigger mechanism for card fulfillment.
 
 ```mermaid
 sequenceDiagram
     participant Agent as AI Agent
-    participant API as AgentCard API
+    participant API as agentcard API
     participant Stellar as Stellar (Soroban)
     participant Visa as Visa Issuer
 
@@ -43,7 +43,7 @@ sequenceDiagram
 ## Repository Structure
 
 ```text
-AgentCard/
+agentcard/
 ├── backend/        Node.js/Express API, Soroban watcher, SQLite, policy engine
 ├── contract/       Soroban smart contract (Rust)
 ├── sdk/            TypeScript client + CLI + MCP server (npm: agentcard)
@@ -53,7 +53,7 @@ AgentCard/
 └── scripts/        Deploy and ops tooling
 ```
 
-> **Note:** For backward compatibility, the underlying protocol and SDK still use the `agentcard` namespace (referencing the HTTP 402 "Payment Required" status code).
+> **Naming:** The project name `agentcard` reflects its purpose — virtual card issuance for AI agents. The npm package, CLI, SDK, and contract all use the `agentcard` namespace consistently.
 
 ---
 
@@ -67,7 +67,7 @@ A high-performance Node.js/Express backend that manages the order lifecycle. It 
 ### 📦 `sdk/` — TypeScript SDK + MCP
 The primary interface for agents. It provides a clean API for creating orders and handling contract payments.
 - **MCP Server**: Pre-configured for Claude Desktop or any MCP-compatible host.
-- **CLI**: `npx cards402 purchase` for manual/testing flows.
+- **CLI**: `npx agentcard purchase` for manual/testing flows.
 
 ### 🎨 `web/` — Dashboard & Marketing
 A professional Next.js application providing:
@@ -91,7 +91,7 @@ A secure Rust contract deployed on Stellar. It receives USDC or XLM and emits a 
    import { purchaseCardOWS } from 'agentcard';
 
    const card = await purchaseCardOWS({
-     apiKey: process.env.AGENT_CARD_API_KEY!,
+     apiKey: process.env.AGENTCARD_API_KEY!,
      walletName: 'my-agent',
      amountUsdc: '25.00',
      paymentAsset: 'usdc',
@@ -106,9 +106,9 @@ A secure Rust contract deployed on Stellar. It receives USDC or XLM and emits a 
 
 - [**Agent Guide**](./AGENTS.md): Detailed integration steps for AI agents.
 - [**Architecture**](./ARCHITECTURE.md): Deep dive into fulfillment pipelines and security models.
-- [**Contributing**](./CONTRIBUTING.md): How to build and test the AgentCard ecosystem.
+- [**Contributing**](./CONTRIBUTING.md): How to build and test the agentcard ecosystem.
 
 ---
 
 ## License
-MIT © Elite-tch / AgentCard
+MIT © Elite-tch / agentcard

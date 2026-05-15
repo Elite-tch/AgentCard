@@ -20,7 +20,7 @@
 // noise, orbs) is a faithful port of the standalone prototype at
 // ~/code/agentcardanimation/index.html with three deltas:
 //   - Idle drift dialled back from ±8/±6 to ±2.5/±1.8 per pass.
-//   - The brand mark is replaced with a AgentCard wordmark rendered
+//   - The brand mark is replaced with a agentcard wordmark rendered
 //     via mask-image so it inherits the card's cream ink.
 //   - The bottomline shows 'YOUR AGENT' instead of 'ASH / PRIMARY'.
 
@@ -171,7 +171,7 @@ export function HeroCard() {
     <>
       <div className="hc-card-wrap">
         <div className="hc-card-shadow" aria-hidden />
-        <article ref={cardRef} className="hc-card" aria-label="AgentCard virtual card">
+        <article ref={cardRef} className="hc-card" aria-label="agentcard virtual card">
           {/* Load-in choreography elements (rendered first so they sit
               underneath the noise + content layers in z-order):
                 · outline-glow: soft radial that pulses outward

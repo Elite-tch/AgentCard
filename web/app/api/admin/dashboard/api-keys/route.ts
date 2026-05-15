@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
 
   const { spend_limit_usdc, default_webhook_url, wallet_public_key, label } = body;
 
-  const rawKey = `AgentCard_${crypto.randomBytes(24).toString('hex')}`;
+  const rawKey = `agentcard_${crypto.randomBytes(24).toString('hex')}`;
   const keyPrefix = rawKey.slice(10, 22);
   const keyHash = await bcrypt.hash(rawKey, 10);
   const webhookSecret = `whsec_${crypto.randomBytes(32).toString('hex')}`;

@@ -23,7 +23,7 @@ async function runIntervalJobs() {
 }
 
 async function startWorker() {
-  log('Initializing AgentCard Worker...');
+  log('Initializing agentcard Worker...');
   await connectToDatabase();
   log('Database connected.');
 

@@ -1,25 +1,25 @@
-# cards402 agent examples
+# agentcard agent examples
 
-Three working integrations showing how to use cards402 from different
+Three working integrations showing how to use agentcard from different
 environments. Each example is self-contained with its own dependencies.
 
 ## Quick start (all examples)
 
-1. Create an agent in the cards402 dashboard (Agents tab → Create Agent) and copy the claim code
-2. Run `npx -y cards402@latest onboard --claim <code>` to exchange the claim for credentials
+1. Create an agent in the agentcard dashboard (Agents tab → Create Agent) and copy the claim code
+2. Run `npx -y agentcard@latest onboard --claim <code>` to exchange the claim for credentials
 3. Fund your wallet (MCP: run `setup_wallet`; manual: send at least 2 XLM to the address)
 
 ## Examples
 
-### `node-agent/` — Node.js + cards402 SDK
+### `node-agent/` — Node.js + agentcard SDK
 
-The recommended path for TypeScript/JavaScript agents. Uses the `cards402`
+The recommended path for TypeScript/JavaScript agents. Uses the `agentcard`
 npm package with the all-in-one `purchaseCardOWS()` helper.
 
 ```bash
 cd node-agent
 npm install
-CARDS402_API_KEY=cards402_... OWS_WALLET_NAME=my-agent node index.mjs
+AGENTCARD_API_KEY=agentcard_... OWS_WALLET_NAME=my-agent node index.mjs
 ```
 
 ### `python-agent/` — Python + REST API
@@ -30,21 +30,21 @@ flow. Payment must be completed externally (Stellar SDK or MCP server).
 ```bash
 cd python-agent
 pip install -r requirements.txt
-CARDS402_API_KEY=cards402_... python main.py
+AGENTCARD_API_KEY=agentcard_... python main.py
 ```
 
 ### `langchain-tool/` — LangChain custom tools
 
 Three LangChain `BaseTool` subclasses that any LangChain agent can use:
 
-- `Cards402OrderTool` — create a card order
-- `Cards402CheckOrderTool` — poll order status / get card details
-- `Cards402BudgetTool` — check spend vs limit
+- `AgentcardOrderTool` — create a card order
+- `AgentcardCheckOrderTool` — poll order status / get card details
+- `AgentcardBudgetTool` — check spend vs limit
 
 ```python
-from cards402_tool import Cards402OrderTool, Cards402CheckOrderTool, Cards402BudgetTool
+from agentcard_tool import AgentcardOrderTool, AgentcardCheckOrderTool, AgentcardBudgetTool
 
-tools = [Cards402OrderTool(), Cards402CheckOrderTool(), Cards402BudgetTool()]
+tools = [AgentcardOrderTool(), AgentcardCheckOrderTool(), AgentcardBudgetTool()]
 agent = initialize_agent(tools, llm, agent=AgentType.OPENAI_FUNCTIONS)
 agent.run("Buy me a $5 virtual Visa card")
 ```
@@ -56,11 +56,11 @@ The fastest path for Claude-based agents. No code needed — just configure:
 ```json
 {
   "mcpServers": {
-    "cards402": {
+    "agentcard": {
       "command": "npx",
-      "args": ["-y", "cards402@latest"],
+      "args": ["-y", "agentcard@latest"],
       "env": {
-        "CARDS402_API_KEY": "cards402_...",
+        "AGENTCARD_API_KEY": "agentcard_...",
         "OWS_WALLET_NAME": "my-agent"
       }
     }
@@ -68,8 +68,8 @@ The fastest path for Claude-based agents. No code needed — just configure:
 }
 ```
 
-The `cards402` CLI defaults to the `mcp` subcommand when no other subcommand
-is passed, so `npx cards402@latest` with no args runs the MCP server. `-y`
+The `agentcard` CLI defaults to the `mcp` subcommand when no other subcommand
+is passed, so `npx agentcard@latest` with no args runs the MCP server. `-y`
 auto-accepts the one-time install prompt. **Always pin `@latest`** — without
 it, `npx` serves whatever version it first resolved from its local cache
 indefinitely, so SDK patch releases (particularly the ones touching on-chain

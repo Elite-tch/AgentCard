@@ -48,7 +48,7 @@ export default function GlobalError({ error }: { error: Error & { digest?: strin
               marginBottom: 20,
             }}
           >
-            AgentCard · HTTP 500 · Fatal
+            agentcard · HTTP 500 · Fatal
           </div>
           <h1
             style={{

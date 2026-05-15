@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 /**
- * cards402 Node.js agent example — order a $2 virtual Visa card using XLM.
+ * agentcard Node.js agent example — order a $2 virtual Visa card using XLM.
  *
  * Prerequisites:
- *   1. npm install cards402
+ *   1. npm install agentcard
  *   2. Set environment variables:
- *      - CARDS402_API_KEY   — from your cards402 dashboard
+ *      - AGENTCARD_API_KEY   — from your agentcard dashboard
  *      - OWS_WALLET_NAME   — your OWS encrypted wallet name
  *      - (Optional) OWS_WALLET_PASSPHRASE
  *   3. Fund the wallet's public key (printed by createOWSWallet) with
@@ -15,20 +15,20 @@
  *   node index.mjs
  *
  * What it does:
- *   1. Creates a $2 order via the cards402 API
+ *   1. Creates a $2 order via the agentcard API
  *   2. Pays the Soroban contract from your OWS wallet
  *   3. Polls until the card is ready (~30-60s)
  *   4. Prints the card number, CVV, and expiry
  */
 
-import { Cards402Client, purchaseCardOWS } from 'cards402';
+import { AgentcardClient, purchaseCardOWS } from 'agentcard';
 
-const API_KEY = process.env.CARDS402_API_KEY;
-const BASE_URL = process.env.CARDS402_BASE_URL || 'https://api.cards402.com/v1';
+const API_KEY = process.env.AGENTCARD_API_KEY;
+const BASE_URL = process.env.AGENTCARD_BASE_URL || 'https://api.agentcard.com/v1';
 const WALLET_NAME = process.env.OWS_WALLET_NAME;
 
 if (!API_KEY) {
-  console.error('Set CARDS402_API_KEY in your environment');
+  console.error('Set AGENTCARD_API_KEY in your environment');
   process.exit(1);
 }
 if (!WALLET_NAME) {
@@ -68,7 +68,7 @@ main();
 /*
  * Option B: step-by-step (for more control)
  *
- * const client = new Cards402Client({ apiKey: API_KEY, baseUrl: BASE_URL });
+ * const client = new AgentcardClient({ apiKey: API_KEY, baseUrl: BASE_URL });
  *
  * // 1. Create order
  * const order = await client.createOrder({ amount_usdc: '2.00' });

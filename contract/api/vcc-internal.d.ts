@@ -13,7 +13,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Self-register a new tenant (cards402 instance) */
+        /** Self-register a new tenant (agentcard instance) */
         post: operations["registerTenant"];
         delete?: never;
         options?: never;
@@ -32,8 +32,8 @@ export interface paths {
         put?: never;
         /**
          * Create a CTX gift card order and get payment URL
-         * @description cards402 calls this after an agent creates an order. VCC creates
-         *     the CTX order and returns a `web+stellar:pay` URI that cards402
+         * @description agentcard calls this after an agent creates an order. VCC creates
+         *     the CTX order and returns a `web+stellar:pay` URI that agentcard
          *     pays directly from its treasury wallet.
          *
          *     **Idempotent** per `(tenant_id, order_id)` — a duplicate call
@@ -56,7 +56,7 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Notify VCC that cards402 has paid the CTX invoice
+         * Notify VCC that agentcard has paid the CTX invoice
          * @description Transitions the job from `invoice_issued` to `queued` and kicks
          *     off the fulfillment pipeline (SSE monitoring → stage1 scrape →
          *     stage2 scrape → callback).
@@ -131,7 +131,7 @@ export interface components {
             note?: string;
         };
         InvoiceRequest: {
-            /** @description cards402 order UUID */
+            /** @description agentcard order UUID */
             order_id: string;
             amount_usdc: string;
             /**
@@ -147,7 +147,7 @@ export interface components {
             job_id: string;
             /** @description CTX.com gift card order UUID */
             ctx_order_id: string;
-            /** @description web+stellar:pay URI — cards402 pays this directly */
+            /** @description web+stellar:pay URI — agentcard pays this directly */
             payment_url: string;
             /** @description 'already_exists' if this is a duplicate */
             note?: string;
@@ -173,7 +173,7 @@ export interface components {
         /**
          * @description POST to callback_url when a job reaches terminal state. Signed
          *     with HMAC-SHA256 v2 (order_id in signing payload). Headers:
-         *     X-VCC-Signature, X-VCC-Timestamp, X-VCC-Order-Id, X-Request-ID.
+         *     X-agentcard-Signature, X-agentcard-Timestamp, X-agentcard-Order-Id, X-Request-ID.
          */
         CallbackPayload: {
             /** Format: uuid */
@@ -293,7 +293,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                /** @description Correlation ID from cards402 for end-to-end tracing */
+                /** @description Correlation ID from agentcard for end-to-end tracing */
                 "X-Request-ID"?: string;
             };
             path?: never;
