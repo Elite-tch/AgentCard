@@ -15,14 +15,14 @@
   "dependencies": {
     "@stellar/stellar-sdk": "^15.1.0",
     "bcryptjs": "^3.0.3",
-    "better-auth": "^1.6.11",
-    "geist": "^1.7.0",
+    "better-auth": "^1.6.14",
+    "geist": "^1.7.2",
     "mongodb": "^7.2.0",
-    "mongoose": "^9.6.2",
-    "next": "16.2.4",
-    "nodemailer": "^8.0.7",
-    "react": "19.2.5",
-    "react-dom": "19.2.5"
+    "mongoose": "^9.6.3",
+    "next": "16.2.7",
+    "nodemailer": "^8.0.10",
+    "react": "19.2.7",
+    "react-dom": "19.2.7"
   },
   "optionalDependencies": {
     "@tailwindcss/oxide-linux-x64-gnu": "^4.2.2",
@@ -30,18 +30,18 @@
     "lightningcss-linux-x64-gnu": "^1.32.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.59.1",
-    "@tailwindcss/postcss": "4.2.4",
+    "@playwright/test": "^1.60.0",
+    "@tailwindcss/postcss": "4.3.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "20.19.39",
     "@types/nodemailer": "^8.0.0",
-    "@types/react": "19.2.14",
+    "@types/react": "19.2.16",
     "@types/react-dom": "19.2.3",
-    "@vitest/ui": "^4.1.5",
+    "@vitest/ui": "^4.1.8",
     "eslint": "9.39.4",
-    "eslint-config-next": "16.2.4",
-    "tailwindcss": "4.2.4",
+    "eslint-config-next": "16.2.7",
+    "tailwindcss": "4.3.0",
     "typescript": "6.0.3",
-    "vitest": "^4.1.5"
+    "vitest": "^4.1.8"
   }
 }
